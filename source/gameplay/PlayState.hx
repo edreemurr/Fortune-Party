@@ -1,9 +1,11 @@
 package gameplay;
 
-import assets.Character;
 import flixel.FlxG;
 import flixel.math.FlxMath;
+
 import managers.Everything;
+
+import assets.Character;
 
 class PlayState extends Everything
 {
@@ -17,10 +19,16 @@ class PlayState extends Everything
 
 	var activePlayer:Int = 0;
 
-	var dieRoll:Int = 0;
+	var diceRoll:Int = 0;
 
 	override public function create()
 	{
+		FlxG.mouse.visible = false;
+
+		#if CRASH_HANDLER
+		FlxG.watch.add(activePlayer, 'Active Player');
+		#end
+
 		// var background:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.WHITE);
 		// add(background);
 
@@ -46,12 +54,16 @@ class PlayState extends Everything
 	override public function update(elapsed:Float)
 	{
 		if (controls.ENTER)
-			dieRoll = rollDice();
+		{
+			FlxG.log.notice('ENTER button pressed');
 
-		playerMove();
+			diceRoll = rollDice();
 
-		activePlayer += 1;
-		activePlayer = FlxMath.wrap(activePlayer, 0, players.length - 1);
+			playerMove(diceRoll);
+			
+			activePlayer += 1;
+			activePlayer = FlxMath.wrap(activePlayer, 0, players.length - 1);
+		}
 
 		super.update(elapsed);
 	}
@@ -66,7 +78,5 @@ class PlayState extends Everything
 	}
 
 	function playerMove(num:Int = null)
-	{
 		players[activePlayer].x += num * 10;
-	}
 }

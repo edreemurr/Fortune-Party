@@ -5,6 +5,7 @@ import flixel.input.gamepad.FlxGamepadButton;
 import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.input.gamepad.mappings.FlxGamepadMapping;
 import flixel.input.keyboard.FlxKey;
+
 import managers.Settings;
 
 class Controls
@@ -25,6 +26,7 @@ class Controls
 	public var DOWN_P(get, never):Bool;
 	public var LEFT_P(get, never):Bool;
 	public var RIGHT_P(get, never):Bool;
+
 	private function get_UP_P() return justPressed('up');
 	private function get_DOWN_P() return justPressed('down');
 	private function get_LEFT_P() return justPressed('left');
@@ -35,7 +37,8 @@ class Controls
 	public var DOWN(get, never):Bool;
 	public var LEFT(get, never):Bool;
 	public var RIGHT(get, never):Bool;
-	private function get_UP() return justPressed('up');
+
+    private function get_UP() return justPressed('up');
 	private function get_DOWN() return justPressed('down');
 	private function get_LEFT() return justPressed('left');
 	private function get_RIGHT() return justPressed('right');
@@ -45,7 +48,8 @@ class Controls
 	public var DOWN_R(get, never):Bool;
 	public var LEFT_R(get, never):Bool;
 	public var RIGHT_R(get, never):Bool;
-	private function get_UP_R() return released('up');
+
+    private function get_UP_R() return released('up');
 	private function get_DOWN_R() return released('down');
 	private function get_LEFT_R() return released('left');
 	private function get_RIGHT_R() return released('right');
@@ -55,7 +59,8 @@ class Controls
 	public var ENTER(get, never):Bool;
 	public var BACK(get, never):Bool;
 	public var PAUSE(get, never):Bool;
-	private function get_ENTER() return justPressed('enter');
+
+    private function get_ENTER() return justPressed('enter');
 	private function get_BACK() return justPressed('back');
 	private function get_PAUSE() return justPressed('pause');
 

@@ -20,12 +20,12 @@ class SaveData
     public static var gamepadDefault:Map<String, Array<FlxGamepadInputID>> = null;
 
     public static  var keyboardButtons:Map<String, Array<FlxKey>> = [
-        'up' => [W],
-        'down' => [S],
-        'left' => [A],
-        'right' => [D],
+        'up' => [W, UP],
+        'down' => [S, DOWN],
+        'left' => [A, LEFT],
+        'right' => [D, RIGHT],
 
-        'enter' => [SPACE],
+        'enter' => [SPACE, ENTER],
         'back' => [BACKSPACE],
         'pause' => [ESCAPE]
     ];
