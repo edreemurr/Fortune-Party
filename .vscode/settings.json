@@ -3,12 +3,24 @@
 		"export/**/*.*": true
 	},
 	"[haxe]": {
-		"editor.formatOnSave": true,
+		"editor.formatOnSave": false,
 		"editor.formatOnSaveMode":"modifications",
 		"editor.formatOnPaste": false,
 		"editor.codeActionsOnSave": {
-			"source.sortImports": "explicit"
+			"source.sortImports": "never"
 		}
 	},
-	"haxe.enableExtendedIndentation": true
+	"haxe.enableExtendedIndentation": true,
+	"files.exclude": {
+		"**/*.rpyc": true,
+		"**/*.rpa": true,
+		"**/*.rpymc": true,
+		"**/cache/": true
+	},
+	"typescript.preferences.organizeImports": {
+
+	},
+	"javascript.preferences.organizeImports": {
+		
+	}
 }
