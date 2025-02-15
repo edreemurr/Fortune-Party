@@ -1,0 +1,15 @@
+export/*
+.vscode/*
+.haxelib/
+.github/
+*.code-workspace
+.history
+.ionide
+
+!.vscode/settings/json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+art/build_html.bat
+art/build_html-debug.bat
