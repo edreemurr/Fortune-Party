@@ -1,0 +1,187 @@
+{
+  "name": "Fortune Party",
+  "ogmoVersion": "3.4.0",
+  "levelPaths": ["."],
+  "backgroundColor": "#282c34ff",
+  "gridColor": "#3c4049cc",
+  "anglesRadians": false,
+  "directoryDepth": 5,
+  "layerGridDefaultSize": {"x": 16, "y": 16},
+  "levelDefaultSize": {"x": 320, "y": 240},
+  "levelMinSize": {"x": 128, "y": 128},
+  "levelMaxSize": {"x": 4096, "y": 4096},
+  "levelValues": [],
+  "defaultExportMode": ".json",
+  "compactExport": false,
+  "externalScript": "",
+  "playCommand": "",
+  "entityTags": [],
+  "layers": [
+    {
+      "definition": "entity",
+      "name": "players",
+      "gridSize": {"x": 16, "y": 16},
+      "exportID": "36355317",
+      "requiredTags": [],
+      "excludedTags": []
+    },
+    {
+      "definition": "tile",
+      "name": "spaces",
+      "gridSize": {"x": 16, "y": 16},
+      "exportID": "36354133",
+      "exportMode": 0,
+      "arrayMode": 0,
+      "defaultTileset": "spaces"
+    }
+  ],
+  "entities": [
+    {
+      "exportID": "36350035",
+      "name": "player1",
+      "limit": -1,
+      "size": {"x": 16, "y": 16},
+      "origin": {"x": 0, "y": 0},
+      "originAnchored": true,
+      "shape": {
+        "label": "Rectangle",
+        "points": [
+          {"x": -1, "y": -1},
+          {"x": 1, "y": -1},
+          {"x": -1, "y": 1},
+          {"x": 1, "y": -1},
+          {"x": -1, "y": 1},
+          {"x": 1, "y": 1}
+        ]
+      },
+      "color": "#ff0000ff",
+      "tileX": false,
+      "tileY": false,
+      "tileSize": {"x": 16, "y": 16},
+      "resizeableX": false,
+      "resizeableY": false,
+      "rotatable": false,
+      "rotationDegrees": 360,
+      "canFlipX": false,
+      "canFlipY": false,
+      "canSetColor": false,
+      "hasNodes": false,
+      "nodeLimit": 0,
+      "nodeDisplay": 0,
+      "nodeGhost": true,
+      "tags": [],
+      "values": []
+    },
+    {
+      "exportID": "36357797",
+      "name": "player2",
+      "limit": -1,
+      "size": {"x": 16, "y": 16},
+      "origin": {"x": 0, "y": 0},
+      "originAnchored": true,
+      "shape": {
+        "label": "Rectangle",
+        "points": [
+          {"x": -1, "y": -1},
+          {"x": 1, "y": -1},
+          {"x": -1, "y": 1},
+          {"x": 1, "y": -1},
+          {"x": -1, "y": 1},
+          {"x": 1, "y": 1}
+        ]
+      },
+      "color": "#0076ffff",
+      "tileX": false,
+      "tileY": false,
+      "tileSize": {"x": 16, "y": 16},
+      "resizeableX": false,
+      "resizeableY": false,
+      "rotatable": false,
+      "rotationDegrees": 360,
+      "canFlipX": false,
+      "canFlipY": false,
+      "canSetColor": false,
+      "hasNodes": false,
+      "nodeLimit": 0,
+      "nodeDisplay": 0,
+      "nodeGhost": true,
+      "tags": [],
+      "values": []
+    },
+    {
+      "exportID": "36351033",
+      "name": "player3",
+      "limit": -1,
+      "size": {"x": 16, "y": 16},
+      "origin": {"x": 0, "y": 0},
+      "originAnchored": true,
+      "shape": {
+        "label": "Rectangle",
+        "points": [
+          {"x": -1, "y": -1},
+          {"x": 1, "y": -1},
+          {"x": -1, "y": 1},
+          {"x": 1, "y": -1},
+          {"x": -1, "y": 1},
+          {"x": 1, "y": 1}
+        ]
+      },
+      "color": "#2dff00ff",
+      "tileX": false,
+      "tileY": false,
+      "tileSize": {"x": 16, "y": 16},
+      "resizeableX": false,
+      "resizeableY": false,
+      "rotatable": false,
+      "rotationDegrees": 360,
+      "canFlipX": false,
+      "canFlipY": false,
+      "canSetColor": false,
+      "hasNodes": false,
+      "nodeLimit": 0,
+      "nodeDisplay": 0,
+      "nodeGhost": true,
+      "tags": [],
+      "values": []
+    },
+    {
+      "exportID": "36351176",
+      "name": "player4",
+      "limit": -1,
+      "size": {"x": 16, "y": 16},
+      "origin": {"x": 0, "y": 0},
+      "originAnchored": true,
+      "shape": {
+        "label": "Rectangle",
+        "points": [
+          {"x": -1, "y": -1},
+          {"x": 1, "y": -1},
+          {"x": -1, "y": 1},
+          {"x": 1, "y": -1},
+          {"x": -1, "y": 1},
+          {"x": 1, "y": 1}
+        ]
+      },
+      "color": "#ffe800ff",
+      "tileX": false,
+      "tileY": false,
+      "tileSize": {"x": 16, "y": 16},
+      "resizeableX": false,
+      "resizeableY": false,
+      "rotatable": false,
+      "rotationDegrees": 360,
+      "canFlipX": false,
+      "canFlipY": false,
+      "canSetColor": false,
+      "hasNodes": false,
+      "nodeLimit": 0,
+      "nodeDisplay": 0,
+      "nodeGhost": true,
+      "tags": [],
+      "values": []
+    }
+  ],
+  "tilesets": [
+    {"label": "spaces", "path": "../../images/tiles.png", "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAAAQCAYAAACBSfjBAAAACXBIWXMAAAsTAAALEwEAmpwYAAACYElEQVRYhc2YfU7bQBDFfzPrjyQUoRACyQl6il6Hi3CanqLXoAdAoU1Cq0qF2F7v9I/NV1GhIKdln2TZK3s1z89vdmYtdMTl5aV1mf/h+FOn+B8/v+80/+rqChEB2J5fg6xT9APhy7fAeDTFgIe6xXujXzpK+QqA5hMAah94qAO+jd9s2Ft2jq2q3eZ3ZnAAnJxcMF/OACiccnKUcdTbUVMF3xqNNwRwKjh9vVv+BZIQ0AfjdDhhsZzhFHInuL10qhrjvmppWsOAEDqtGgdFEgI6EYpMOD+bsri7ZdUEah+293/ce1ZNwCw6UFVIxIBpCBgsHm0wjt6ds7y7pWp2Lqu9UebKoHQUmVJkQpkfhrpZNzcnUUScQuONYIZT4Ww0ZbGccTGMIpnFtC5yxcxoPNGBB8jkuq5R1Scr8N8ETkLAns7jxeYdAlvxACbHdwBYE8c5HEQ8gNlsRpZlvwn4UleaWRoCviWur6+3DjSzrXib876wj/vFZAQ0d0HtjaoJOBXCmvxxvgBinzg6nVBmSjDDt0bljYGbd459c3Oz4/EH5z0nICSSwiI78hvxdI/keDRlvpwxHk1p1k10Gwxc99ir1eoF/J4u+UkI6NvoKpXYJPdLJXOCr+J9kZ2IvcF47dL/x++5NTGJNub7z9jnicQdRvZop9EGi1s4HbG6n6+feUPCe0jCgVVj9IvoOhFi01yvqy2xOG9SuzcYU2SCIQerxF2QhIC9Iu5/i0wwiyldt4FNr1x7IxiUudArHEWuhGCYf1vekIiAo/4SArR1HCuw9y+BvpvTd0ARx5vnUsAvJ84HhxzEKAIAAAAASUVORK5CYII=", "tileWidth": 16, "tileHeight": 16, "tileSeparationX": 0, "tileSeparationY": 0, "tileMarginX": 0, "tileMarginY": 0}
+  ]
+}

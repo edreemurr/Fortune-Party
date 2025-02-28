@@ -29,7 +29,6 @@ import haxe.io.Path;
 import openfl.events.UncaughtErrorEvent;
 #end
 
-
 class Main extends Sprite
 {
 	public function new()
@@ -58,7 +57,7 @@ class Main extends Sprite
 
 		SaveData.loadDefaultButtons();
 
-		addChild(new FlxGame(0, 0, gameplay.PlayState));
+		addChild(new FlxGame(gameplay.PlayState, true));
 
 		#if CRASH_HANDLER
 		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);

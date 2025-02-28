@@ -2,13 +2,14 @@ package assets;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.util.FlxColor;
 
 class Character extends FlxSprite
 {
-    public function new(x:Float = 0, y:Float = 0)
+    public function new(color:FlxColor)
     {
-        super(x, y);
+        super();
 
-        makeGraphic(16, 16, FlxG.random.color());
+        makeGraphic(16, 16, color);
     }
 }
