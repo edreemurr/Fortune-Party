@@ -11,22 +11,24 @@ import managers.Everything;
 
 class CharacterSelect extends Everything
 {
-    public static var players:Int = 0;
+    public static var playerCount:Int = 1;
 
-    public static var character1:FlxColor;
-    public static var character2:FlxColor;
-    public static var character3:FlxColor;
-    public static var character4:FlxColor;
+    public static var character1:String;
+    public static var character2:String;
+    public static var character3:String;
+    public static var character4:String;
     
-    var text:FlxText = null;
-    var numText:FlxText = null;
+    var text:FlxText;
+    var numText:FlxText;
 
     var buttons:FlxTypedGroup<FlxSprite>;
     var buttonNames:Array<String>;
 
     var num:Int = 1;
-
     var selected:Int = 0;
+
+    var playerAmount:Bool = true;
+    var charSelection:Bool = false;
 
     override function create()
     {
@@ -34,7 +36,7 @@ class CharacterSelect extends Everything
         text.screenCenter(X);
         add(text);
 
-        numText = new FlxText('1');
+        numText = new FlxText('', 32);
         numText.screenCenter();
         add(numText);
 
@@ -52,17 +54,53 @@ class CharacterSelect extends Everything
 
     override function update(elapsed)
     {
-        if (controls.UP)
-            numText.text = '${FlxMath.maxAdd(num, 1, 4, 1)}';
-        if (controls.DOWN)
-            numText.text = '${FlxMath.maxAdd(num, -1, 4, 1)}';
-        if (controls.ENTER)
-        {
-            numText.visible = false;
-            players = num;
-            num = 0;
+        var mouseHover:Bool = false;
 
-            characterSelect();
+        if (playerAmount)
+        {
+            numText.text = '$num';
+
+            if (controls.UP)
+                num = FlxMath.maxAdd(num, 1, 4, 1);
+            if (controls.DOWN)
+                num = FlxMath.maxAdd(num, -1, 4, 1);
+            if (controls.ENTER)
+            {
+                numText.visible = false;
+                playerCount = num;
+                num = 0;
+
+                characterSelect();
+            }
+        }
+
+        if (charSelection)
+        {
+            // if (controls.LEFT)
+            //     changeSelection(-1);
+            // if (controls.RIGHT)
+            //     changeSelection(1);
+
+            for (i in 0...buttonNames.length)
+                if (FlxG.mouse.overlaps(buttons.members[i]))
+                {
+                    mouseHover = true;
+
+                    if (FlxG.mouse.justPressed)
+                        characterChoice();
+
+                    if (selected != i)
+                        buttonHover(i);
+                        
+                    break;
+                }
+
+            if (!mouseHover && selected != -1)
+            {
+                buttonIdle(selected);
+
+                selected = -1;
+            }
         }
 
         super.update(elapsed);
@@ -70,49 +108,72 @@ class CharacterSelect extends Everything
 
     function characterSelect()
     {
-        num += 1;
+        playerAmount = false;
+        charSelection = true;
         
         buttons.visible = true;
         
+        num += 1;
+        
         text.text = 'Player $num: Choose your character';
-
-        for (i in 0...buttonNames.length)
-            if (FlxG.mouse.overlaps(buttons.members[i]))
-                if (selected != i)
-                {
-                    buttonHover(i);
-                    
-                    break;
-                }
-
-                if (FlxG.mouse.justPressed)
-                    characterChoice();
-            else
-                selected = -1;
     }
 
     function characterChoice()
     {
-        switch (num)
+        switch (buttonNames[selected])
         {
-            case 1: character1 = FlxColor.fromString(buttonNames[selected]);
-            case 2: character2 = FlxColor.fromString(buttonNames[selected]);
-            case 3: character3 = FlxColor.fromString(buttonNames[selected]);
-            case 4: character4 = FlxColor.fromString(buttonNames[selected]);
+            case 'red':
+                if (num == 1)
+                    character1 = '0xFF0000';
+                if (num == 2)
+                    character2 = '0xFF0000';
+                if (num == 3)
+                    character3 = '0xFF0000';
+                if (num == 4)
+                    character4 = '0xFF0000';
+            case 'blue':
+                if (num == 1)
+                    character1 = '0x0011FF';
+                if (num == 2)
+                    character2 = '0x0011FF';
+                if (num == 3)
+                    character3 = '0x0011FF';
+                if (num == 4)
+                    character4 = '0x0011FF';
+            case 'green':
+                if (num == 1)
+                    character1 = '0x00FF00';
+                if (num == 2)
+                    character2 = '0x00FF00';
+                if (num == 3)
+                    character3 = '0x00FF00';
+                if (num == 4)
+                    character4 = '0x00FF00';
+            case 'yellow':
+                if (num == 1)
+                    character1 = '0xD0FF00';
+                if (num == 2)
+                    character2 = '0xD0FF00';
+                if (num == 3)
+                    character3 = '0xD0FF00';
+                if (num == 4)
+                    character4 = '0xD0FF00';
         }
 
-        if (num > players)
-            FlxG.switchState(() -> new PlayState());
+        trace ('Player $num selected ${buttonNames[selected]}');
+
+        if (num == playerCount)
+            FlxG.switchState(PlayState.new);
         else
             characterSelect();
     }
 
-    function menuButton(name: String, x:Float, y:Float):FlxSprite
+    function menuButton(name:String, x:Float, y:Float):FlxSprite
     {
         var button:FlxSprite = new FlxSprite(x, y);
         button.loadGraphic('assets/images/$name.png');
+        button.alpha = 0.5;
         buttons.add(button);
-        button.updateHitbox();
 
         return button;
     }
@@ -120,10 +181,13 @@ class CharacterSelect extends Everything
     function buttonHover(selection:Int)
     {
         if (selected != -1)
-            buttons.members[selected].alpha = 1;
+            buttonIdle(selected);
 
         selected = selection;
 
-        buttons.members[selected].alpha = 0.5;
+        buttons.members[selected].alpha = 1;
     }
+
+    function buttonIdle(index:Int)
+        buttons.members[index].alpha = 0.5;
 }

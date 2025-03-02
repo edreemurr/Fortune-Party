@@ -3,15 +3,17 @@ package managers;
 import flixel.FlxG;
 import flixel.FlxState;
 
+import assets.Character;
+
 class Everything extends FlxState
 {
-    private static var cycle:Int = 0;
+    var cycle:Int;
+    var activePlayer:Int;
 
-    private static var players:Int = 1;
-    private static var cpus:Int = 0;
+    var characters:Array<Character> = [];
 
-    private static var coins:Array<Int> = [];
-    private static var starPieces:Array<Int> = [];
+    var coins:Array<Int> = [];
+    var starPieces:Array<Int> = [];
 
     public var controls(get, never):Controls;
     public var variables:Map<String, Dynamic> = new Map<String, Dynamic>();

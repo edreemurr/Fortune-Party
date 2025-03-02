@@ -9,23 +9,20 @@ import flixel.tweens.FlxTween;
 import flixel.tile.FlxTilemap;
 import flixel.addons.editors.ogmo.FlxOgmo3Loader;
 
-import managers.Everything;
-
 import assets.Character;
+import managers.Everything;
+import gameplay.CharacterSelect;
 
 class PlayState extends Everything
 {
 	var board:FlxOgmo3Loader;
 	var tiles:FlxTilemap;
 
-	public static var player1:Character;
-	public static var player2:Character;
-	public static var player3:Character;
-	public static var player4:Character;
+	public var player1:Character;
+	public var player2:Character;
+	public var player3:Character;
+	public var player4:Character;
 
-	var players:Array<Character> = [];
-
-	var activePlayer:Int = 0;
 	var diceRoll:Int = 0;
 
 	var spaceArray:Array<Array<Int>>;
@@ -51,27 +48,35 @@ class PlayState extends Everything
 		for (i in 0...4)
 			tiles.setTileProperties(i, NONE);
 
-		player1 = new Character(FlxColor.RED);
-		players.push(player1);
+		playerLocations = new Map<Character, Int>();
+
+		player1 = new Character(CharacterSelect.character1);
+		characters.push(player1);
 		add(player1);
 
-		player2 = new Character(FlxColor.BLUE);
-		players.push(player2);
-		add(player2);
+		if (CharacterSelect.playerCount >= 2)
+		{
+			player2 = new Character(CharacterSelect.character2);
+			characters.push(player2);
+			add(player2);
+		}
 
-		player3 = new Character(FlxColor.GREEN);
-		players.push(player3);
-		add(player3);
+		if (CharacterSelect.playerCount >= 3)
+		{
+			player3 = new Character(CharacterSelect.character3);
+			characters.push(player3);
+			add(player3);
+		}
 
-		player4 = new Character(FlxColor.YELLOW);
-		players.push(player4);
-		add(player4);
+		if (CharacterSelect.playerCount >= 4)
+		{
+			player4 = new Character(CharacterSelect.character4);
+			characters.push(player4);
+			add(player4);
+		}
 
-		playerLocations = new Map<Character, Int>();
-		playerLocations.set(player1, -1);
-		playerLocations.set(player2, -1);
-		playerLocations.set(player3, -1);
-		playerLocations.set(player4, -1);
+		for (player in characters)
+			playerLocations.set(player, -1);
 
 		board.loadEntities(placeObjects, 'players');
 
@@ -96,28 +101,26 @@ class PlayState extends Everything
 	{
 		var num:Int = FlxG.random.int(1, 6);
 
-		trace ('${players[activePlayer]} rolled $num');
+		trace ('Player ${activePlayer + 1} rolled $num');
 
 		return num;
 	}
 
 	function initTurnOrder()
 	{
-		FlxG.random.shuffle(players);
-
-		trace (players[0], players[1], players[2], players[3]);
+		FlxG.random.shuffle(characters);
 	}
 
 	function playerMove(num:Int = null)
 	{
 		if (num > 0)
 		{
-			var x:Int = spaceArray[playerLocations.get(players[activePlayer]) + 1][0];
-			var y:Int = spaceArray[playerLocations.get(players[activePlayer]) + 1][1];
+			var x:Int = spaceArray[playerLocations.get(characters[activePlayer]) + 1][0];
+			var y:Int = spaceArray[playerLocations.get(characters[activePlayer]) + 1][1];
 
-			FlxTween.tween(players[activePlayer], {x: x, y: y}, 0.5, {onComplete: function (tween:FlxTween)
+			FlxTween.tween(characters[activePlayer], {x: x, y: y}, 0.5, {onComplete: function (tween:FlxTween)
 			{
-				playerLocations.set(players[activePlayer], playerLocations.get(players[activePlayer]) + 1);
+				playerLocations.set(characters[activePlayer], playerLocations.get(characters[activePlayer]) + 1);
 
 				num--;
 
@@ -131,16 +134,10 @@ class PlayState extends Everything
 	function initEvent()
 	{
 		activePlayer += 1;
-		activePlayer = FlxMath.wrap(activePlayer, 0, players.length - 1);
+		activePlayer = FlxMath.wrap(activePlayer, 0, characters.length - 1);
 	}
 
 	function placeObjects(object:EntityData)
-        switch (object.name)
-        {
-            case 'player1': PlayState.player1.setPosition(object.x, object.y);
-            case 'player2': PlayState.player2.setPosition(object.x, object.y);
-            case 'player3': PlayState.player3.setPosition(object.x, object.y);
-            case 'player4': PlayState.player4.setPosition(object.x, object.y);
-            default: FlxG.log.warn('Never seen "${object.name}" before in my life fam');
-        }
+		for (i => character in characters)
+			character.setPosition(object.x, object.y - (i * 10));
 }
