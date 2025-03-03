@@ -4,10 +4,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.text.FlxText;
 import flixel.math.FlxMath;
-import flixel.util.FlxColor;
 import flixel.tweens.FlxTween;
-import flixel.tile.FlxTilemap;
-import flixel.addons.editors.ogmo.FlxOgmo3Loader;
 
 import assets.Character;
 import managers.Everything;
@@ -15,9 +12,6 @@ import gameplay.CharacterSelect;
 
 class PlayState extends Everything
 {
-	// var board:FlxOgmo3Loader;
-	// var tiles:FlxTilemap;
-
 	public var player1:Character;
 	public var player2:Character;
 	public var player3:Character;
@@ -50,15 +44,6 @@ class PlayState extends Everything
 			add(space);
 		}
 
-		// board = new FlxOgmo3Loader(AssetPaths.test__ogmo, AssetPaths.demo__json);
-
-/* 		tiles = board.loadTilemap(AssetPaths.tiles__png, 'spaces');
-		tiles.follow();
-		add(tiles);
-
-		for (i in 0...4)
-			tiles.setTileProperties(i, NONE);
- */
 		playerLocations = new Map<Character, Int>();
 
 		player1 = new Character(CharacterSelect.character1);
@@ -92,8 +77,6 @@ class PlayState extends Everything
 			character.setPosition(startPos[0], startPos[1] - (num * 10));
 		}
 
-		// board.loadEntities(placeObjects, 'players');
-
 		initTurnOrder();
 
 		super.create();
@@ -123,6 +106,8 @@ class PlayState extends Everything
 	function initTurnOrder()
 	{
 		FlxG.random.shuffle(characters);
+
+		playerStats();
 	}
 
 	function playerMove(num:Int)
@@ -138,8 +123,6 @@ class PlayState extends Everything
 			FlxTween.tween(characters[activePlayer], {x: x, y: y}, 0.5, {onComplete: function(tween:FlxTween)
 			{
 				playerLocations.set(characters[activePlayer], playerLocations.get(characters[activePlayer]) + wrap);
-
-				trace (playerLocations.get(characters[activePlayer]));
 
 				num--;
 
@@ -173,7 +156,19 @@ class PlayState extends Everything
 		}});
 	}
 
-/* 	function placeObjects(object:EntityData)
-		for (i => character in characters)
-			character.setPosition(object.x, object.y - (i * 10)); */
+	function playerStats(event:String = 'create')
+	{
+		if (event == 'create')
+		{
+			for (num => char in characters)
+			{
+				var player:FlxSprite = new FlxSprite(20, 20 + (num * 30)).loadGraphicFromSprite(char);
+				player.setGraphicSize(15);
+				add(player);
+
+				var stats:FlxText = new FlxText(player.x + 20, player.y, 'Coins: 10', 20);
+				add(stats);
+			}
+		}
+	}
 }
