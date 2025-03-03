@@ -9,9 +9,9 @@ class Character extends FlxSprite
     {
         super();
 
-        makeGraphic(16, 16, FlxColor.fromString(color));
+        makeGraphic(50, 50, FlxColor.fromString(color));
 
-        offset.x = offset.y = 8;
+        offset.x = offset.y = 25;
 
         updateHitbox();
     }

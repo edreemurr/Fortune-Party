@@ -8,6 +8,7 @@ import assets.Character;
 class Everything extends FlxState
 {
     var cycle:Int;
+    var spaceCount:Int;
     var activePlayer:Int;
 
     var characters:Array<Character> = [];

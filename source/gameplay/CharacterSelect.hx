@@ -171,7 +171,7 @@ class CharacterSelect extends Everything
     function menuButton(name:String, x:Float, y:Float):FlxSprite
     {
         var button:FlxSprite = new FlxSprite(x, y);
-        button.loadGraphic('assets/images/$name.png');
+        button.loadGraphic('assets/images/characters/$name.png');
         button.alpha = 0.5;
         buttons.add(button);
 

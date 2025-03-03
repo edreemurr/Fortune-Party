@@ -15,8 +15,8 @@ import gameplay.CharacterSelect;
 
 class PlayState extends Everything
 {
-	var board:FlxOgmo3Loader;
-	var tiles:FlxTilemap;
+	// var board:FlxOgmo3Loader;
+	// var tiles:FlxTilemap;
 
 	public var player1:Character;
 	public var player2:Character;
@@ -25,7 +25,9 @@ class PlayState extends Everything
 
 	var diceRoll:Int = 0;
 
-	var spaceArray:Array<Array<Int>>;
+	var startPos:Array<Int>;
+
+	var spaceArray:Array<Array<Dynamic>>;
 
 	var playerLocations:Map<Character, Int>;
 
@@ -37,17 +39,26 @@ class PlayState extends Everything
 		FlxG.watch.add(activePlayer, 'Active Player');
 		#end
 
-		spaceArray = [[240, 190], [200, 190], [175, 190], [145, 190], [110, 190], [80, 175], [65, 144], [65, 110], [80, 80], [112, 64], [145, 80], [175, 95], [210, 95], [240, 80], [270, 50]];
+		startPos = [600, 650];
+		spaceCount = 13;
 
-		board = new FlxOgmo3Loader(AssetPaths.test__ogmo, AssetPaths.demo__json);
+		spaceArray = [['blue', 634, 546], ['blue', 500, 543], ['red', 380, 490], ['blue', 294, 400], ['green', 325, 285], ['red', 413, 191], ['brown', 511, 115], ['blue', 633, 105], ['blue', 766, 115], ['brown', 872, 154], ['green', 948, 237], ['blue', 971, 343], ['brown', 887, 456], ['red', 768, 522]];
 
-		tiles = board.loadTilemap(AssetPaths.tiles__png, 'spaces');
+		for (i in 0...spaceArray.length)
+		{
+			var space:FlxSprite = new FlxSprite(spaceArray[i][1], spaceArray[i][2]).loadGraphic('assets/images/spaces/${spaceArray[i][0]}.png');
+			add(space);
+		}
+
+		// board = new FlxOgmo3Loader(AssetPaths.test__ogmo, AssetPaths.demo__json);
+
+/* 		tiles = board.loadTilemap(AssetPaths.tiles__png, 'spaces');
 		tiles.follow();
 		add(tiles);
 
 		for (i in 0...4)
 			tiles.setTileProperties(i, NONE);
-
+ */
 		playerLocations = new Map<Character, Int>();
 
 		player1 = new Character(CharacterSelect.character1);
@@ -75,10 +86,13 @@ class PlayState extends Everything
 			add(player4);
 		}
 
-		for (player in characters)
-			playerLocations.set(player, -1);
+		for (num => character in characters)
+		{
+			playerLocations.set(character, -1);
+			character.setPosition(startPos[0], startPos[1] - (num * 10));
+		}
 
-		board.loadEntities(placeObjects, 'players');
+		// board.loadEntities(placeObjects, 'players');
 
 		initTurnOrder();
 
@@ -111,16 +125,21 @@ class PlayState extends Everything
 		FlxG.random.shuffle(characters);
 	}
 
-	function playerMove(num:Int = null)
+	function playerMove(num:Int)
 	{
 		if (num > 0)
 		{
-			var x:Int = spaceArray[playerLocations.get(characters[activePlayer]) + 1][0];
-			var y:Int = spaceArray[playerLocations.get(characters[activePlayer]) + 1][1];
+			var wrap:Int = (playerLocations.get(characters[activePlayer]) + 1) > spaceCount ? -spaceCount : 1;
+			trace (wrap);
 
-			FlxTween.tween(characters[activePlayer], {x: x, y: y}, 0.5, {onComplete: function (tween:FlxTween)
+			var x:Int = spaceArray[playerLocations.get(characters[activePlayer]) + wrap][1];
+			var y:Int = spaceArray[playerLocations.get(characters[activePlayer]) + wrap][2];
+			
+			FlxTween.tween(characters[activePlayer], {x: x, y: y}, 0.5, {onComplete: function(tween:FlxTween)
 			{
-				playerLocations.set(characters[activePlayer], playerLocations.get(characters[activePlayer]) + 1);
+				playerLocations.set(characters[activePlayer], playerLocations.get(characters[activePlayer]) + wrap);
+
+				trace (playerLocations.get(characters[activePlayer]));
 
 				num--;
 
@@ -128,16 +147,33 @@ class PlayState extends Everything
 			}});
 		}
 		else
-			initEvent();
+			initEvent(spaceArray[playerLocations.get(characters[activePlayer])][0]);
 	}
 
-	function initEvent()
+	function initEvent(event:String)
 	{
-		activePlayer += 1;
-		activePlayer = FlxMath.wrap(activePlayer, 0, characters.length - 1);
+		var space:FlxText = new FlxText(FlxG.width/2, FlxG.height/2, '', 40);
+		add(space);
+
+		switch (event)
+		{
+			case 'blue': space.text = '+3';
+			case 'red': space.text = '-3';
+			case 'green': space.text = 'lucky';
+			case 'brown': space.text = 'chance time';
+		}
+
+		FlxTween.tween(space, {alpha: 0}, 1, {onComplete: function(tween:FlxTween)
+		{
+			activePlayer += 1;
+			activePlayer = FlxMath.wrap(activePlayer, 0, characters.length - 1);
+
+			space.destroy();
+			space.kill();
+		}});
 	}
 
-	function placeObjects(object:EntityData)
+/* 	function placeObjects(object:EntityData)
 		for (i => character in characters)
-			character.setPosition(object.x, object.y - (i * 10));
+			character.setPosition(object.x, object.y - (i * 10)); */
 }
