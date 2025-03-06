@@ -17,12 +17,14 @@ class PlayState extends Everything
 	public var player3:Character;
 	public var player4:Character;
 
+	var statsArray:Array<FlxText>;
+
 	var diceRoll:Int = 0;
 
+	var controlsFree:Bool = false;
+
 	var startPos:Array<Int>;
-
 	var spaceArray:Array<Array<Dynamic>>;
-
 	var playerLocations:Map<Character, Int>;
 
 	override public function create()
@@ -84,7 +86,7 @@ class PlayState extends Everything
 
 	override public function update(elapsed:Float)
 	{
-		if (controls.ENTER)
+		if (controls.ENTER && controlsFree)
 		{
 			diceRoll = rollDice();
 
@@ -108,14 +110,17 @@ class PlayState extends Everything
 		FlxG.random.shuffle(characters);
 
 		playerStats();
+
+		controlsFree = true;
 	}
 
 	function playerMove(num:Int)
 	{
+		controlsFree = false;
+
 		if (num > 0)
 		{
 			var wrap:Int = (playerLocations.get(characters[activePlayer]) + 1) > spaceCount ? -spaceCount : 1;
-			trace (wrap);
 
 			var x:Int = spaceArray[playerLocations.get(characters[activePlayer]) + wrap][1];
 			var y:Int = spaceArray[playerLocations.get(characters[activePlayer]) + wrap][2];
@@ -146,6 +151,8 @@ class PlayState extends Everything
 			case 'brown': space.text = 'chance time';
 		}
 
+		playerStats('update', event);
+		
 		FlxTween.tween(space, {alpha: 0}, 1, {onComplete: function(tween:FlxTween)
 		{
 			activePlayer += 1;
@@ -153,22 +160,51 @@ class PlayState extends Everything
 
 			space.destroy();
 			space.kill();
+			
+			controlsFree = true;
 		}});
 	}
 
-	function playerStats(event:String = 'create')
+	function playerStats(event:String = 'create', ?statChange:Dynamic)
 	{
-		if (event == 'create')
+		switch (event)
 		{
-			for (num => char in characters)
-			{
-				var player:FlxSprite = new FlxSprite(20, 20 + (num * 30)).loadGraphicFromSprite(char);
-				player.setGraphicSize(15);
-				add(player);
+			case 'create':
+				coins = [10, 10, 10, 10];
+				starPieces = [0, 0, 0, 0];
+				statsArray = [];
+				
+				for (num => char in characters)
+				{
+					var player:FlxSprite = new FlxSprite(20, 20 + (num * 30)).loadGraphicFromSprite(char);
+					player.setGraphicSize(25);
+					add(player);
 
-				var stats:FlxText = new FlxText(player.x + 20, player.y, 'Coins: 10', 20);
-				add(stats);
-			}
+					var stats:FlxText = new FlxText(player.x + 20, player.y, 'Coins: ${coins[num]}, Star Pieces: ${starPieces[num]}', 20);
+					statsArray.push(stats);
+					add(stats);
+				}
+
+			case 'update':
+
+				switch (statChange)
+				{
+					case 'blue':
+						coins[activePlayer] = FlxMath.maxAdd(coins[activePlayer], 3, 999, 0);
+						statsArray[activePlayer].text = 'Coins: ${coins[activePlayer]}, Star Pieces: ${starPieces[activePlayer]}';
+
+					case 'red':
+						coins[activePlayer] = FlxMath.maxAdd(coins[activePlayer], -3, 999, 0);
+						statsArray[activePlayer].text = 'Coins: ${coins[activePlayer]}, Star Pieces: ${starPieces[activePlayer]}';
+
+					case 'green':
+						starPieces[activePlayer] = FlxMath.maxAdd(starPieces[activePlayer], 1, 5, 0);
+						statsArray[activePlayer].text = 'Coins: ${coins[activePlayer]}, Star Pieces: ${starPieces[activePlayer]}';
+
+					case 'brown':
+						coins[activePlayer] = FlxMath.maxAdd(coins[activePlayer], 100, 999, 0);
+						statsArray[activePlayer].text = 'Coins: ${coins[activePlayer]}, Star Pieces: ${starPieces[activePlayer]}';
+				}
 		}
 	}
 }
