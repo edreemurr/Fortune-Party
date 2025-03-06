@@ -13,8 +13,8 @@ class Everything extends FlxState
 
     var characters:Array<Character> = [];
 
-    var coins:Array<Int> = [];
-    var starPieces:Array<Int> = [];
+    var coins:Array<Int>;
+    var starPieces:Array<Int>;
 
     public var controls(get, never):Controls;
     public var variables:Map<String, Dynamic> = new Map<String, Dynamic>();
