@@ -13,6 +13,22 @@ class CardGame extends Everything
     var cards:FlxTypedGroup<Card>;
     var chosenCards:Array<Int>;
 
+    var cardType:String;
+    var amount:Int;
+
+    public function new(type:String = 'uno')
+    {
+        super();
+
+        this.cardType = type;
+
+        switch (type)
+        {
+            case 'poker': amount = 66;
+            case 'uno': amount = 61;
+        }
+    }
+
     override public function create()
     {
         add(initCards());
@@ -45,12 +61,10 @@ class CardGame extends Everything
 
         for (i in 0...cardCount)
         {
-            var choice = FlxG.random.int(0, 66, chosenCards);
+            var choice = FlxG.random.int(0, amount, chosenCards);
             chosenCards.push(choice);
 
-            cards.add(new Card(x, y, choice));
-
-            trace (chosenCards);
+            cards.add(new Card(cardType, x, y, choice));
 
             x += offset.x;
             y += offset.y;

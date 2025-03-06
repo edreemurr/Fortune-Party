@@ -9,26 +9,40 @@ class Card extends FlxSprite
 {
     var cardIndex:Int;
 
-    public function new(x:Float, y:Float, index:Int)
+    var xCut:Int;
+    var yCut:Int;
+
+    public function new(type:String = 'uno', x:Float, y:Float, index:Int)
     {
         super(x, y);
 
         this.cardIndex = index;
 
-        loadGraphic('assets/images/cards/poker.png', true, 125, 181/* .5 */);
+        switch (type)
+        {
+            case 'poker':
+                xCut = 125;
+                yCut = 181;
+            
+            case 'uno':
+                xCut = 86;
+                yCut = 86;
+        }
+
+        loadGraphic('assets/images/cards/$type.png', true, xCut, yCut/* .5 */);
         
         animation.frameIndex = cardIndex;
         
         FlxMouseEvent.add(this, pressed, null, hover, idle);
     }
 
-/*     override public function destroy()
+    override public function destroy()
     {
         FlxMouseEvent.remove(this);
 
         super.destroy();
     }
- */
+
     function pressed(_)
         FlxTween.tween(scale, {x: 0}, 0.5);
 
