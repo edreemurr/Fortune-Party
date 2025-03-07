@@ -1,4 +1,4 @@
-package managers;
+package assets;
 
 import flixel.tweens.FlxTween;
 import flixel.FlxG;
@@ -22,14 +22,14 @@ class Card extends FlxSprite
         {
             case 'poker':
                 xCut = 125;
-                yCut = 181;
+                yCut = 181/* .5 */;
             
             case 'uno':
                 xCut = 86;
                 yCut = 86;
         }
 
-        loadGraphic('assets/images/cards/$type.png', true, xCut, yCut/* .5 */);
+        loadGraphic('assets/images/cards/$type.png', true, xCut, yCut);
         
         animation.frameIndex = cardIndex;
         

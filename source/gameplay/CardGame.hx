@@ -4,13 +4,12 @@ import flixel.FlxG;
 import flixel.math.FlxPoint;
 import flixel.group.FlxGroup.FlxTypedGroup;
 
-import managers.Card;
+import assets.Card;
 
 import managers.Everything;
 
 class CardGame extends Everything
 {
-    var cards:FlxTypedGroup<Card>;
     var chosenCards:Array<Int>;
 
     var cardType:String;
