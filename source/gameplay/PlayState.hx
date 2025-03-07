@@ -12,20 +12,8 @@ import gameplay.CharacterSelect;
 
 class PlayState extends Everything
 {
-	public var player1:Character;
-	public var player2:Character;
-	public var player3:Character;
-	public var player4:Character;
-
 	var statsArray:Array<FlxText>;
-
-	var diceRoll:Int = 0;
-
-	var controlsFree:Bool = false;
-
 	var startPos:Array<Int>;
-	var spaceArray:Array<Array<Dynamic>>;
-	var playerLocations:Map<Character, Int>;
 
 	override public function create()
 	{
@@ -94,15 +82,6 @@ class PlayState extends Everything
 		}
 
 		super.update(elapsed);
-	}
-
-	function rollDice():Int
-	{
-		var num:Int = FlxG.random.int(1, 6);
-
-		trace ('Player ${activePlayer + 1} rolled $num');
-
-		return num;
 	}
 
 	function initTurnOrder()

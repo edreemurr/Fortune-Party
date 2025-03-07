@@ -2,29 +2,44 @@ package managers;
 
 import flixel.FlxG;
 import flixel.FlxState;
+import flixel.FlxSprite;
+import flixel.group.FlxGroup.FlxTypedGroup;
 
+import assets.Card;
 import assets.Character;
 
 class Everything extends FlxState
 {
+    var selected:Int = -1;
+
+    var controlsFree:Bool = false;
+    
     var cycle:Int;
+    var diceRoll:Int;
     var spaceCount:Int;
     var activePlayer:Int;
 
+    var board:FlxSprite;
+    var cards:FlxTypedGroup<Card>;
+
     var characters:Array<Character> = [];
+
+    var player1:Character;
+    var player2:Character;
+    var player3:Character;
+    var player4:Character;
 
     var coins:Array<Int>;
     var starPieces:Array<Int>;
+
+    var spaceArray:Array<Array<Dynamic>>;
+    var playerLocations:Map<Character, Int>;
 
     public var controls(get, never):Controls;
     public var variables:Map<String, Dynamic> = new Map<String, Dynamic>();
 
     override function create()
-    {
-        // FlxTransitionableState.skipNextTransOut = false;
-
         super.create();
-    }
 
     override function update(elapsed:Float)
     {
@@ -34,49 +49,9 @@ class Everything extends FlxState
         super.update(elapsed);
     }
 
-/*     public static function switchState(state:FlxState = null)
-    {
-        if (state == null)
-        {
-            resetState();
+    function rollDice(min:Int = 1, max:Int = 6):Int
+        return FlxG.random.int(min, max);
 
-            return;
-        }
-
-        if (FlxTransitionableState.skipNextTransIn)
-            FlxG.switchState(state);
-        else
-            startTransition(state);
-
-        FlxTransitionableState.skipNextTransIn = false;
-    }
-
-    public static function resetState()
-    {
-        if (FlxTransitionableState.skipNextTransIn)
-            FlxG.resetState();
-        else
-            startTransition();
-
-        FlxTransitionableState.skipNextTransIn = false;
-    }
-
-    public static function startTransition(state:FlxState = null)
-    {
-        FlxG.state.openSubState(new CustomFadeTransition(0.5, false));
-
-        if (state == false)
-            CustomFadeTransition.finishCallback = function() FlxG.resetState();
-        else
-            CustomFadeTransition.finishCallback = function() FlxG.switchState(state);
-    }
- */
-    public static function getState():Everything
-        return cast (FlxG.state, Everything);
-
-    public static function getVariables()
-        return getState().variables;
-    
     private function get_controls()
         return Controls.instance;
 }
