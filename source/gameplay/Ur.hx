@@ -1,7 +1,6 @@
 package gameplay;
 
 import flixel.FlxSprite;
-import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.group.FlxGroup.FlxTypedGroup;
 
@@ -11,20 +10,18 @@ import managers.Everything;
 class Ur extends Everything
 {
     public static var roll:Int;
-    public static var turn:Int;
+
+    public static var turn:String = 'light';
 
     public static var rolled:Bool = false;
     public static var moving:Bool = false;
 
     var pieces:FlxTypedGroup<UrPiece>;
 
-    //set turn cycle, each player only interact with their own pieces...ghost of placement option on hover?
     override function create()
     {
         board = new FlxSprite().loadGraphic('assets/images/ur/board.png');
         add(board);
-
-        turn = FlxMath.wrap(activePlayer, 0, 1);
 
         add(initPieces('light'));
         add(initPieces('dark'));
@@ -34,16 +31,22 @@ class Ur extends Everything
 
     override function update(elapsed:Float)
     {
+        var numText:FlxText = new FlxText(20, 10, '', 40);
+
         if (controls.ENTER && !moving && !rolled)
         {
             roll = rollDice(0, 4);
 
-            var numText:FlxText = new FlxText(20, 10, roll, 40);
+            numText.text = '$roll';
             add(numText);
 
-            trace ('Player ${turn + 1}, rolled $roll');
-
             rolled = true;
+        }
+
+        if (moving)
+        {
+            remove(numText);
+            numText.destroy();
         }
 
         super.update(elapsed);
@@ -56,17 +59,19 @@ class Ur extends Everything
         
         pieces = new FlxTypedGroup<UrPiece>();
 
-        switch (type)
+        if (type == 'light')
         {
-            case 'light':
-                x = 50;
-
-            case 'dark':
-                x = 640;
+            x = 300;
+            y = 650;
+        }
+        else if (type == 'dark')
+        {
+            x = 300;
+            y = 100;
         }
 
         for (i in 0...5)
-            pieces.add(new UrPiece(type, x + (i * 50), 600));
+            pieces.add(new UrPiece(type, x + (i * 100), y));
 
         return pieces;
     }
