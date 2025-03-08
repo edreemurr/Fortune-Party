@@ -10,7 +10,7 @@ import assets.Character;
 import managers.Everything;
 import gameplay.CharacterSelect;
 
-class PlayState extends Everything
+class BoardGame extends Everything
 {
 	var statsArray:Array<FlxText>;
 	var startPos:Array<Int>;

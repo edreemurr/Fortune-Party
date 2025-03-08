@@ -7,6 +7,7 @@ import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.group.FlxGroup.FlxTypedGroup;
 
+import gameplay.BoardGame;
 import managers.Everything;
 
 class CharacterSelect extends Everything
@@ -25,7 +26,7 @@ class CharacterSelect extends Everything
     var buttonNames:Array<String>;
 
     var num:Int = 1;
-    var selected:Int = 0;
+    // var selected:Int = 0;
 
     var playerAmount:Bool = true;
     var charSelection:Bool = false;
@@ -163,7 +164,7 @@ class CharacterSelect extends Everything
         trace ('Player $num selected ${buttonNames[selected]}');
 
         if (num == playerCount)
-            FlxG.switchState(PlayState.new);
+            FlxG.switchState(BoardGame.new);
         else
             characterSelect();
     }
