@@ -11,6 +11,8 @@ class UrPiece extends FlxSprite
     var spaces:Array<Array<Dynamic>>;
     var location:Int = -1;
     var type:String;
+    
+    var endGoal:Bool = false;
 
     public function new(type:String, x:Float, y:Float)
     {
@@ -31,13 +33,26 @@ class UrPiece extends FlxSprite
         FlxMouseEvent.add(this, pressed, null, hover, idle);
     }
 
+    override function update(elapsed:Float)
+    {
+        if (Ur.roll == 0)
+        {
+            Ur.rolled = false;
+            
+            if (Ur.turn == 'light')
+                Ur.turn = 'dark';
+            else
+                Ur.turn = 'light';
+        }
+    }
+
     function pressed(_)
-        if (Ur.rolled && !Ur.moving)
+        if (Ur.rolled && !Ur.moving && !endGoal)
             if (type == Ur.turn)
                 movePiece(Ur.roll);
 
     function hover(_)
-        if (Ur.rolled && !Ur.moving)
+        if (Ur.rolled && !Ur.moving && !endGoal)
             if (type == Ur.turn)
                 alpha = 0.5;
 
@@ -45,34 +60,30 @@ class UrPiece extends FlxSprite
         alpha = 1;
 
     function movePiece(num:Int)
-        if (type == Ur.turn)
-            if (num > 0)
-            {
-                Ur.moving = true;
+    {
+        Ur.moving = true;
 
-                var x:Int = spaces[location + num][0];
-                var y:Int = spaces[location + num][1];
+        var x:Int = spaces[location + num][0];
+        var y:Int = spaces[location + num][1];
 
-                FlxTween.tween(this, {x: x, y: y}, 0.5, {onComplete: function(tween:FlxTween)
-                {
-                    Ur.moving = false;
-                    Ur.rolled = false;
+        if (location + num >= spaces.length)
+        {
+            x = spaces[14][0];
+            y = spaces[14][1];
+        }
 
-                    location += num;
+        FlxTween.tween(this, {x: x, y: y}, 0.5, {onComplete: function(tween:FlxTween)
+        {
+            Ur.moving = false;
+            Ur.rolled = false;
 
-                    if (Ur.turn == 'light')
-                        Ur.turn = 'dark';
-                    else
-                        Ur.turn = 'light';
-                }});
-            }
-            else
-            {
-                Ur.rolled = false;
-                
+            location += num;
+
+            if (spaces[location][2] == false)
                 if (Ur.turn == 'light')
                     Ur.turn = 'dark';
                 else
                     Ur.turn = 'light';
-            }
+        }});
+    }
 }

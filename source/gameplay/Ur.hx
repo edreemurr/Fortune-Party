@@ -1,7 +1,9 @@
 package gameplay;
 
+import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.text.FlxText;
+import flixel.util.FlxTimer;
 import flixel.group.FlxGroup.FlxTypedGroup;
 
 import assets.UrPiece;
@@ -17,37 +19,74 @@ class Ur extends Everything
     public static var moving:Bool = false;
 
     var pieces:FlxTypedGroup<UrPiece>;
+    
+    var numText:FlxText;
+    var basedText:FlxText;
+
+    var zero:Array<String>;
 
     override function create()
     {
         board = new FlxSprite().loadGraphic('assets/images/ur/board.png');
         add(board);
 
+        numText = new FlxText(20, 10, '', 40);
+        add(numText);
+
+        zero = [
+            'L',
+            'Gay',
+            'Nerd',
+            'Bruh',
+            'Basic',
+            'Cringe',
+            'You suck',
+            'Hi Ryder',
+            'Mitaplier',
+            'Me when I-',
+            'It wimdy fr',
+            'Not the vibe',
+            'My cabbages!',
+            'Nitroglycerin',
+            'Immunoglobulin',
+            'I miss my\nwife, Tails',
+            'How\'d he know\nwhat time it was?'
+        ];
+
         add(initPieces('light'));
         add(initPieces('dark'));
+
+        basedText = new FlxText(250, '', 100);
+        basedText.alignment = CENTER;
+        basedText.screenCenter(Y);
+        add(basedText);
         
         super.create();
     }
 
     override function update(elapsed:Float)
     {
-        var numText:FlxText = new FlxText(20, 10, '', 40);
-
         if (controls.ENTER && !moving && !rolled)
         {
             roll = rollDice(0, 4);
 
             numText.text = '$roll';
-            add(numText);
 
-            rolled = true;
+            if (roll > 0)
+                rolled = true;
+            else
+            {
+                basedText.text = '${zero[FlxG.random.int(0, zero.length)]}';
+
+                new FlxTimer().start(5, function(timer:FlxTimer)
+                {
+                    basedText.text = '';
+                });
+            }
         }
 
         if (moving)
-        {
-            remove(numText);
-            numText.destroy();
-        }
+            numText.text = '';
 
         super.update(elapsed);
     }
