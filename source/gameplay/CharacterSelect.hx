@@ -4,7 +4,6 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
-import flixel.util.FlxColor;
 import flixel.group.FlxGroup.FlxTypedGroup;
 
 import gameplay.BoardGame;
@@ -164,7 +163,7 @@ class CharacterSelect extends Everything
         trace ('Player $num selected ${buttonNames[selected]}');
 
         if (num == playerCount)
-            FlxG.switchState(BoardGame.new);
+            FlxG.switchState(() -> new BoardGame('demo'));
         else
             characterSelect();
     }

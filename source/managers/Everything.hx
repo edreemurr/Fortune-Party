@@ -14,12 +14,8 @@ class Everything extends FlxState
 
     var controlsFree:Bool = false;
     
-    var cycle:Int;
-    var diceRoll:Int;
-    var spaceCount:Int;
     var activePlayer:Int;
 
-    var board:FlxSprite;
     var cards:FlxTypedGroup<Card>;
 
     var characters:Array<Character> = [];
@@ -28,12 +24,6 @@ class Everything extends FlxState
     var player2:Character;
     var player3:Character;
     var player4:Character;
-
-    var coins:Array<Int>;
-    var starPieces:Array<Int>;
-
-    var spaceArray:Array<Array<Dynamic>>;
-    var playerLocations:Map<Character, Int>;
 
     public var controls(get, never):Controls;
     public var variables:Map<String, Dynamic> = new Map<String, Dynamic>();

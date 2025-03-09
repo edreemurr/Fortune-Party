@@ -18,6 +18,7 @@ class Ur extends Everything
     public static var rolled:Bool = false;
     public static var moving:Bool = false;
 
+    var board:FlxSprite;
     var pieces:FlxTypedGroup<UrPiece>;
     
     var numText:FlxText;
