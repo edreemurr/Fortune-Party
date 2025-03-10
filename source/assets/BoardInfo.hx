@@ -40,7 +40,7 @@ class BoardInfo extends Everything
             case 'kingdom':
                 spaceCount = 20;
                 startPos = [300, 300];
-                spaceArray = [['start', 300, 300], [null, 400, 300], [null, 500, 300], [null, 600, 300], [null, 700, 300], ['jail', 800, 300], [null, 800, 350], [null, 800, 400], [null, 800, 450], [null, 800, 500], ['parking', 800, 550], [null, 700, 550], [null, 600, 550], [null, 500, 550], [null, 400, 550], ['go to jail', 300, 550], [null, 300, 500], [null, 300, 450], [null, 300, 400], [null, 300, 350], [null, 300, 300]];
+                spaceArray = [[null, 400, 300], [null, 500, 300], [null, 600, 300], [null, 700, 300], ['jail', 800, 300], [null, 800, 350], [null, 800, 400], [null, 800, 450], [null, 800, 500], ['parking', 800, 550], [null, 700, 550], [null, 600, 550], [null, 500, 550], [null, 400, 550], ['go to jail', 300, 550], [null, 300, 500], [null, 300, 450], [null, 300, 400], [null, 300, 350], ['start', 300, 300]];
         }
 
         playerLocations = new Map<Character, Int>();

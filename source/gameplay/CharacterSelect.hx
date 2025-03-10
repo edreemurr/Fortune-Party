@@ -25,7 +25,6 @@ class CharacterSelect extends Everything
     var buttonNames:Array<String>;
 
     var num:Int = 1;
-    // var selected:Int = 0;
 
     var playerAmount:Bool = true;
     var charSelection:Bool = false;
@@ -73,8 +72,7 @@ class CharacterSelect extends Everything
                 characterSelect();
             }
         }
-
-        if (charSelection)
+        else if (charSelection)
         {
             // if (controls.LEFT)
             //     changeSelection(-1);
@@ -92,6 +90,29 @@ class CharacterSelect extends Everything
                     if (selected != i)
                         buttonHover(i);
                         
+                    break;
+                }
+
+            if (!mouseHover && selected != -1)
+            {
+                buttonIdle(selected);
+
+                selected = -1;
+            }
+        }
+        else
+        {
+            for (i in 0...buttonNames.length)
+                if (FlxG.mouse.overlaps(buttons.members[i]))
+                {
+                    mouseHover = true;
+
+                    if (FlxG.mouse.justPressed)
+                        FlxG.switchState(() -> new BoardGame(buttonNames[selected].toLowerCase()));
+
+                    if (selected != i)
+                        buttonHover(i);
+
                     break;
                 }
 
@@ -163,15 +184,31 @@ class CharacterSelect extends Everything
         trace ('Player $num selected ${buttonNames[selected]}');
 
         if (num == playerCount)
-            FlxG.switchState(() -> new BoardGame('demo'));
+        {
+            charSelection = false;
+
+            boardSelect();
+        }
         else
             characterSelect();
+    }
+
+    function boardSelect()
+    {
+        buttons.killMembers();
+
+        buttonNames = ['Demo', 'Kingdom'];
+
+        text.text = 'Choose a board';
+
+        for (num => name in buttonNames)
+            menuButton(name.toLowerCase(), 275 * (num + 1), 200);
     }
 
     function menuButton(name:String, x:Float, y:Float):FlxSprite
     {
         var button:FlxSprite = new FlxSprite(x, y);
-        button.loadGraphic('assets/images/characters/$name.png');
+        button.loadGraphic('assets/images/buttons/$name.png');
         button.alpha = 0.5;
         buttons.add(button);
 
