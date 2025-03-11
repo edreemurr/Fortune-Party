@@ -8,11 +8,10 @@ import flixel.input.mouse.FlxMouseEvent;
 class Card extends FlxSprite
 {
     var cardIndex:Int;
-
     var xCut:Int;
     var yCut:Int;
 
-    public function new(type:String = 'uno', x:Float, y:Float, index:Int)
+    public function new(type:String, x:Float, y:Float, index:Int)
     {
         super(x, y);
 
@@ -47,9 +46,17 @@ class Card extends FlxSprite
         FlxTween.tween(scale, {x: 0}, 0.5);
 
     function hover(_)
+    {
         scale.x = scale.y = 1.2;
 
+        updateHitbox();
+    }
+
     function idle(_)
+    {
         scale.x = scale.y = 1;
+
+        updateHitbox();
+    }
 
 }

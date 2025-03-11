@@ -16,8 +16,6 @@ class Everything extends FlxState
     
     var activePlayer:Int;
 
-    var cards:FlxTypedGroup<Card>;
-
     var characters:Array<Character> = [];
 
     var player1:Character;
