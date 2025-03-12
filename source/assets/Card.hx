@@ -1,8 +1,8 @@
 package assets;
 
-import flixel.tweens.FlxTween;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.tweens.FlxTween;
 import flixel.input.mouse.FlxMouseEvent;
 
 class Card extends FlxSprite
@@ -10,6 +10,8 @@ class Card extends FlxSprite
     var cardIndex:Int;
     var xCut:Int;
     var yCut:Int;
+
+    public var drawn:Bool = false;
 
     public function new(type:String, x:Float, y:Float, index:Int)
     {
@@ -33,6 +35,18 @@ class Card extends FlxSprite
         animation.frameIndex = cardIndex;
         
         FlxMouseEvent.add(this, pressed, null, hover, idle);
+    }
+
+    override function update(elapsed:Float)
+    {
+        if (drawn)
+        {
+            trace ('Hello');
+            x = 300;
+            y = 100;
+        }
+
+        super.update(elapsed);
     }
 
     override public function destroy()
