@@ -2,10 +2,8 @@ package managers;
 
 import flixel.FlxG;
 import flixel.FlxState;
-import flixel.FlxSprite;
-import flixel.group.FlxGroup.FlxTypedGroup;
 
-import assets.Card;
+import menus.Title;
 import assets.Character;
 
 class Everything extends FlxState
@@ -33,6 +31,9 @@ class Everything extends FlxState
     {
         if (FlxG.save.data != null)
             FlxG.save.data.fullscreen = FlxG.fullscreen;
+
+        if (controls.PAUSE)
+            FlxG.switchState(Title.new);
 
         super.update(elapsed);
     }

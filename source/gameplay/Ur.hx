@@ -8,7 +8,7 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 
 import assets.UrPiece;
 import managers.Everything;
-
+//managers.BoardGame.hx
 class Ur extends Everything
 {
     public static var roll:Int;

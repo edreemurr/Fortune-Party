@@ -1,10 +1,11 @@
 package managers;
 
 import flixel.FlxG;
-import flixel.FlxBasic;
 import flixel.tweens.FlxTween;
 import flixel.group.FlxGroup.FlxTypedGroup;
 
+import gameplay.Garbage;
+import gameplay.Ur;
 import assets.Card;
 import managers.Everything;
 
@@ -20,9 +21,7 @@ class CardGame extends Everything
     var cardType:String;
     var cardCount:Int;
 
-    var drawCallback:Void -> Void = null;
-
-    public function new(game:String = 'garbage')
+    public function new(game:String)
     {
         super();
 
@@ -31,6 +30,9 @@ class CardGame extends Everything
             case 'garbage':
                 cardType = 'poker';
                 cardCount = 66;
+
+                FlxG.switchState(() -> new Garbage(game));
+
             case 'uno':
                 cardType = 'uno';
                 cardCount = 61;
