@@ -9,6 +9,8 @@ class Garbage extends CardGame
 {
     override function create()
     {
+        game = 'garbage';
+
         // add(buildDeck(50, 50));
 
         super.create();

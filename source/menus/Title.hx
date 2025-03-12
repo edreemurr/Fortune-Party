@@ -7,9 +7,9 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import openfl.system.System;
 
 import gameplay.Ur;
+import gameplay.Garbage;
 import gameplay.CharacterSelect;
 
-import managers.CardGame;
 import managers.Everything;
 
 class Title extends Everything
@@ -49,10 +49,10 @@ class Title extends Everything
                 FlxG.switchState(CharacterSelect.new);
 
             case 'Garbage':
-                FlxG.switchState(() -> new CardGame('garbage'));
+                FlxG.switchState(Garbage.new);
 
             case 'Ur':
-                FlxG.switchState(() -> new Ur());
+                FlxG.switchState(Ur.new);
 
             case 'Exit':
                 System.exit(0);

@@ -21,17 +21,15 @@ class CardGame extends Everything
     var cardType:String;
     var cardCount:Int;
 
-    public function new(game:String)
-    {
-        super();
+    var game:String;
 
+    override function create()
+    {
         switch (game)
         {
             case 'garbage':
                 cardType = 'poker';
                 cardCount = 66;
-
-                FlxG.switchState(() -> new Garbage(game));
 
             case 'uno':
                 cardType = 'uno';
@@ -40,10 +38,13 @@ class CardGame extends Everything
 
         drawnCards = [];
 
+        //create array for players' hands
         hand1 = new FlxTypedGroup<Card>();
         hand2 = new FlxTypedGroup<Card>();
         hand3 = new FlxTypedGroup<Card>();
         hand4 = new FlxTypedGroup<Card>();
+
+        super.create();
     }
 
     function drawCards(player:Int, amount:Int, start:Array<Int>, ?offset:Array<Int>):FlxTypedGroup<Card>
