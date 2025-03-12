@@ -11,6 +11,7 @@ import managers.Everything;
 
 class CardGame extends Everything
 {
+    var playerHands:Array<FlxTypedGroup<Card>>;
     var hand1:FlxTypedGroup<Card>;
     var hand2:FlxTypedGroup<Card>;
     var hand3:FlxTypedGroup<Card>;
@@ -19,7 +20,8 @@ class CardGame extends Everything
     var drawnCards:Array<Int>;
     var initCards:Array<Int>;
     var cardType:String;
-    var cardCount:Int;
+
+    public static var cardCount:Int;
 
     var game:String;
 
@@ -29,7 +31,7 @@ class CardGame extends Everything
         {
             case 'garbage':
                 cardType = 'poker';
-                cardCount = 66;
+                cardCount = 67;
 
             case 'uno':
                 cardType = 'uno';
@@ -38,40 +40,41 @@ class CardGame extends Everything
 
         drawnCards = [];
 
-        //create array for players' hands
         hand1 = new FlxTypedGroup<Card>();
         hand2 = new FlxTypedGroup<Card>();
         hand3 = new FlxTypedGroup<Card>();
         hand4 = new FlxTypedGroup<Card>();
 
+        playerHands = [hand1, hand2, hand3, hand4];
+
         super.create();
     }
 
-    function drawCards(player:Int, amount:Int, start:Array<Int>, ?offset:Array<Int>):FlxTypedGroup<Card>
+    function drawCards(player:Int, amount:Int, start:Array<Int>, ?offset:Array<Int>, faceUp:Bool = true):FlxTypedGroup<Card>
     {
         // var setRows:Float = amount/rows;
-
-        // var choice = FlxG.random.int(0, cardCount, drawnCards);
-        // drawnCards.push(choice);
 
         for (i in 0...amount)
         {
             var newCard = FlxG.random.int(0, cardCount, drawnCards);
             drawnCards.push(newCard);
 
+            var x:Float = start[0] + (i * offset[0]);
+            var y:Float = start[1] + (i * offset[1]);
+
             switch (player)
             {
                 case 1:
-                    hand1.add(new Card(cardType, start[0] + (i * offset[0]), start[1] + (i * offset[1]), newCard));
+                    hand1.add(new Card(cardType, x, y, newCard));
 
                 case 2:
-                    hand2.add(new Card(cardType, start[0] + (i * offset[0]), start[1] + (i + offset[1]), newCard));
+                    hand2.add(new Card(cardType, x, y, newCard));
 
                 case 3:
-                    hand3.add(new Card(cardType, start[0] + (i * offset[0]), start[1] + (i * offset[1]), newCard));
+                    hand3.add(new Card(cardType, x, y, newCard));
 
                 case 4:
-                    hand4.add(new Card(cardType, start[0] + (i * offset[0]), start[1] + (i * offset[1]), newCard));
+                    hand4.add(new Card(cardType, x, y, newCard));
             }
 
     /*         for (card in hand1)
@@ -81,8 +84,6 @@ class CardGame extends Everything
                 card.y = 200;
             }
     */
-            // if (amount > 0)
-            // drawCards(player, amount, start, offset);
         }
 
         return hand1;

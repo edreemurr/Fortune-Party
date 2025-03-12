@@ -1,22 +1,25 @@
 package assets;
 
-import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.tweens.FlxTween;
 import flixel.input.mouse.FlxMouseEvent;
 
+import managers.CardGame;
+
 class Card extends FlxSprite
 {
-    var cardIndex:Int;
     var xCut:Int;
     var yCut:Int;
+    var card:Int;
+    var cardIndex:Int;
 
     public var drawn:Bool = false;
 
-    public function new(type:String, x:Float, y:Float, index:Int)
+    public function new(type:String, x:Float, y:Float, index:Int, ?card:Int)
     {
         super(x, y);
 
+        this.card = card;
         this.cardIndex = index;
 
         switch (type)
@@ -34,7 +37,7 @@ class Card extends FlxSprite
         
         animation.frameIndex = cardIndex;
         
-        FlxMouseEvent.add(this, pressed, null, hover, idle);
+        FlxMouseEvent.add(this, flip, null, hover, idle);
     }
 
     override function update(elapsed:Float)
@@ -54,6 +57,16 @@ class Card extends FlxSprite
         FlxMouseEvent.remove(this);
 
         super.destroy();
+    }
+
+    function flip(_)
+    {
+        FlxTween.tween(scale, {x: 0}, 0.25, {onComplete: function(tween:FlxTween)
+        {
+            animation.frameIndex = CardGame.cardCount;
+
+            FlxTween.tween(scale, {x: 1}, 0.25);
+        }});
     }
 
     function pressed(_)

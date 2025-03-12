@@ -1,8 +1,7 @@
 package gameplay;
 
-import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.FlxG;
 
-import assets.Card;
 import managers.CardGame;
 
 class Garbage extends CardGame
@@ -20,6 +19,11 @@ class Garbage extends CardGame
     {
         if (controls.ENTER)
             add(drawCards(1, 1, [500, 300], [100, 0]));
+
+        if (FlxG.keys.pressed.THREE)
+            add(drawCards(1, 3, [500, 300], [100, 0]));
+        if (FlxG.keys.pressed.FIVE)
+            add(drawCards(1, 5, [500, 100], [100, 0]));
 
         super.update(elapsed);
     }
