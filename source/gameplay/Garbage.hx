@@ -1,7 +1,5 @@
 package gameplay;
 
-import flixel.FlxG;
-
 import managers.CardGame;
 
 class Garbage extends CardGame
@@ -10,7 +8,7 @@ class Garbage extends CardGame
     {
         game = 'garbage';
 
-        // add(buildDeck(50, 50));
+        add(buildDeck(100, 100));
 
         super.create();
     }
@@ -18,12 +16,9 @@ class Garbage extends CardGame
     override function update(elapsed:Float)
     {
         if (controls.ENTER)
-            add(drawCards(1, 1, [500, 300], [100, 0]));
-
-        if (FlxG.keys.pressed.THREE)
-            add(drawCards(1, 3, [500, 300], [100, 0]));
-        if (FlxG.keys.pressed.FIVE)
-            add(drawCards(1, 5, [500, 100], [100, 0]));
+        {
+            add(drawCards(1, 1, [800, 200]));
+        }
 
         super.update(elapsed);
     }

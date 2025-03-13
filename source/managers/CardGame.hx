@@ -20,10 +20,9 @@ class CardGame extends Everything
     var drawnCards:Array<Int>;
     var initCards:Array<Int>;
     var cardType:String;
+    var game:String;
 
     public static var cardCount:Int;
-
-    var game:String;
 
     override function create()
     {
@@ -54,6 +53,9 @@ class CardGame extends Everything
     {
         // var setRows:Float = amount/rows;
 
+        if (offset == null)
+            offset = [0, 0];
+
         for (i in 0...amount)
         {
             var newCard = FlxG.random.int(0, cardCount, drawnCards);
@@ -61,6 +63,9 @@ class CardGame extends Everything
 
             var x:Float = start[0] + (i * offset[0]);
             var y:Float = start[1] + (i * offset[1]);
+
+            // start[0] += i == setRows ? -i * offset[0] : offset[0];
+            // start[1] += i == setRows - 1 ? offset[1] : 0;
 
             switch (player)
             {
@@ -87,23 +92,20 @@ class CardGame extends Everything
         }
 
         return hand1;
-
-        // start[0] += i == setRows ? -i * offset[0] : offset[0];
-        // start[1] += i == setRows - 1 ? offset[1] : 0;
     }
 
     function buildDeck(x:Float, y:Float):FlxTypedGroup<Card>
     {
         deck = new FlxTypedGroup<Card>();
 
-        initCards = [];
+        // initCards = [];
 
         for (i in 0...cardCount)
         {
-            var card = FlxG.random.int(0, cardCount, initCards);
-            initCards.push(card);
+            // var card = FlxG.random.int(0, cardCount, initCards);
+            // initCards.push(card);
 
-            deck.add(new Card(cardType, x + (i * 0.25), y + (i * 0.25), card));
+            deck.add(new Card(cardType, x + (i * 0.25), y + (i/0.25), cardCount));
         }
 
         return deck;
