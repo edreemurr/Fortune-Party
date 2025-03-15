@@ -15,7 +15,7 @@ import managers.Everything;
 class BoardInfo extends Everything
 {
     var board:String;
-    var curSpace:Dynamic;
+    var curSpace:String;
 
     var cycle:Int;
     var diceRoll:Int;
@@ -24,15 +24,20 @@ class BoardInfo extends Everything
     var coins:Array<Int>;
     var starPieces:Array<Int>;
 
-    var statsArray:Array<FlxText>;
     var startPos:Array<Int>;
-    var spaceType:Array<Dynamic>;
+    var spaceType:Array<String>;
     var spacePos:Array<FlxPoint>;
+    var statsArray:Array<FlxText>;
+    var char1Land:Array<String>;
+    var char2Land:Array<String>;
+    var char3Land:Array<String>;
+    var char4Land:Array<String>;
+    var ownedLand:Array<Array<String>>;
     var playerLocations:Map<Character, Int>;
 
-    var landPrompt:FlxTypedGroup<FlxButton>;
     var yes:FlxButton;
     var no:FlxButton;
+    var landPrompt:FlxTypedGroup<FlxButton>;
 
     var landText:FlxTypeText;
 
@@ -55,7 +60,7 @@ class BoardInfo extends Everything
             case 'kingdom':
                 spaceCount = 20;
                 startPos = [300, 300];
-                spaceType = [null, null, null, null, 'jail', null, null, null, null, 'parking', null, null, null, null, 'go to jail', null, null, null, null, 'start'];
+                spaceType = ['land1', 'land2', 'land3', 'land4', 'land5', 'land6', 'land7', 'land8', 'land9', 'land10', 'land11', 'land12', 'land13', 'land14', 'land15', 'land16', 'land17', 'land18', 'land19', 'start'];
                 spacePos = [FlxPoint.get(400, 300), FlxPoint.get(500, 300), FlxPoint.get(600, 300), FlxPoint.get(700, 300), FlxPoint.get(800, 300), FlxPoint.get(800, 350), FlxPoint.get(800, 400), FlxPoint.get(800, 450), FlxPoint.get(800, 500), FlxPoint.get(800, 550), FlxPoint.get(700, 550), FlxPoint.get(600, 550), FlxPoint.get(500, 550), FlxPoint.get(400, 550), FlxPoint.get(300, 550), FlxPoint.get(300, 500), FlxPoint.get(300, 450), FlxPoint.get(300, 400), FlxPoint.get(300, 350), FlxPoint.get(300, 300)];
 
                 landText = new FlxTypeText(0, 100, 500, 'Would you like to\npurchase this land?', 30);
@@ -66,7 +71,7 @@ class BoardInfo extends Everything
                 landPrompt.visible = false;
                 add(landPrompt);
 
-                yes = new FlxButton('YES', () -> landOption('buy'));
+                yes = new FlxButton('YES', () -> landOption('purchase'));
                 landPrompt.add(yes);
                 
                 no = new FlxButton('NO', () -> landOption('decline'));
@@ -78,13 +83,6 @@ class BoardInfo extends Everything
                     button.y = landText.y + 200 + (num * 150);
                 }
         }
-    }
-
-    override function update(elapsed:Float)
-    {
-        curSpace = spaceType[playerLocations.get(characters[activePlayer])];
-
-        super.update(elapsed);
     }
 
     function initEvent(event:String)
@@ -113,16 +111,16 @@ class BoardInfo extends Everything
         }});
     }
 
-    function land(owner:String)
+    function land()
     {
         FlxG.mouse.visible = true;
 
-        trace (owner);
+        var owner = checkOwnership();
 
         if (owner != null)
-            landText.text = 'This property is owned by Player ${characters[curSpace[0]]}';
+            landText.resetText('$curSpace is owned');
         else
-            landText.text = 'Would you like to\npurchase this land?';
+            landText.resetText('Would you like to\npurchase this land?');
 
         landText.start(0.02);
         landPrompt.visible = true;
@@ -132,13 +130,14 @@ class BoardInfo extends Everything
     {
         FlxG.mouse.visible = false;
 
+        landPrompt.visible = false;
+        landText.resetText('');
+        
         switch (choice)
         {
-            case 'buy':
+            case 'purchase':
                 playerStats('update', 'land buy');
         }
-                
-        landPrompt.visible = false;
 
         changeTurn();
 
@@ -149,9 +148,14 @@ class BoardInfo extends Everything
         switch (event)
         {
             case 'create':
+                char1Land = [];
+                char2Land = [];
+                char3Land = [];
+                char4Land = [];
+                statsArray = [];
                 coins = [10, 10, 10, 10];
                 starPieces = [0, 0, 0, 0];
-                statsArray = [];
+                ownedLand = [char1Land, char2Land, char3Land, char4Land];
                 
                 for (num => char in characters)
                 {
@@ -187,8 +191,22 @@ class BoardInfo extends Everything
                     case 'land buy':
                         coins[activePlayer] = FlxMath.maxAdd(coins[activePlayer], -5, 999, 0);
                         statsArray[activePlayer].text = 'Coins: ${coins[activePlayer]}, Star Pieces: ${starPieces[activePlayer]}';
+
+                        ownedLand[activePlayer].push(curSpace);
+
+                        for (land in ownedLand)
+                            trace (land);
                 }
         }
+
+    function checkOwnership():Character
+    {
+        for (char => array in ownedLand)
+            if (array.contains(curSpace))
+                return characters[char];
+
+        return null;
+    }
 
     function changeTurn()
     {

@@ -95,6 +95,7 @@ class BoardGame extends BoardInfo
 			FlxTween.tween(characters[activePlayer], {x: nextSpace.x, y: nextSpace.y}, 0.5, {onComplete: function(tween:FlxTween)
 			{
 				playerLocations.set(characters[activePlayer], playerLocations.get(characters[activePlayer]) + wrap);
+				curSpace = spaceType[playerLocations.get(characters[activePlayer])];
 
 				num--;
 
@@ -105,6 +106,6 @@ class BoardGame extends BoardInfo
 			if (board == 'demo')
 				initEvent(curSpace);
 			else if (board == 'kingdom')
-				land(curSpace);
+				land();
 	}
 }
