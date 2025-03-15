@@ -117,13 +117,21 @@ class BoardInfo extends Everything
 
         var owner = checkOwnership();
 
+        landText.completeCallback = null;
+
         if (owner != null)
-            landText.resetText('$curSpace is owned');
+        {
+            landText.resetText('$owner owns $curSpace\nPay 2 coins');
+            landText.completeCallback = () -> landOption('rent');
+        }
         else
+        {
             landText.resetText('Would you like to\npurchase this land?');
 
+            landPrompt.visible = true;
+        }
+
         landText.start(0.02);
-        landPrompt.visible = true;
     }
     
     function landOption(choice:String)
@@ -137,6 +145,9 @@ class BoardInfo extends Everything
         {
             case 'purchase':
                 playerStats('update', 'land buy');
+
+            case 'rent':
+                playerStats('update', 'land rent');
         }
 
         changeTurn();
@@ -196,6 +207,10 @@ class BoardInfo extends Everything
 
                         for (land in ownedLand)
                             trace (land);
+
+                    case 'land rent':
+                        coins[activePlayer] = FlxMath.maxAdd(coins[activePlayer], -2, 999, 0);
+                        coins[characters.indexOf(checkOwnership())] = FlxMath.maxAdd(coins[characters.indexOf(checkOwnership())], 2, 999, 0);
                 }
         }
 
