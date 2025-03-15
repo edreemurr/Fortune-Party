@@ -18,6 +18,8 @@ class BoardGame extends BoardInfo
 		FlxG.watch.add(activePlayer, 'Active Player');
 		#end
 
+		canPause = true;
+
 		for (i in 0...spacePos.length)
 		{
 			var space:FlxSprite = new FlxSprite(spacePos[i].x, spacePos[i].y).loadGraphic('assets/images/spaces/${spaceType[i]}.png');

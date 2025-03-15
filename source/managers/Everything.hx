@@ -3,6 +3,7 @@ package managers;
 import flixel.FlxG;
 import flixel.FlxState;
 
+import menus.Pause;
 import menus.Title;
 import assets.Character;
 
@@ -10,6 +11,7 @@ class Everything extends FlxState
 {
     var selected:Int = -1;
 
+    var canPause:Bool = false;
     var controlsFree:Bool = false;
     
     var activePlayer:Int;
@@ -24,16 +26,16 @@ class Everything extends FlxState
     public var controls(get, never):Controls;
     public var variables:Map<String, Dynamic> = new Map<String, Dynamic>();
 
-    override function create()
-        super.create();
-
     override function update(elapsed:Float)
     {
         if (FlxG.save.data != null)
             FlxG.save.data.fullscreen = FlxG.fullscreen;
 
-        if (controls.PAUSE)
+        if (controls.BACK)
             FlxG.switchState(Title.new);
+
+        if (controls.PAUSE && canPause)
+            openSubState(new Pause(0xffffff));
 
         super.update(elapsed);
     }
