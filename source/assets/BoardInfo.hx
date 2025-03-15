@@ -2,15 +2,20 @@ package assets;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.ui.FlxButton;
 import flixel.text.FlxText;
 import flixel.math.FlxMath;
+import flixel.math.FlxPoint;
 import flixel.tweens.FlxTween;
+import flixel.addons.text.FlxTypeText;
+import flixel.group.FlxGroup.FlxTypedGroup;
 
 import managers.Everything;
 
 class BoardInfo extends Everything
 {
     var board:String;
+    var curSpace:Dynamic;
 
     var cycle:Int;
     var diceRoll:Int;
@@ -21,8 +26,15 @@ class BoardInfo extends Everything
 
     var statsArray:Array<FlxText>;
     var startPos:Array<Int>;
-    var spaceArray:Array<Array<Dynamic>>;
+    var spaceType:Array<Dynamic>;
+    var spacePos:Array<FlxPoint>;
     var playerLocations:Map<Character, Int>;
+
+    var landPrompt:FlxTypedGroup<FlxButton>;
+    var yes:FlxButton;
+    var no:FlxButton;
+
+    var landText:FlxTypeText;
 
     public function new(board:String)
     {
@@ -30,20 +42,49 @@ class BoardInfo extends Everything
 
         this.board = board;
 
+        playerLocations = new Map<Character, Int>();
+
         switch (board)
         {
             case 'demo':
                 spaceCount = 13;
                 startPos = [600, 650];
-                spaceArray = [['blue', 634, 546], ['blue', 500, 543], ['red', 380, 490], ['blue', 294, 400], ['green', 325, 285], ['red', 413, 191], ['brown', 511, 115], ['blue', 633, 105], ['blue', 766, 115], ['brown', 872, 154], ['green', 948, 237], ['blue', 971, 343], ['brown', 887, 456], ['red', 768, 522]];
+                spaceType = ['blue', 'blue', 'red', 'blue', 'green', 'red', 'brown', 'blue', 'blue', 'brown', 'green', 'blue', 'brown', 'red'];
+                spacePos = [FlxPoint.get(634, 546), FlxPoint.get(500, 543), FlxPoint.get(380, 490), FlxPoint.get(294, 400), FlxPoint.get(325, 285), FlxPoint.get(413, 191), FlxPoint.get(511, 115), FlxPoint.get(633, 105), FlxPoint.get(766, 115), FlxPoint.get(872, 154), FlxPoint.get(948, 237), FlxPoint.get(971, 343), FlxPoint.get(887, 456), FlxPoint.get(768, 522)];
 
             case 'kingdom':
                 spaceCount = 20;
                 startPos = [300, 300];
-                spaceArray = [[null, 400, 300], [null, 500, 300], [null, 600, 300], [null, 700, 300], ['jail', 800, 300], [null, 800, 350], [null, 800, 400], [null, 800, 450], [null, 800, 500], ['parking', 800, 550], [null, 700, 550], [null, 600, 550], [null, 500, 550], [null, 400, 550], ['go to jail', 300, 550], [null, 300, 500], [null, 300, 450], [null, 300, 400], [null, 300, 350], ['start', 300, 300]];
-        }
+                spaceType = [null, null, null, null, 'jail', null, null, null, null, 'parking', null, null, null, null, 'go to jail', null, null, null, null, 'start'];
+                spacePos = [FlxPoint.get(400, 300), FlxPoint.get(500, 300), FlxPoint.get(600, 300), FlxPoint.get(700, 300), FlxPoint.get(800, 300), FlxPoint.get(800, 350), FlxPoint.get(800, 400), FlxPoint.get(800, 450), FlxPoint.get(800, 500), FlxPoint.get(800, 550), FlxPoint.get(700, 550), FlxPoint.get(600, 550), FlxPoint.get(500, 550), FlxPoint.get(400, 550), FlxPoint.get(300, 550), FlxPoint.get(300, 500), FlxPoint.get(300, 450), FlxPoint.get(300, 400), FlxPoint.get(300, 350), FlxPoint.get(300, 300)];
 
-        playerLocations = new Map<Character, Int>();
+                landText = new FlxTypeText(0, 100, 500, 'Would you like to\npurchase this land?', 30);
+                landText.screenCenter(X);
+                add(landText);
+                
+                landPrompt = new FlxTypedGroup<FlxButton>();
+                landPrompt.visible = false;
+                add(landPrompt);
+
+                yes = new FlxButton('YES', () -> landOption('buy'));
+                landPrompt.add(yes);
+                
+                no = new FlxButton('NO', () -> landOption('decline'));
+                landPrompt.add(no);
+
+                for (num => button in landPrompt)
+                {
+                    button.screenCenter(X);
+                    button.y = landText.y + 200 + (num * 150);
+                }
+        }
+    }
+
+    override function update(elapsed:Float)
+    {
+        curSpace = spaceType[playerLocations.get(characters[activePlayer])];
+
+        super.update(elapsed);
     }
 
     function initEvent(event:String)
@@ -63,8 +104,7 @@ class BoardInfo extends Everything
         
         FlxTween.tween(space, {alpha: 0}, 1, {onComplete: function(tween:FlxTween)
         {
-            activePlayer += 1;
-            activePlayer = FlxMath.wrap(activePlayer, 0, characters.length - 1);
+            changeTurn();
 
             space.destroy();
             space.kill();
@@ -73,8 +113,39 @@ class BoardInfo extends Everything
         }});
     }
 
-    function playerStats(event:String = 'create', ?statChange:Dynamic)
+    function land(owner:String)
     {
+        FlxG.mouse.visible = true;
+
+        trace (owner);
+
+        if (owner != null)
+            landText.text = 'This property is owned by Player ${characters[curSpace[0]]}';
+        else
+            landText.text = 'Would you like to\npurchase this land?';
+
+        landText.start(0.02);
+        landPrompt.visible = true;
+    }
+    
+    function landOption(choice:String)
+    {
+        FlxG.mouse.visible = false;
+
+        switch (choice)
+        {
+            case 'buy':
+                playerStats('update', 'land buy');
+        }
+                
+        landPrompt.visible = false;
+
+        changeTurn();
+
+        controlsFree = true;
+    }
+
+    function playerStats(event:String = 'create', ?statChange:Dynamic)
         switch (event)
         {
             case 'create':
@@ -112,7 +183,16 @@ class BoardInfo extends Everything
                     case 'brown':
                         coins[activePlayer] = FlxMath.maxAdd(coins[activePlayer], 100, 999, 0);
                         statsArray[activePlayer].text = 'Coins: ${coins[activePlayer]}, Star Pieces: ${starPieces[activePlayer]}';
+
+                    case 'land buy':
+                        coins[activePlayer] = FlxMath.maxAdd(coins[activePlayer], -5, 999, 0);
+                        statsArray[activePlayer].text = 'Coins: ${coins[activePlayer]}, Star Pieces: ${starPieces[activePlayer]}';
                 }
         }
+
+    function changeTurn()
+    {
+        activePlayer += 1;
+        activePlayer = FlxMath.wrap(activePlayer, 0, characters.length - 1);
     }
 }

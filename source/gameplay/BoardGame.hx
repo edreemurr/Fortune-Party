@@ -18,9 +18,9 @@ class BoardGame extends BoardInfo
 		FlxG.watch.add(activePlayer, 'Active Player');
 		#end
 
-		for (i in 0...spaceArray.length)
+		for (i in 0...spacePos.length)
 		{
-			var space:FlxSprite = new FlxSprite(spaceArray[i][1], spaceArray[i][2]).loadGraphic('assets/images/spaces/${spaceArray[i][0]}.png');
+			var space:FlxSprite = new FlxSprite(spacePos[i].x, spacePos[i].y).loadGraphic('assets/images/spaces/${spaceType[i]}.png');
 			add(space);
 		}
 
@@ -88,11 +88,9 @@ class BoardGame extends BoardInfo
 		if (num > 0)
 		{
 			var wrap:Int = (playerLocations.get(characters[activePlayer]) + 1) > spaceCount ? -spaceCount : 1;
-
-			var x:Int = spaceArray[playerLocations.get(characters[activePlayer]) + wrap][1];
-			var y:Int = spaceArray[playerLocations.get(characters[activePlayer]) + wrap][2];
+			var nextSpace = spacePos[playerLocations.get(characters[activePlayer]) + 1];
 			
-			FlxTween.tween(characters[activePlayer], {x: x, y: y}, 0.5, {onComplete: function(tween:FlxTween)
+			FlxTween.tween(characters[activePlayer], {x: nextSpace.x, y: nextSpace.y}, 0.5, {onComplete: function(tween:FlxTween)
 			{
 				playerLocations.set(characters[activePlayer], playerLocations.get(characters[activePlayer]) + wrap);
 
@@ -102,6 +100,9 @@ class BoardGame extends BoardInfo
 			}});
 		}
 		else
-			initEvent(spaceArray[playerLocations.get(characters[activePlayer])][0]);
+			if (board == 'demo')
+				initEvent(curSpace);
+			else if (board == 'kingdom')
+				land(curSpace);
 	}
 }
