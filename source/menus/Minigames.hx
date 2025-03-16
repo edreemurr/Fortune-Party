@@ -4,13 +4,12 @@ import flixel.FlxG;
 import flixel.ui.FlxButton;
 import flixel.group.FlxGroup.FlxTypedGroup;
 
-import openfl.system.System;
-
-import gameplay.CharacterSelect;
+import gameplay.Ur;
+import gameplay.Garbage;
 
 import managers.Everything;
 
-class Title extends Everything
+class Minigames extends Everything
 {
     var buttons:FlxTypedGroup<FlxButton>;
     var buttonNames:Array<String>;
@@ -22,11 +21,11 @@ class Title extends Everything
         buttons = new FlxTypedGroup<FlxButton>();
         add(buttons);
 
-        buttonNames = ['Board', 'Minigames', 'Exit'];
+        buttonNames = ['Garbage', 'Ur'];
 
         for (i in 0...buttonNames.length)
         {
-            var button:FlxButton = new FlxButton(0, 200 + (i * 100), buttonNames[i], () -> button(buttonNames[i]));
+            var button:FlxButton = new FlxButton(0, 200 + (i * 50), buttonNames[i], () -> button(buttonNames[i]));
             button.screenCenter(X);
             button.setGraphicSize(200, 50);
             button.updateHitbox();
@@ -43,8 +42,7 @@ class Title extends Everything
     function button(state:String)
         switch (state)
         {
-            case 'Board': FlxG.switchState(CharacterSelect.new);
-            case 'Minigames': FlxG.switchState(Minigames.new);
-            case 'Exit': System.exit(0);
+            case 'Garbage': FlxG.switchState(Garbage.new);
+            case 'Ur': FlxG.switchState(Ur.new);
         }
 }
