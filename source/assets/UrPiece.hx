@@ -4,7 +4,7 @@ import flixel.FlxSprite;
 import flixel.tweens.FlxTween;
 import flixel.input.mouse.FlxMouseEvent;
 
-import gameplay.Ur;
+import gameplay.minigames.Ur;
 
 class UrPiece extends FlxSprite
 {

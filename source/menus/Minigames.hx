@@ -4,9 +4,7 @@ import flixel.FlxG;
 import flixel.ui.FlxButton;
 import flixel.group.FlxGroup.FlxTypedGroup;
 
-import gameplay.Ur;
-import gameplay.Garbage;
-
+import gameplay.minigames.*;
 import managers.Everything;
 
 class Minigames extends Everything
@@ -21,7 +19,7 @@ class Minigames extends Everything
         buttons = new FlxTypedGroup<FlxButton>();
         add(buttons);
 
-        buttonNames = ['Garbage', 'Ur'];
+        buttonNames = ['Hue Won\'t', 'Garbage', 'Ur'];
 
         for (i in 0...buttonNames.length)
         {
@@ -42,6 +40,7 @@ class Minigames extends Everything
     function button(state:String)
         switch (state)
         {
+            case 'Hue Won\'t': FlxG.switchState(HueWont.new);
             case 'Garbage': FlxG.switchState(Garbage.new);
             case 'Ur': FlxG.switchState(Ur.new);
         }

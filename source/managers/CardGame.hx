@@ -1,11 +1,8 @@
 package managers;
 
 import flixel.FlxG;
-import flixel.tweens.FlxTween;
 import flixel.group.FlxGroup.FlxTypedGroup;
 
-import gameplay.Garbage;
-import gameplay.Ur;
 import assets.Card;
 import managers.Everything;
 

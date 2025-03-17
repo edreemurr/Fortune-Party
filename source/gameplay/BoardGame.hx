@@ -6,7 +6,7 @@ import flixel.tweens.FlxTween;
 
 import assets.BoardInfo;
 import assets.Character;
-import gameplay.CharacterSelect;
+import menus.CharacterSelect;
 
 class BoardGame extends BoardInfo
 {
@@ -30,21 +30,21 @@ class BoardGame extends BoardInfo
 		characters.push(player1);
 		add(player1);
 
-		if (CharacterSelect.playerCount >= 2)
+		if (playerCount >= 2)
 		{
 			player2 = new Character(CharacterSelect.character2);
 			characters.push(player2);
 			add(player2);
 		}
 
-		if (CharacterSelect.playerCount >= 3)
+		if (playerCount >= 3)
 		{
 			player3 = new Character(CharacterSelect.character3);
 			characters.push(player3);
 			add(player3);
 		}
 
-		if (CharacterSelect.playerCount >= 4)
+		if (playerCount >= 4)
 		{
 			player4 = new Character(CharacterSelect.character4);
 			characters.push(player4);

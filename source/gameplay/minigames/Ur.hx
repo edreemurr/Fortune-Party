@@ -1,4 +1,4 @@
-package gameplay;
+package gameplay.minigames;
 
 import flixel.FlxG;
 import flixel.FlxSprite;

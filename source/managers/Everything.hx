@@ -11,6 +11,9 @@ class Everything extends FlxState
 {
     var selected:Int = -1;
 
+    var playerCount:Int = 1;
+    var round:Int = 0;
+
     var canPause:Bool = false;
     var controlsFree:Bool = false;
     

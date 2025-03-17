@@ -1,4 +1,4 @@
-package gameplay;
+package menus;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -11,8 +11,6 @@ import managers.Everything;
 
 class CharacterSelect extends Everything
 {
-    public static var playerCount:Int = 1;
-
     public static var character1:String;
     public static var character2:String;
     public static var character3:String;

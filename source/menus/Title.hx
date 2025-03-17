@@ -6,8 +6,7 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 
 import openfl.system.System;
 
-import gameplay.CharacterSelect;
-
+import menus.CharacterSelect;
 import managers.Everything;
 
 class Title extends Everything
