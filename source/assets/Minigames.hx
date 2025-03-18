@@ -1,10 +1,12 @@
 package assets;
 
+import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.addons.text.FlxTypeText;
 
 import assets.Character;
+import gameplay.BoardGame;
 import managers.Everything;
 
 class Minigames extends Everything
@@ -19,7 +21,7 @@ class Minigames extends Everything
 
     override function create()
     {
-        playerCount = 4;
+        // playerCount = 4;
 
         participants = characters;
         playerChoice = [];
@@ -29,6 +31,9 @@ class Minigames extends Everything
 
         buttons = new FlxTypedGroup<FlxSprite>();
         add(buttons);
+
+        if (controls.BACK)
+            FlxG.switchState(() -> new BoardGame('demo', playerCount));
 
         super.create();
     }

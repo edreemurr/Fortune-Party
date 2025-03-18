@@ -11,6 +11,8 @@ import flixel.addons.text.FlxTypeText;
 import flixel.group.FlxGroup.FlxTypedGroup;
 
 import assets.Card;
+import gameplay.minigames.*;
+
 import managers.Everything;
 
 class BoardInfo extends Everything
@@ -116,6 +118,9 @@ class BoardInfo extends Everything
         FlxTween.tween(space, {alpha: 0}, 1, {onComplete: function(tween:FlxTween)
         {
             changeTurn();
+
+            if (activePlayer == playerCount)
+                minigame();
 
             space.destroy();
             space.kill();
@@ -252,6 +257,9 @@ class BoardInfo extends Everything
                 }
         }
 
+    function minigame()
+        FlxG.switchState(Ur.new);
+
     function checkOwnership():Character
     {
         for (char => array in ownedLand)
@@ -262,8 +270,5 @@ class BoardInfo extends Everything
     }
 
     function changeTurn()
-    {
         activePlayer += 1;
-        activePlayer = FlxMath.wrap(activePlayer, 0, characters.length - 1);
-    }
 }
