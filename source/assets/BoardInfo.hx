@@ -10,6 +10,7 @@ import flixel.tweens.FlxTween;
 import flixel.addons.text.FlxTypeText;
 import flixel.group.FlxGroup.FlxTypedGroup;
 
+import assets.Card;
 import managers.Everything;
 
 class BoardInfo extends Everything
@@ -28,11 +29,13 @@ class BoardInfo extends Everything
     var spaceType:Array<String>;
     var spacePos:Array<FlxPoint>;
     var statsArray:Array<FlxText>;
+
     var char1Land:Array<String>;
     var char2Land:Array<String>;
     var char3Land:Array<String>;
     var char4Land:Array<String>;
     var ownedLand:Array<Array<String>>;
+
     var playerLocations:Map<Character, Int>;
 
     var yes:FlxButton;
@@ -41,11 +44,12 @@ class BoardInfo extends Everything
 
     var landText:FlxTypeText;
 
-    public function new(board:String)
+    public function new(board:String, playerCount:Int)
     {
         super();
 
         this.board = board;
+        this.playerCount = playerCount;
 
         playerLocations = new Map<Character, Int>();
 
@@ -82,6 +86,13 @@ class BoardInfo extends Everything
                     button.screenCenter(X);
                     button.y = landText.y + 200 + (num * 150);
                 }
+
+                // cards1 = new FlxTypedGroup<Card>();
+                // cards2 = new FlxTypedGroup<Card>();
+                // cards3 = new FlxTypedGroup<Card>();
+                // cards4 = new FlxTypedGroup<Card>();
+
+                // playerHands = [cards1, cards2, cards3, cards4];
         }
     }
 
@@ -150,11 +161,19 @@ class BoardInfo extends Everything
                 playerStats('update', 'land rent');
         }
 
+        // drawCard();
         changeTurn();
 
         controlsFree = true;
     }
 
+/*     function drawCard():FlxTypedGroup<Card>
+    {
+        playerHands[activePlayer].add(new Card('poker', 0, 0, FlxG.random.int(0, 67)));
+
+        return playerHands[activePlayer];
+    }
+ */
     function playerStats(event:String = 'create', ?statChange:Dynamic)
         switch (event)
         {

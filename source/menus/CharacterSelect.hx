@@ -106,7 +106,7 @@ class CharacterSelect extends Everything
                     mouseHover = true;
 
                     if (FlxG.mouse.justPressed)
-                        FlxG.switchState(() -> new BoardGame(buttonNames[selected].toLowerCase()));
+                        FlxG.switchState(() -> new BoardGame(buttonNames[selected].toLowerCase(), playerCount));
 
                     if (selected != i)
                         buttonHover(i);
