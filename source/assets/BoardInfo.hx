@@ -26,6 +26,7 @@ class BoardInfo extends Everything
     var starPieces:Array<Int>;
 
     var startPos:Array<Int>;
+    var spacePrice:Array<Null<Int>>;
     var spaceType:Array<String>;
     var spacePos:Array<FlxPoint>;
     var statsArray:Array<FlxText>;
@@ -66,6 +67,7 @@ class BoardInfo extends Everything
                 startPos = [300, 300];
                 spaceType = ['land1', 'land2', 'land3', 'land4', 'land5', 'land6', 'land7', 'land8', 'land9', 'land10', 'land11', 'land12', 'land13', 'land14', 'land15', 'land16', 'land17', 'land18', 'land19', 'start'];
                 spacePos = [FlxPoint.get(400, 300), FlxPoint.get(500, 300), FlxPoint.get(600, 300), FlxPoint.get(700, 300), FlxPoint.get(800, 300), FlxPoint.get(800, 350), FlxPoint.get(800, 400), FlxPoint.get(800, 450), FlxPoint.get(800, 500), FlxPoint.get(800, 550), FlxPoint.get(700, 550), FlxPoint.get(600, 550), FlxPoint.get(500, 550), FlxPoint.get(400, 550), FlxPoint.get(300, 550), FlxPoint.get(300, 500), FlxPoint.get(300, 450), FlxPoint.get(300, 400), FlxPoint.get(300, 350), FlxPoint.get(300, 300)];
+                spacePrice = [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, null];
 
                 landText = new FlxTypeText(0, 100, 500, 'Would you like to\npurchase this land?', 30);
                 landText.screenCenter(X);
@@ -132,12 +134,20 @@ class BoardInfo extends Everything
 
         if (owner != null)
         {
-            landText.resetText('$owner owns $curSpace\nPay 2 coins');
-            landText.completeCallback = () -> landOption('rent');
+            landText.resetText('Pay 2 coins');
+            
+            landOption('rent');
         }
         else
         {
-            landText.resetText('Would you like to\npurchase this land?');
+            if (coins[activePlayer] < 5)
+            {
+                trace ('Can\'t afford');
+
+                changeTurn();
+            }
+            else
+                landText.resetText('Would you like to\npurchase this land for ${spacePrice[curLocation]} coins?');
 
             landPrompt.visible = true;
         }
@@ -219,7 +229,7 @@ class BoardInfo extends Everything
                         statsArray[activePlayer].text = 'Coins: ${coins[activePlayer]}, Star Pieces: ${starPieces[activePlayer]}';
 
                     case 'land buy':
-                        coins[activePlayer] = FlxMath.maxAdd(coins[activePlayer], -5, 999, 0);
+                        coins[activePlayer] -= spacePrice[curLocation];
                         statsArray[activePlayer].text = 'Coins: ${coins[activePlayer]}, Star Pieces: ${starPieces[activePlayer]}';
 
                         ownedLand[activePlayer].push(curSpace);
@@ -228,8 +238,17 @@ class BoardInfo extends Everything
                             trace (land);
 
                     case 'land rent':
-                        coins[activePlayer] = FlxMath.maxAdd(coins[activePlayer], -2, 999, 0);
-                        coins[characters.indexOf(checkOwnership())] = FlxMath.maxAdd(coins[characters.indexOf(checkOwnership())], 2, 999, 0);
+                        if (coins[activePlayer] < 2)
+                        {
+                            trace ('Can\'t afford');
+
+                            changeTurn();
+                        }
+                        else
+                        {
+                            coins[activePlayer] -= 2;
+                            coins[characters.indexOf(checkOwnership())] += 2;
+                        }
                 }
         }
 

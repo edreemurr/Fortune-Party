@@ -87,6 +87,7 @@ class BoardGame extends BoardInfo
 	{
 		controlsFree = false;
 
+		
 		if (num > 0)
 		{
 			var wrap:Int = (playerLocations.get(characters[activePlayer]) + 1) > spaceCount ? -spaceCount : 1;
@@ -96,6 +97,7 @@ class BoardGame extends BoardInfo
 			{
 				playerLocations.set(characters[activePlayer], playerLocations.get(characters[activePlayer]) + wrap);
 				curSpace = spaceType[playerLocations.get(characters[activePlayer])];
+				curLocation = playerLocations.get(characters[activePlayer]) + wrap;
 
 				num--;
 
@@ -106,6 +108,9 @@ class BoardGame extends BoardInfo
 			if (board == 'demo')
 				initEvent(curSpace);
 			else if (board == 'kingdom')
-				land();
+				if (curLocation == 0)
+					changeTurn();
+				else
+					land();
 	}
 }
