@@ -18,7 +18,7 @@ class Ur extends Everything
     public static var rolled:Bool = false;
     public static var moving:Bool = false;
 
-    var board:FlxSprite;
+    var gameBoard:FlxSprite;
     var pieces:FlxTypedGroup<UrPiece>;
     
     var numText:FlxText;
@@ -28,8 +28,8 @@ class Ur extends Everything
 
     override function create()
     {
-        board = new FlxSprite().loadGraphic('assets/images/ur/board.png');
-        add(board);
+        gameBoard = new FlxSprite().loadGraphic('assets/images/ur/board.png');
+        add(gameBoard);
 
         numText = new FlxText(20, 10, '', 40);
         add(numText);

@@ -1,5 +1,6 @@
 package gameplay.minigames;
 
+import managers.Everything;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.addons.text.FlxTypeText;
@@ -55,7 +56,7 @@ class HueWont extends Minigames
 
         choice = color;
 
-        for (i in 0...playerCount)
+        for (i in 0...Everything.playerCount)
         {
             playerChoice.push(FlxG.random.getObject(buttonNames));
 

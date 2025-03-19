@@ -8,12 +8,13 @@ import menus.Pause;
 import menus.Title;
 import assets.Card;
 import assets.Character;
+import gameplay.BoardGame;
 
 class Everything extends FlxState
 {
     var selected:Int = -1;
 
-    var playerCount:Int;
+    static var playerCount:Int;
     var round:Int = 0;
 
     var canPause:Bool = false;
@@ -44,7 +45,7 @@ class Everything extends FlxState
             FlxG.save.data.fullscreen = FlxG.fullscreen;
 
         if (controls.BACK)
-            FlxG.switchState(Title.new);
+            FlxG.switchState(BoardGame.new);
 
         if (controls.PAUSE && canPause)
             openSubState(new Pause(0xffffff));

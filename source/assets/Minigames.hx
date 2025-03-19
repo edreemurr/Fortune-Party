@@ -32,9 +32,6 @@ class Minigames extends Everything
         buttons = new FlxTypedGroup<FlxSprite>();
         add(buttons);
 
-        if (controls.BACK)
-            FlxG.switchState(() -> new BoardGame('demo', playerCount));
-
         super.create();
     }
 }

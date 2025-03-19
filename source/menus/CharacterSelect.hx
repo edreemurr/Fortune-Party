@@ -64,7 +64,7 @@ class CharacterSelect extends Everything
             if (controls.ENTER)
             {
                 numText.visible = false;
-                playerCount = num;
+                Everything.playerCount = num;
                 num = 0;
 
                 characterSelect();
@@ -106,7 +106,11 @@ class CharacterSelect extends Everything
                     mouseHover = true;
 
                     if (FlxG.mouse.justPressed)
-                        FlxG.switchState(() -> new BoardGame(buttonNames[selected].toLowerCase(), playerCount));
+                    {
+                        BoardGame.board = buttonNames[selected].toLowerCase();
+
+                        FlxG.switchState(BoardGame.new);
+                    }
 
                     if (selected != i)
                         buttonHover(i);
@@ -181,7 +185,7 @@ class CharacterSelect extends Everything
 
         trace ('Player $num selected ${buttonNames[selected]}');
 
-        if (num == playerCount)
+        if (num == Everything.playerCount)
         {
             charSelection = false;
 
