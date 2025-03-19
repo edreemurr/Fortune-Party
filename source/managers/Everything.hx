@@ -2,10 +2,9 @@ package managers;
 
 import flixel.FlxG;
 import flixel.FlxState;
-import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.text.FlxText;
 
 import menus.Pause;
-import menus.Title;
 import assets.Card;
 import assets.Character;
 import gameplay.BoardGame;
@@ -14,22 +13,39 @@ class Everything extends FlxState
 {
     var selected:Int = -1;
 
-    static var playerCount:Int;
+    var newGame:Bool;
+
+    var playerCount:Int;
+    var cycle:Int = 1;
     var round:Int = 0;
+    var board:String;
+
+    var coins:Array<Int>;
+    var starPieces:Array<Int>;
 
     var canPause:Bool = false;
     var controlsFree:Bool = false;
     
     var activePlayer:Int;
-    var curLocation:Int;
+    var curLocations:Array<Int>;
 
     var characters:Array<Character> = [];
     // var playerHands:Array<FlxTypedGroup<Card>> = [];
+
+    var statsArray:Array<FlxText>;
 
     var player1:Character;
     var player2:Character;
     var player3:Character;
     var player4:Character;
+
+    var char1Land:Array<String>;
+    var char2Land:Array<String>;
+    var char3Land:Array<String>;
+    var char4Land:Array<String>;
+    var ownedLand:Array<Array<String>>;
+
+    var playerLocations:Map<Character, Int>;
 
     // var cards1:FlxTypedGroup<Card>;
     // var cards2:FlxTypedGroup<Card>;

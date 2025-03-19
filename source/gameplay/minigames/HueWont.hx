@@ -56,7 +56,7 @@ class HueWont extends Minigames
 
         choice = color;
 
-        for (i in 0...Everything.playerCount)
+        for (i in 0...playerCount)
         {
             playerChoice.push(FlxG.random.getObject(buttonNames));
 

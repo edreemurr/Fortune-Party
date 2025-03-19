@@ -6,6 +6,7 @@ import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.group.FlxGroup.FlxTypedGroup;
 
+// import assets.BoardSave;
 import gameplay.BoardGame;
 import managers.Everything;
 
@@ -29,6 +30,10 @@ class CharacterSelect extends Everything
 
     override function create()
     {
+        newGame = true;
+
+        FlxG.save.data.cycle = 1;
+
         text = new FlxText(0, 50, 'How many players?', 40);
         text.screenCenter(X);
         add(text);
@@ -64,7 +69,10 @@ class CharacterSelect extends Everything
             if (controls.ENTER)
             {
                 numText.visible = false;
-                Everything.playerCount = num;
+
+                playerCount = FlxG.save.data.playerCount = num;
+                FlxG.save.flush();
+
                 num = 0;
 
                 characterSelect();
@@ -107,7 +115,8 @@ class CharacterSelect extends Everything
 
                     if (FlxG.mouse.justPressed)
                     {
-                        BoardGame.board = buttonNames[selected].toLowerCase();
+                        board = FlxG.save.data.board = buttonNames[selected].toLowerCase();
+                        FlxG.save.flush();
 
                         FlxG.switchState(BoardGame.new);
                     }
@@ -185,7 +194,7 @@ class CharacterSelect extends Everything
 
         trace ('Player $num selected ${buttonNames[selected]}');
 
-        if (num == Everything.playerCount)
+        if (num == playerCount)
         {
             charSelection = false;
 

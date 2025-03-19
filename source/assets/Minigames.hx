@@ -1,12 +1,10 @@
 package assets;
 
-import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.addons.text.FlxTypeText;
 
 import assets.Character;
-import gameplay.BoardGame;
 import managers.Everything;
 
 class Minigames extends Everything

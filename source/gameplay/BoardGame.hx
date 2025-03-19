@@ -1,5 +1,6 @@
 package gameplay;
 
+import flixel.util.FlxArrayUtil;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.util.FlxSave;
@@ -20,30 +21,15 @@ import menus.CharacterSelect;
 
 class BoardGame extends Everything
 {
-    public static var board:String;
-
     var curSpace:String;
 
-    var cycle:Int;
     var diceRoll:Int;
     var spaceCount:Int;
-
-    var coins:Array<Int>;
-    var starPieces:Array<Int>;
 
     var startPos:Array<Int>;
     var spacePrice:Array<Null<Int>>;
     var spaceType:Array<String>;
     var spacePos:Array<FlxPoint>;
-    var statsArray:Array<FlxText>;
-
-    var char1Land:Array<String>;
-    var char2Land:Array<String>;
-    var char3Land:Array<String>;
-    var char4Land:Array<String>;
-    var ownedLand:Array<Array<String>>;
-
-    var playerLocations:Map<Character, Int>;
 
     var yes:FlxButton;
     var no:FlxButton;
@@ -61,7 +47,38 @@ class BoardGame extends Everything
 
         canPause = true;
 
+        FlxG.save.data.coins = new Array<Int>();
+        FlxG.save.data.starPieces = new Array<Int>();
+        FlxG.save.data.statsArray = new Array<FlxText>();
+        FlxG.save.data.ownedLand = new Array<Array<String>>();
+        FlxG.save.data.playerLocations = new Array<Int>();
+
+/*         if (newGame)
+            for (i in 1...playerCount)
+            {
+                FlxG.save.data.coins.push(0);
+                FlxG.save.data.starPieces.push(0);
+                FlxG.save.data.statsArray.push(0);
+                FlxG.save.flush();
+            }
+
+        trace (FlxG.save.data.coins);
+ */
         playerLocations = new Map<Character, Int>();
+
+        board = FlxG.save.data.board;
+        playerCount = FlxG.save.data.playerCount;
+
+        cycle = FlxG.save.data.cycle;
+        statsArray = FlxG.save.data.statsArray;
+
+        coins = FlxG.save.data.coins;
+        starPieces = FlxG.save.data.starPieces;
+
+        if (cycle == 1)
+            newGame = true;
+
+        trace ('Cycle: $cycle');
 
         switch (board)
         {
@@ -104,8 +121,6 @@ class BoardGame extends Everything
                 // cards4 = new FlxTypedGroup<Card>();
 
                 // playerHands = [cards1, cards2, cards3, cards4];
-
-                // load();
         }
 
         for (i in 0...spacePos.length)
@@ -118,21 +133,21 @@ class BoardGame extends Everything
         characters.push(player1);
         add(player1);
 
-        if (Everything.playerCount >= 2)
+        if (playerCount >= 2)
         {
             player2 = new Character(CharacterSelect.character2);
             characters.push(player2);
             add(player2);
         }
 
-        if (Everything.playerCount >= 3)
+        if (playerCount >= 3)
         {
             player3 = new Character(CharacterSelect.character3);
             characters.push(player3);
             add(player3);
         }
 
-        if (Everything.playerCount >= 4)
+        if (playerCount >= 4)
         {
             player4 = new Character(CharacterSelect.character4);
             characters.push(player4);
@@ -140,10 +155,16 @@ class BoardGame extends Everything
         }
 
         for (num => character in characters)
-        {
-            playerLocations.set(character, -1);
-            character.setPosition(startPos[0], startPos[1] - (num * 10));
-        }
+            if (newGame)
+            {
+                playerLocations.set(character, -1);
+                character.setPosition(startPos[0], startPos[1] - (num * 10));
+            }
+            else
+            {
+                playerLocations.set(character, FlxG.save.data.playerLocations[num]);
+                character.setPosition(spacePos[playerLocations.get(character)].x, spacePos[playerLocations.get(character)].y);
+            }
 
         initTurnOrder();
 
@@ -164,6 +185,8 @@ class BoardGame extends Everything
 
     function initEvent(event:String)
     {
+        newGame = false;
+
         var space:FlxText = new FlxText(FlxG.width/2, FlxG.height/2, '', 40);
         add(space);
 
@@ -181,7 +204,7 @@ class BoardGame extends Everything
         {
             changeTurn();
 
-            if (activePlayer == Everything.playerCount)
+            if (activePlayer == playerCount)
                 minigame();
 
             space.destroy();
@@ -214,7 +237,7 @@ class BoardGame extends Everything
                 changeTurn();
             }
             else
-                landText.resetText('Would you like to\npurchase this land for ${spacePrice[curLocation]} coins?');
+                landText.resetText('Would you like to\npurchase this land for ${spacePrice[curLocations[activePlayer]]} coins?');
 
             landPrompt.visible = true;
         }
@@ -245,25 +268,29 @@ class BoardGame extends Everything
     }
 
 /*     function drawCard():FlxTypedGroup<Card>
-    {
-        playerHands[activePlayer].add(new Card('poker', 0, 0, FlxG.random.int(0, 67)));
+        {
+            playerHands[activePlayer].add(new Card('poker', 0, 0, FlxG.random.int(0, 67)));
 
-        return playerHands[activePlayer];
-    }
+            return playerHands[activePlayer];
+        }
  */
     function playerStats(event:String = 'create', ?statChange:Dynamic)
         switch (event)
         {
             case 'create':
-                char1Land = [];
-                char2Land = [];
-                char3Land = [];
-                char4Land = [];
-                statsArray = [];
-                coins = [10, 10, 10, 10];
-                starPieces = [0, 0, 0, 0];
-                ownedLand = [char1Land, char2Land, char3Land, char4Land];
-                
+                if (newGame)
+                {
+                    char1Land = [];
+                    char2Land = [];
+                    char3Land = [];
+                    char4Land = [];
+                    statsArray = [];
+                    coins = [10, 10, 10, 10];
+                    starPieces = [0, 0, 0, 0];
+                    curLocations = [0, 0, 0, 0];
+                    ownedLand = [char1Land, char2Land, char3Land, char4Land];
+                }
+
                 for (num => char in characters)
                 {
                     var player:FlxSprite = new FlxSprite(20, 20 + (num * 30)).loadGraphicFromSprite(char);
@@ -273,33 +300,58 @@ class BoardGame extends Everything
                     var stats:FlxText = new FlxText(player.x + 20, player.y, 'Coins: ${coins[num]}, Star Pieces: ${starPieces[num]}', 20);
                     statsArray.push(stats);
                     add(stats);
+
+                    if (newGame)
+                    {
+                        FlxG.save.data.coins.push(10);
+                        FlxG.save.flush();
+                    }
                 }
 
             case 'update':
-
                 switch (statChange)
                 {
                     case 'blue':
                         coins[activePlayer] = FlxMath.maxAdd(coins[activePlayer], 3, 999, 0);
                         statsArray[activePlayer].text = 'Coins: ${coins[activePlayer]}, Star Pieces: ${starPieces[activePlayer]}';
 
+                        coins = FlxArrayUtil.fastSplice(coins, activePlayer);
+                        FlxG.save.data.coins = coins;
+                        FlxG.save.flush();
+
                     case 'red':
-                        coins[activePlayer] = FlxMath.maxAdd(coins[activePlayer], -3, 999, 0);
+                        FlxG.save.data.coins[activePlayer] = coins[activePlayer] = FlxMath.maxAdd(coins[activePlayer], -3, 999, 0);
                         statsArray[activePlayer].text = 'Coins: ${coins[activePlayer]}, Star Pieces: ${starPieces[activePlayer]}';
+
+                        coins = FlxArrayUtil.fastSplice(coins, activePlayer);
+                        FlxG.save.data.coins = coins;
+                        FlxG.save.flush();
 
                     case 'green':
                         starPieces[activePlayer] = FlxMath.maxAdd(starPieces[activePlayer], 1, 5, 0);
                         statsArray[activePlayer].text = 'Coins: ${coins[activePlayer]}, Star Pieces: ${starPieces[activePlayer]}';
 
+                        starPieces = FlxArrayUtil.fastSplice(starPieces, activePlayer);
+                        FlxG.save.data.starPieces = starPieces;
+                        FlxG.save.flush();
+
                     case 'brown':
                         coins[activePlayer] = FlxMath.maxAdd(coins[activePlayer], 100, 999, 0);
                         statsArray[activePlayer].text = 'Coins: ${coins[activePlayer]}, Star Pieces: ${starPieces[activePlayer]}';
 
+                        coins = FlxArrayUtil.fastSplice(coins, activePlayer);
+                        FlxG.save.data.coins = coins;
+                        FlxG.save.flush();
+
                     case 'land buy':
-                        coins[activePlayer] -= spacePrice[curLocation];
+                        coins[activePlayer] -= spacePrice[curLocations[activePlayer]];
                         statsArray[activePlayer].text = 'Coins: ${coins[activePlayer]}, Star Pieces: ${starPieces[activePlayer]}';
 
                         ownedLand[activePlayer].push(curSpace);
+
+                        coins = FlxArrayUtil.fastSplice(coins, activePlayer);
+                        FlxG.save.data.coins = coins;
+                        FlxG.save.flush();
 
                         for (land in ownedLand)
                             trace (land);
@@ -315,6 +367,12 @@ class BoardGame extends Everything
                         {
                             coins[activePlayer] -= 2;
                             coins[characters.indexOf(checkOwnership())] += 2;
+
+                            coins = FlxArrayUtil.fastSplice(coins, activePlayer);
+                            coins = FlxArrayUtil.fastSplice(coins, characters.indexOf(checkOwnership()));
+
+                            FlxG.save.data.coins = coins;
+                            FlxG.save.flush();
                         }
                 }
         }
@@ -333,29 +391,36 @@ class BoardGame extends Everything
                 {
                     playerLocations.set(characters[activePlayer], playerLocations.get(characters[activePlayer]) + wrap);
                     curSpace = spaceType[playerLocations.get(characters[activePlayer])];
-                    curLocation = playerLocations.get(characters[activePlayer]) + wrap;
-    
+
+                    curLocations[activePlayer] = playerLocations.get(characters[activePlayer]) + wrap;
+
+                    FlxG.save.data.playerLocations = curLocations;
+                    FlxG.save.flush();
+
                     num--;
     
                     playerMove(num);
                 }});
             }
             else
-            {
                 if (board == 'demo')
                     initEvent(curSpace);
                 else if (board == 'kingdom')
-                    if (curLocation == 0)
+                    if (curLocations[activePlayer] == 0)
                         changeTurn();
                     else
                         land();
-    
-                // save();
-            }
         }
 
     function minigame()
+    {
+        cycle += 1;
+        
+        FlxG.save.data.cycle = cycle;
+        FlxG.save.flush();
+
         FlxG.switchState(Ur.new);
+    }
 
     function checkOwnership():Character
     {
