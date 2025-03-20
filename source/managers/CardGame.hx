@@ -4,20 +4,23 @@ import flixel.FlxG;
 import flixel.group.FlxGroup.FlxTypedGroup;
 
 import assets.Card;
-import managers.Everything;
+import assets.Minigames;
 
-class CardGame extends Everything
+class CardGame extends Minigames
 {
-    var playerHands:Array<FlxTypedGroup<Card>>;
+    var game:String;
+    var cardType:String;
+    var initCards:Array<Int>;
+    var drawnCards:Array<Int>;
+    
+    var firstDraw:Bool = false;
+    
+    var deck:FlxTypedGroup<Card>;
     var hand1:FlxTypedGroup<Card>;
     var hand2:FlxTypedGroup<Card>;
     var hand3:FlxTypedGroup<Card>;
     var hand4:FlxTypedGroup<Card>;
-    var deck:FlxTypedGroup<Card>;
-    var drawnCards:Array<Int>;
-    var initCards:Array<Int>;
-    var cardType:String;
-    var game:String;
+    var playerHands:Array<FlxTypedGroup<Card>>;
 
     public static var cardCount:Int;
 
@@ -50,6 +53,8 @@ class CardGame extends Everything
     {
         // var setRows:Float = amount/rows;
 
+        drawnCards.push(cardCount);
+        
         if (offset == null)
             offset = [0, 0];
 
@@ -69,14 +74,22 @@ class CardGame extends Everything
                 case 1:
                     hand1.add(new Card(cardType, x, y, newCard));
 
+                    return hand1;
+
                 case 2:
                     hand2.add(new Card(cardType, x, y, newCard));
+
+                    return hand2;
 
                 case 3:
                     hand3.add(new Card(cardType, x, y, newCard));
 
+                    return hand3;
+
                 case 4:
                     hand4.add(new Card(cardType, x, y, newCard));
+
+                    return hand4;
             }
 
     /*         for (card in hand1)
@@ -88,7 +101,7 @@ class CardGame extends Everything
     */
         }
 
-        return hand1;
+        return null;
     }
 
     function buildDeck(x:Float, y:Float):FlxTypedGroup<Card>
