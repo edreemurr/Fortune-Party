@@ -374,19 +374,17 @@ class BoardGame extends Everything
         function playerMove(num:Int)
         {
             controlsFree = false;
-    
             
             if (num > 0)
             {
                 var wrap:Int = (curLocations[activePlayer] + 1) > spaceCount ? -spaceCount : 1;
-                var nextSpace = spacePos[curLocations[activePlayer] + 1];
-                
+                var nextSpace = spacePos[curLocations[activePlayer] + wrap];
+
                 FlxTween.tween(characters[activePlayer], {x: nextSpace.x, y: nextSpace.y}, 0.5, {onComplete: function(tween:FlxTween)
                 {
-                    // playerLocations.set(characters[activePlayer], playerLocations.get(characters[activePlayer]) + wrap);
+                    curLocations[activePlayer] += wrap;
+                    
                     curSpace = spaceType[curLocations[activePlayer]];
-
-                    curLocations[activePlayer] = curLocations[activePlayer] + wrap;
 
                     FlxG.save.data.curLocations = curLocations;
                     FlxG.save.flush();
