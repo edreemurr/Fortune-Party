@@ -9,7 +9,6 @@ class Garbage extends CardGame
         game = 'garbage';
 
         start(2);
-        trace ('started');
 
         super.create();
     }
@@ -18,21 +17,14 @@ class Garbage extends CardGame
     {
         if (START && !firstDraw)
         {
-            trace ('drawing cards');
-            cards();
+            add(drawCards(1, 5, [150, 400], false));
+            add(drawCards(1, 5, [150, 500], false));
+            add(drawCards(2, 5, [150, 100], false));
+            add(drawCards(2, 5, [150, 200], false));
 
             firstDraw = true;
         }
 
         super.update(elapsed);
-    }
-
-    function cards()
-    {
-        trace ('drawCards');
-        add(drawCards(1, 5, [300, 400], [200, 0]));
-        add(drawCards(1, 5, [300, 600], [200, 0]));
-        add(drawCards(2, 5, [300, 100], [200, 0]));
-        add(drawCards(2, 5, [300, 300], [200, 0]));
     }
 }

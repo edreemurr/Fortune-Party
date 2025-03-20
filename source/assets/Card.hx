@@ -61,9 +61,12 @@ class Card extends FlxSprite
 
     function flip(_)
     {
-        FlxTween.tween(scale, {x: 0}, 0.25, {onComplete: function(tween:FlxTween)
+        FlxTween.tween(scale, {x: 0}, 0.1, {onComplete: function(tween:FlxTween)
         {
-            animation.frameIndex = CardGame.cardCount;
+            if (animation.frameIndex == CardGame.cardCount)
+                animation.frameIndex = card;
+            else
+                animation.frameIndex = cardIndex;
 
             FlxTween.tween(scale, {x: 1}, 0.25);
         }});

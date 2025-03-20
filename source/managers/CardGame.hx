@@ -49,56 +49,40 @@ class CardGame extends Minigames
         super.create();
     }
 
-    function drawCards(player:Int, amount:Int, start:Array<Int>, ?offset:Array<Int>, faceUp:Bool = true):FlxTypedGroup<Card>
+    function drawCards(player:Int, amount:Int, start:Array<Int>, ?offset:Int = 150, faceUp:Bool = true):FlxTypedGroup<Card>
     {
-        // var setRows:Float = amount/rows;
-
         drawnCards.push(cardCount);
         
-        if (offset == null)
-            offset = [0, 0];
-
         for (i in 0...amount)
         {
             var newCard = FlxG.random.int(0, cardCount, drawnCards);
             drawnCards.push(newCard);
 
-            var x:Float = start[0] + (i * offset[0]);
-            var y:Float = start[1] + (i * offset[1]);
-
-            // start[0] += i == setRows ? -i * offset[0] : offset[0];
-            // start[1] += i == setRows - 1 ? offset[1] : 0;
+            var x:Float = start[0] + (i * offset);
+            var y:Float = start[1] + i;
 
             switch (player)
             {
                 case 1:
-                    hand1.add(new Card(cardType, x, y, newCard));
-
-                    return hand1;
+                    hand1.add(new Card(cardType, x, y, faceUp ? newCard : cardCount, newCard));
 
                 case 2:
-                    hand2.add(new Card(cardType, x, y, newCard));
-
-                    return hand2;
+                    hand2.add(new Card(cardType, x, y, faceUp ? newCard : cardCount, newCard));
 
                 case 3:
-                    hand3.add(new Card(cardType, x, y, newCard));
-
-                    return hand3;
+                    hand3.add(new Card(cardType, x, y, faceUp ? newCard : cardCount, newCard));
 
                 case 4:
-                    hand4.add(new Card(cardType, x, y, newCard));
-
-                    return hand4;
+                    hand4.add(new Card(cardType, x, y, faceUp ? newCard : cardCount, newCard));
             }
+        }
 
-    /*         for (card in hand1)
-            {
-                card.drawn = true;
-                card.x = 500;
-                card.y = 200;
-            }
-    */
+        switch (player)
+        {
+            case 1: return hand1;
+            case 2: return hand2;
+            case 3: return hand3;
+            case 4: return hand4;
         }
 
         return null;
