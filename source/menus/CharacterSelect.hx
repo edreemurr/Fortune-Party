@@ -30,7 +30,8 @@ class CharacterSelect extends Everything
 
     override function create()
     {
-        newGame = true;
+        FlxG.save.data.newGame = true;
+        FlxG.save.flush();
 
         FlxG.save.data.cycle = 1;
 
