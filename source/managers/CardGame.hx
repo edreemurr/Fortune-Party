@@ -8,21 +8,32 @@ import assets.Minigames;
 
 class CardGame extends Minigames
 {
-    var game:String;
+    public var game:String;
+
+    public var curCard:Card;
+    public var newCard:Card;
+    public var topDeck:Card;
+
     var cardType:String;
     var initCards:Array<Int>;
     var drawnCards:Array<Int>;
     
     var firstDraw:Bool = false;
+
+    public var turnStart:Bool = false;
+    // public var turnEnd:Bool = false;
+    public var interactable:Bool = false;
     
     var deck:FlxTypedGroup<Card>;
+    var discard:FlxTypedGroup<Card>;
+
     var hand1:FlxTypedGroup<Card>;
     var hand2:FlxTypedGroup<Card>;
     var hand3:FlxTypedGroup<Card>;
     var hand4:FlxTypedGroup<Card>;
     var playerHands:Array<FlxTypedGroup<Card>>;
 
-    public static var cardCount:Int;
+    public var cardCount:Int;
 
     override function create()
     {
@@ -74,6 +85,9 @@ class CardGame extends Minigames
 
                 case 4:
                     hand4.add(new Card(cardType, x, y, faceUp ? newCard : cardCount, newCard));
+
+                default:
+
             }
         }
 
@@ -91,17 +105,23 @@ class CardGame extends Minigames
     function buildDeck(x:Float, y:Float):FlxTypedGroup<Card>
     {
         deck = new FlxTypedGroup<Card>();
+        discard = new FlxTypedGroup<Card>();
 
-        // initCards = [];
+        initCards = [];
 
         for (i in 0...cardCount)
         {
-            // var card = FlxG.random.int(0, cardCount, initCards);
-            // initCards.push(card);
+            var card = FlxG.random.int(0, cardCount, initCards);
+            initCards.push(card);
 
-            deck.add(new Card(cardType, x + (i * 0.25), y + (i/0.25), cardCount));
+            deck.add(new Card(cardType, x + (i * 0.05), y + (i * 0.05), cardCount));
         }
+
+        topDeck = deck.members[cardCount - 1];
 
         return deck;
     }
+
+    function shuffleTurn():Int
+        return FlxG.random.int(0, playerCount);
 }

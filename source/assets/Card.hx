@@ -5,15 +5,24 @@ import flixel.tweens.FlxTween;
 import flixel.input.mouse.FlxMouseEvent;
 
 import managers.CardGame;
+import gameplay.minigames.Garbage;
 
 class Card extends FlxSprite
 {
     var xCut:Int;
     var yCut:Int;
-    var card:Int;
-    var cardIndex:Int;
+
+    public var card:Int;
+    public var cardIndex:Int;
+
+    public var usable:Bool;
+    public var discarded:Bool;
 
     public var drawn:Bool = false;
+    public var interactable:Bool = false;
+
+    var game:CardGame;
+    var garbage:Garbage;
 
     public function new(type:String, x:Float, y:Float, index:Int, ?card:Int)
     {
@@ -35,49 +44,36 @@ class Card extends FlxSprite
 
         loadGraphic('assets/images/cards/$type.png', true, xCut, yCut);
         
-        animation.frameIndex = cardIndex;
-        
-        FlxMouseEvent.add(this, flip, null, hover, idle);
+        animation.frameIndex = cardIndex;        
     }
-
+    
     override function update(elapsed:Float)
     {
-        if (drawn)
+        if (interactable)
+            FlxMouseEvent.add(this, select, null, hover, idle);
+
+        if (usable)
         {
-            trace ('Hello');
-            x = 300;
-            y = 100;
+            x = 50;
+            y = 300;
         }
 
         super.update(elapsed);
     }
 
-    override public function destroy()
-    {
-        FlxMouseEvent.remove(this);
-
-        super.destroy();
-    }
-
-    function flip(_)
-    {
-        FlxTween.tween(scale, {x: 0}, 0.1, {onComplete: function(tween:FlxTween)
+    function select(_)
+        FlxTween.tween(scale, {x: 0}, 0.15, {onComplete: function(tween:FlxTween)
         {
-            if (animation.frameIndex == CardGame.cardCount)
-                animation.frameIndex = card;
-            else
-                animation.frameIndex = cardIndex;
+            animation.frameIndex = card;
 
-            FlxTween.tween(scale, {x: 1}, 0.25);
+            FlxTween.tween(scale, {x: 1}, 0.15);
+
+            drawn = true;
         }});
-    }
-
-    function pressed(_)
-        FlxTween.tween(scale, {x: 0}, 0.5);
 
     function hover(_)
     {
-        scale.x = scale.y = 1.2;
+        scale.x = scale.y = 1.1;
 
         updateHitbox();
     }
