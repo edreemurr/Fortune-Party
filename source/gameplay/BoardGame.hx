@@ -149,8 +149,6 @@ class BoardGame extends Everything
                 character.setPosition(spacePos[curLocations[num]].x, spacePos[curLocations[num]].y);
             }
 
-        trace ('\nPlayer Locations: $curLocations');
-
         initTurnOrder();
 
         super.create();
@@ -189,7 +187,7 @@ class BoardGame extends Everything
         {
             changeTurn();
 
-            if (activePlayer == playerCount)
+            if (activePlayer == playerCount && board == 'demo')
                 minigame();
 
             space.destroy();
@@ -215,12 +213,8 @@ class BoardGame extends Everything
         }
         else
         {
-            if (coins[activePlayer] < 5)
-            {
-                trace ('Can\'t afford');
-
+            if (coins[activePlayer] < spacePrice[curLocations[activePlayer]])
                 changeTurn();
-            }
             else
                 landText.resetText('Would you like to\npurchase this land for ${spacePrice[curLocations[activePlayer]]} coins?');
 
@@ -263,7 +257,6 @@ class BoardGame extends Everything
         switch (event)
         {
             case 'create':
-                trace ('Setting variables');
                 char1Land = [];
                 char2Land = [];
                 char3Land = [];
@@ -271,15 +264,14 @@ class BoardGame extends Everything
                 statsArray = [];
                 coins = [10, 10, 10, 10];
                 starPieces = [0, 0, 0, 0];
-                // ownedLand = [char1Land, char2Land, char3Land, char4Land];
+                ownedLand = [char1Land, char2Land, char3Land, char4Land];
 
                 if (!newGame)
                 {
-                    trace ('Loading stats');
                     coins = FlxG.save.data.coins;
                     starPieces = FlxG.save.data.starPieces;
                     curLocations = FlxG.save.data.curLocations;
-                    // ownedLand = FlxG.save.data.ownedLand;
+                    ownedLand = FlxG.save.data.ownedLand;
                 }
 
                 for (num => char in characters)
@@ -299,8 +291,6 @@ class BoardGame extends Everything
                         FlxG.save.flush();
                     }
                 }
-
-                trace ('\nPlayer Locations: $curLocations\nCoins: $coins\nStar Pieces: $starPieces');
 
             case 'update':
                 switch (statChange)
@@ -398,7 +388,7 @@ class BoardGame extends Everything
                 if (board == 'demo')
                     initEvent(curSpace);
                 else if (board == 'kingdom')
-                    if (curLocations[activePlayer] == 0)
+                    if (spaceType[curLocations[activePlayer]] == null)
                         changeTurn();
                     else
                         land();
@@ -438,25 +428,8 @@ class BoardGame extends Everything
     }
 
     function changeTurn()
+    {
         activePlayer += 1;
-
-/*     function load()
-    {
-        playerLocations = FlxG.save.data.locations;
-        starPieces = FlxG.save.data.starPieces;
-        ownedLand = FlxG.save.data.lands;
-        coins = FlxG.save.data.coins;
+        activePlayer = FlxMath.wrap(activePlayer, 0, playerCount - 1);
     }
-
-    function save()
-    {
-        var save:FlxSave = new FlxSave();
-        save.bind('boardGame', FileNans.locateSave());
-        save.data.locations = playerLocations;
-        save.data.starPieces = starPieces;
-        save.data.lands = ownedLand;
-        save.data.coins = coins;
-        save.data.board = board;
-        save.flush();
-    }
- */}
+}
