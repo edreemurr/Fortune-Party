@@ -26,6 +26,8 @@ class Minigames extends Everything
     {
         // playerCount = 4;
 
+        canPause = true;
+
         participants = characters;
         playerChoice = [];
 

@@ -11,8 +11,10 @@ class CardGame extends Minigames
     public var game:String;
 
     public var curCard:Card;
-    public var newCard:Card;
+    public var nextCard:Card;
     public var topDeck:Card;
+
+    public var cardNum:Int;
 
     var cardType:String;
     var initCards:Array<Int>;
@@ -24,14 +26,14 @@ class CardGame extends Minigames
     // public var turnEnd:Bool = false;
     public var interactable:Bool = false;
     
-    var deck:FlxTypedGroup<Card>;
-    var discard:FlxTypedGroup<Card>;
+    public var deck:FlxTypedGroup<Card>;
+    public var discard:FlxTypedGroup<Card>;
 
     var hand1:FlxTypedGroup<Card>;
     var hand2:FlxTypedGroup<Card>;
     var hand3:FlxTypedGroup<Card>;
     var hand4:FlxTypedGroup<Card>;
-    var playerHands:Array<FlxTypedGroup<Card>>;
+    public var playerHands:Array<FlxTypedGroup<Card>>;
 
     public var cardCount:Int;
 
@@ -117,11 +119,11 @@ class CardGame extends Minigames
             deck.add(new Card(cardType, x + (i * 0.05), y + (i * 0.05), cardCount));
         }
 
-        topDeck = deck.members[cardCount - 1];
+        topDeck = deck.members[cardCount];
 
         return deck;
     }
 
     function shuffleTurn():Int
-        return FlxG.random.int(0, playerCount);
+        return FlxG.random.int(1, playerCount);
 }

@@ -4,8 +4,10 @@ import flixel.FlxSprite;
 import flixel.tweens.FlxTween;
 import flixel.input.mouse.FlxMouseEvent;
 
-import managers.CardGame;
 import gameplay.minigames.Garbage;
+
+import managers.CardGame;
+import managers.Everything;
 
 class Card extends FlxSprite
 {
@@ -22,7 +24,7 @@ class Card extends FlxSprite
     public var interactable:Bool = false;
 
     var game:CardGame;
-    var garbage:Garbage;
+    var everything:Everything;
 
     public function new(type:String, x:Float, y:Float, index:Int, ?card:Int)
     {
@@ -53,15 +55,18 @@ class Card extends FlxSprite
             FlxMouseEvent.add(this, select, null, hover, idle);
 
         if (usable)
+            y = 200;
+        
+        if (discarded)
         {
-            x = 50;
-            y = 300;
+            x = 1150;
+            y = 0;
         }
 
         super.update(elapsed);
     }
 
-    function select(_)
+    public function select(_)
         FlxTween.tween(scale, {x: 0}, 0.15, {onComplete: function(tween:FlxTween)
         {
             animation.frameIndex = card;
@@ -72,17 +77,8 @@ class Card extends FlxSprite
         }});
 
     function hover(_)
-    {
-        scale.x = scale.y = 1.1;
-
-        updateHitbox();
-    }
+        alpha = 0.5;
 
     function idle(_)
-    {
-        scale.x = scale.y = 1;
-
-        updateHitbox();
-    }
-
+        alpha = 1;
 }

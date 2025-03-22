@@ -1,5 +1,6 @@
 package gameplay.minigames;
 
+import flixel.math.FlxMath;
 import assets.Card;
 import managers.CardGame;
 
@@ -10,8 +11,6 @@ class Garbage extends CardGame
         game = 'garbage';
 
         start(1);
-
-        activePlayer = shuffleTurn();
 
         super.create();
     }
@@ -46,39 +45,39 @@ class Garbage extends CardGame
     }
 
     function checkIndex(card:Card)
-    {
-        curCard = card;
-
         for (index in 0...playerHands[activePlayer].length)
-            if (curCard.card == index)
+        {
+            cardNum = Std.int(index/4);
+
+            if (card.card == cardNum)
             {
-                newCard = playerHands[activePlayer].members[index];
+                nextCard = playerHands[activePlayer].members[cardNum];
 
-                newCard.scale.x = 1.1;
-                newCard.scale.y = 1.1;
-                newCard.interactable = true;
+                // nextCard.interactable = true;
 
-                curCard.usable = true;
-                curCard.interactable = false;
+                card.usable = true;
+                card.interactable = false;
+
+                nextCard.select(nextCard);
+
+                checkIndex(nextCard);
 
                 break;
             }
             else
             {
-                curCard.x = 1150;
-                curCard.y = 0;
+                card.discarded = true;
+                card.interactable = false;
 
-                // curCard.discarded = true;
-                curCard.interactable = false;
-
-                deck.remove(curCard);
-                discard.add(curCard);
+                deck.remove(card);
+                discard.add(card);
 
                 activePlayer += 1;
+                activePlayer = FlxMath.wrap(activePlayer, 0, 1);
 
                 changeTurn();
             }
-    }
+        }
 
     function changeTurn()
     {
@@ -90,7 +89,7 @@ class Garbage extends CardGame
 
         cardCount -= 1;
 
-        topDeck = deck.members[cardCount - 1];
+        topDeck = deck.members[cardCount];
         topDeck.interactable = true;
 
         // turnEnd = false;
