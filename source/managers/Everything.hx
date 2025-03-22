@@ -26,7 +26,7 @@ class Everything extends FlxState
     var canPause:Bool = false;
     var controlsFree:Bool = false;
     
-    var activePlayer:Int;
+    public var activePlayer:Int;
     var curLocations:Array<Int>;
 
     var characters:Array<Character> = [];

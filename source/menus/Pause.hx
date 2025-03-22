@@ -19,7 +19,7 @@ class Pause extends FlxSubState
         buttons = new FlxTypedGroup<FlxButton>();
         add(buttons);
 
-        buttonNames = ['Resume', 'Title', 'Exit'];
+        buttonNames = ['Resume', 'Restart', 'Title', 'Exit'];
 
         for (i in 0...buttonNames.length)
         {
@@ -41,6 +41,9 @@ class Pause extends FlxSubState
         {
             case 'Resume':
                 close();
+
+            case 'Restart':
+                FlxG.resetState();
 
             case 'Title':
                 FlxG.switchState(Title.new);
