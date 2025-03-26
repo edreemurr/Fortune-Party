@@ -17,3 +17,4 @@ art/build_html-debug.bat
 /export
 checklist.txt
 sounds.txt
+*.pdn
