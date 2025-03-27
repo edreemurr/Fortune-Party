@@ -131,20 +131,17 @@ class BoardGame extends Everything
 
         for (num => char in characters)
         {
-            locations = [];
-
             if (newGame)
             {
-                char.setPosition(startPos.x, startPos.y - (num * 15));
+                locations = [-1, -1, -1, -1];
                 
-                locations.push(-1);
+                char.setPosition(startPos.x, startPos.y - (num * 15));
             }
             else
             {
                 locations = FlxG.save.data.locations;
 
-                for (location in locations)
-                    char.setPosition(spacePos[location].x, spacePos[location].y);
+                char.setPosition(spacePos[locations[num]].x, spacePos[locations[num]].y);
             }
         }
 
@@ -276,7 +273,7 @@ class BoardGame extends Everything
                     {
                         coins = FlxG.save.data.coins;
                         starPieces = FlxG.save.data.starPieces;
-                        locations = FlxG.save.data.curLocations;
+                        locations = FlxG.save.data.locations;
                         lands = FlxG.save.data.ownedLand;
                     }
 
@@ -391,8 +388,8 @@ class BoardGame extends Everything
                     
                     curSpace = spaceType[locations[activePlayer]];
 
-                    // FlxG.save.data.curLocations = curLocations;
-                    // FlxG.save.flush();
+                    FlxG.save.data.locations = locations;
+                    FlxG.save.flush();
 
                     num--;
     
@@ -413,11 +410,14 @@ class BoardGame extends Everything
     {
         cycle += 1;
 
-        FlxG.save.data.cycle = cycle;
         FlxG.save.data.newGame = false;
+
+        FlxG.save.data.cycle = cycle;
+        FlxG.save.data.locations = locations;
+        
+        FlxG.save.data.coins = coins;
+        FlxG.save.data.starPieces = starPieces;
         // FlxG.save.data.ownedLand = ownedLand;
-        // FlxG.save.data.starPieces = starPieces;
-        // FlxG.save.data.curLocations = curLocations;
         FlxG.save.flush();
 
         FlxG.switchState(Ur.new);
@@ -445,7 +445,9 @@ class BoardGame extends Everything
     function changeTurn()
     {
         activePlayer += 1;
-        activePlayer = FlxMath.wrap(activePlayer, 0, playerCount - 1);
+
+        if (board != 'demo')
+            activePlayer = FlxMath.wrap(activePlayer, 0, playerCount - 1);
 
         curChar = characters[activePlayer];
     }
