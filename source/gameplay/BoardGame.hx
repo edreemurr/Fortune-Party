@@ -7,6 +7,7 @@ import flixel.text.FlxText;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.tweens.FlxTween;
+import flixel.util.FlxArrayUtil;
 import flixel.addons.text.FlxTypeText;
 import flixel.group.FlxGroup.FlxTypedGroup;
 
@@ -51,8 +52,8 @@ class BoardGame extends Everything
         playerCount = FlxG.save.data.playerCount;
 
         cycle = FlxG.save.data.cycle;
-        // coins = FlxG.save.data.coins;
-        // starPieces = FlxG.save.data.starPieces;
+        coins = FlxG.save.data.coins;
+        starPieces = FlxG.save.data.starPieces;
 
         switch (board)
         {
@@ -129,18 +130,23 @@ class BoardGame extends Everything
         }
 
         for (num => char in characters)
+        {
+            locations = [];
+
             if (newGame)
             {
                 char.setPosition(startPos.x, startPos.y - (num * 15));
                 
-                char.location = -1;
+                locations.push(-1);
             }
             else
             {
-                char.location = FlxG.save.data.locations[num];
+                locations = FlxG.save.data.locations;
 
-                char.setPosition(spacePos[char.location].x, spacePos[char.location].y);
+                for (location in locations)
+                    char.setPosition(spacePos[location].x, spacePos[location].y);
             }
+        }
 
         curChar = characters[activePlayer];
 
@@ -206,10 +212,10 @@ class BoardGame extends Everything
         }
         else
         {
-            if (curChar.coins < spacePrice[curChar.location])
+            if (coins[activePlayer] < spacePrice[locations[activePlayer]])
                 changeTurn();
             else
-                landText.resetText('Would you like to\npurchase this land for ${spacePrice[curChar.location]} coins?');
+                landText.resetText('Would you like to\npurchase this land for ${spacePrice[locations[activePlayer]]} coins?');
 
             landPrompt.visible = true;
         }
@@ -250,13 +256,21 @@ class BoardGame extends Everything
         switch (event)
         {
             case 'create':
+                coins = [];
+                starPieces = [];
+
+                lands = [];
+                coinsArray = [];
+                piecesArray = [];
+
                 for (num => char in characters)
                 {
-/*                     if (FlxG.save.data.newGame == true)
+                    if (newGame)
                     {
                         coins.push(10);
                         starPieces.push(0);
-                        lands.push([]);
+
+                        // lands.push(char.land);
                     }
                     else
                     {
@@ -265,8 +279,9 @@ class BoardGame extends Everything
                         locations = FlxG.save.data.curLocations;
                         lands = FlxG.save.data.ownedLand;
                     }
- */
-                    char.loadStats();
+
+                    // trace ('Loading stats');
+                    // char.loadStats();
 
                     var ui:FlxSprite = new FlxSprite(20, 20 + (num * 100), 'assets/images/GUI/stats.png');
                     // ui.color = char.color;
@@ -277,65 +292,71 @@ class BoardGame extends Everything
                     player.setGraphicSize(25);
                     add(player);
 
-                    var coins:FlxText = new FlxText(ui.x + 160, ui.y + 30, char.coins, 20);
-                    // statsArray.push(coins);
+                    var coins:FlxText = new FlxText(ui.x + 160, ui.y + 30, '${coins[num]}', 20);
+                    coinsArray.push(coins);
                     add(coins);
 
-                    var pieces:FlxText = new FlxText(ui.x + 250, ui.y + 30, char.starPieces, 20);
-                    // statsArray.push(pieces);
+                    var pieces:FlxText = new FlxText(ui.x + 250, ui.y + 30, '${starPieces[num]}', 20);
+                    piecesArray.push(pieces);
                     add(pieces);
-                }
+
+/*                     if (newGame)
+                    {
+                        FlxG.save.data.coins.push(10);
+                        FlxG.save.flush();
+                    }
+ */             }
 
             case 'update':
                 switch (statChange)
                 {
                     case 'blue':
-                        curChar.coins = FlxMath.maxAdd(curChar.coins, 3, 999, 0);
-                        // statsArray[activePlayer].text = '${curChar.coins}';
+                        coins[activePlayer] = FlxMath.maxAdd(coins[activePlayer], 3, 999, 0);
+                        coinsArray[activePlayer].text = '${coins[activePlayer]}';
 
-                        // coins = FlxArrayUtil.fastSplice(coins, activePlayer);
-                        // FlxG.save.data.coins = coins;
-                        // FlxG.save.flush();
+                        coins = FlxArrayUtil.fastSplice(coins, activePlayer);
+                        FlxG.save.data.coins = coins;
+                        FlxG.save.flush();
 
                     case 'red':
-                        /* FlxG.save.data.curChar.coins =  */curChar.coins = FlxMath.maxAdd(curChar.coins, -3, 999, 0);
-                        // statsArray[activePlayer].text = '${curChar.coins}';
+                        coins[activePlayer] = FlxMath.maxAdd(coins[activePlayer], -3, 999, 0);
+                        coinsArray[activePlayer].text = '${coins[activePlayer]}';
 
-                        // coins = FlxArrayUtil.fastSplice(coins, activePlayer);
-                        // FlxG.save.data.coins = coins;
-                        // FlxG.save.flush();
+                        coins = FlxArrayUtil.fastSplice(coins, activePlayer);
+                        FlxG.save.data.coins = coins;
+                        FlxG.save.flush();
 
                     case 'green':
-                        curChar.starPieces = FlxMath.maxAdd(curChar.starPieces, 1, 5, 0);
-                        // statsArray[activePlayer + (playerCount * 2)].text = '${starPieces[activePlayer]}';
+                        starPieces[activePlayer] = FlxMath.maxAdd(starPieces[activePlayer], 1, 5, 0);
+                        piecesArray[activePlayer].text = '${starPieces[activePlayer]}';
 
-                        // starPieces = FlxArrayUtil.fastSplice(starPieces, activePlayer);
-                        // FlxG.save.data.starPieces = starPieces;
-                        // FlxG.save.flush();
+                        starPieces = FlxArrayUtil.fastSplice(starPieces, activePlayer);
+                        FlxG.save.data.starPieces = starPieces;
+                        FlxG.save.flush();
 
                     case 'brown':
-                        curChar.coins = FlxMath.maxAdd(curChar.coins, 100, 999, 0);
-                        // statsArray[activePlayer].text = '${curChar.coins}';
+                        coins[activePlayer] = FlxMath.maxAdd(coins[activePlayer], 100, 999, 0);
+                        coinsArray[activePlayer].text = '${coins[activePlayer]}';
 
-                        // coins = FlxArrayUtil.fastSplice(coins, activePlayer);
-                        // FlxG.save.data.coins = coins;
-                        // FlxG.save.flush();
+                        coins = FlxArrayUtil.fastSplice(coins, activePlayer);
+                        FlxG.save.data.coins = coins;
+                        FlxG.save.flush();
 
                     case 'land buy':
-                        curChar.coins -= spacePrice[curChar.location];
-                        // statsArray[activePlayer].text = '${curChar.coins}';
+                        coins[activePlayer] -= spacePrice[locations[activePlayer]];
+                        coinsArray[activePlayer].text = '${coins[activePlayer]}';
 
                         curChar.land.push(curSpace);
 
-                        // coins = FlxArrayUtil.fastSplice(coins, activePlayer);
-                        // FlxG.save.data.coins = coins;
-                        // FlxG.save.flush();
+                        coins = FlxArrayUtil.fastSplice(coins, activePlayer);
+                        FlxG.save.data.coins = coins;
+                        FlxG.save.flush();
 
                         // for (land in ownedLand)
                         //     trace (land);
 
                     case 'land rent':
-                        if (curChar.coins < 2)
+                        if (coins[activePlayer] < 2)
                         {
                             trace ('Can\'t afford');
 
@@ -343,7 +364,7 @@ class BoardGame extends Everything
                         }
                         else
                         {
-                            curChar.coins -= 2;
+                            coins[activePlayer] -= 2;
                             checkOwnership().coins += 2;
 
                             // coins = FlxArrayUtil.fastSplice(coins, activePlayer);
@@ -361,14 +382,14 @@ class BoardGame extends Everything
             
             if (num > 0)
             {
-                var wrap:Int = (curChar.location + 1) > spaceCount ? -spaceCount : 1;
-                var nextSpace = spacePos[curChar.location + wrap];
+                var wrap:Int = (locations[activePlayer] + 1) > spaceCount ? -spaceCount : 1;
+                var nextSpace = spacePos[locations[activePlayer] + wrap];
 
                 FlxTween.tween(characters[activePlayer], {x: nextSpace.x, y: nextSpace.y}, 0.5, {onComplete: function(tween:FlxTween)
                 {
-                    curChar.location += wrap;
+                    locations[activePlayer] += wrap;
                     
-                    curSpace = spaceType[curChar.location];
+                    curSpace = spaceType[locations[activePlayer]];
 
                     // FlxG.save.data.curLocations = curLocations;
                     // FlxG.save.flush();
@@ -382,7 +403,7 @@ class BoardGame extends Everything
                 if (board == 'demo')
                     initEvent(curSpace);
                 else if (board == 'kingdom')
-                    if (spaceType[curChar.location] == null)
+                    if (spaceType[locations[activePlayer]] == null)
                         changeTurn();
                     else
                         land();

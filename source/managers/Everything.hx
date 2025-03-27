@@ -3,6 +3,7 @@ package managers;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.FlxSprite;
+import flixel.text.FlxText;
 
 import assets.Card;
 import assets.Character;
@@ -38,6 +39,9 @@ class Everything extends FlxState
     var curChar:Character;
     var characters:Array<Character> = [];
     // var playerHands:Array<FlxTypedGroup<Card>> = [];
+
+    var coinsArray:Array<FlxText>;
+    var piecesArray:Array<FlxText>;
 
     var player1:Character;
     var player2:Character;
