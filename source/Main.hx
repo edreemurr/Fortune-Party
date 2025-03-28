@@ -51,7 +51,8 @@ class Main extends Sprite
 
 	private function bootUp():Void
 	{
-		FlxG.save.bind('saveFile', FileNans.locateSave());
+		if (FlxG.save.data == null)
+			FlxG.save.bind('saveFile', FileNans.locateSave());
 
 		Controls.instance = new Controls();
 
