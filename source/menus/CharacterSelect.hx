@@ -12,10 +12,11 @@ import managers.Everything;
 
 class CharacterSelect extends Everything
 {
-    public static var character1:String;
-    public static var character2:String;
-    public static var character3:String;
-    public static var character4:String;
+    var char1:String;
+    var char2:String;
+    var char3:String;
+    var char4:String;
+    var charColors:Array<String>;
     
     var text:FlxText;
     var numText:FlxText;
@@ -31,9 +32,8 @@ class CharacterSelect extends Everything
     override function create()
     {
         FlxG.save.data.newGame = true;
-        FlxG.save.flush();
-
         FlxG.save.data.cycle = 1;
+        FlxG.save.flush();
 
         text = new FlxText(0, 50, 'How many players?', 40);
         text.screenCenter(X);
@@ -116,7 +116,8 @@ class CharacterSelect extends Everything
 
                     if (FlxG.mouse.justPressed)
                     {
-                        board = FlxG.save.data.board = buttonNames[selected].toLowerCase();
+                        FlxG.save.data.board = buttonNames[selected].toLowerCase();
+                        FlxG.save.data.charColors = charColors;
                         FlxG.save.flush();
 
                         FlxG.switchState(BoardGame.new);
@@ -157,43 +158,43 @@ class CharacterSelect extends Everything
         {
             case 'red':
                 if (num == 1)
-                    character1 = '0xFF0000';
+                    char1 = '0xFF0000';
                 if (num == 2)
-                    character2 = '0xFF0000';
+                    char2 = '0xFF0000';
                 if (num == 3)
-                    character3 = '0xFF0000';
+                    char3 = '0xFF0000';
                 if (num == 4)
-                    character4 = '0xFF0000';
+                    char4 = '0xFF0000';
             case 'blue':
                 if (num == 1)
-                    character1 = '0x0011FF';
+                    char1 = '0x0011FF';
                 if (num == 2)
-                    character2 = '0x0011FF';
+                    char2 = '0x0011FF';
                 if (num == 3)
-                    character3 = '0x0011FF';
+                    char3 = '0x0011FF';
                 if (num == 4)
-                    character4 = '0x0011FF';
+                    char4 = '0x0011FF';
             case 'green':
                 if (num == 1)
-                    character1 = '0x00FF00';
+                    char1 = '0x00FF00';
                 if (num == 2)
-                    character2 = '0x00FF00';
+                    char2 = '0x00FF00';
                 if (num == 3)
-                    character3 = '0x00FF00';
+                    char3 = '0x00FF00';
                 if (num == 4)
-                    character4 = '0x00FF00';
+                    char4 = '0x00FF00';
             case 'yellow':
                 if (num == 1)
-                    character1 = '0xD0FF00';
+                    char1 = '0xD0FF00';
                 if (num == 2)
-                    character2 = '0xD0FF00';
+                    char2 = '0xD0FF00';
                 if (num == 3)
-                    character3 = '0xD0FF00';
+                    char3 = '0xD0FF00';
                 if (num == 4)
-                    character4 = '0xD0FF00';
+                    char4 = '0xD0FF00';
         }
 
-        trace ('Player $num selected ${buttonNames[selected]}');
+        charColors = [char1, char2, char3, char4];
 
         if (num == playerCount)
         {

@@ -23,12 +23,12 @@ class Character extends FlxSprite
     public var items:Array<String>;
     public var cards:FlxTypedGroup<Card>;
 
-    public function new(player:Int, x:Float, y:Float, color:String)
+    public function new(player:Int, x:Float, y:Float)
     {
         super(x, y);
 
         this.player = player;
-        this.colorChoice = FlxColor.fromString(color);
+        this.colorChoice = FlxColor.fromString(FlxG.save.data.charColors[player]);
 
         makeGraphic(50, 50, colorChoice);
 
@@ -52,7 +52,7 @@ class Character extends FlxSprite
             coins = FlxG.save.data.coins[player];
             starPieces = FlxG.save.data.starPieces[player];
 
-            land = FlxG.save.data.ownedLand[player];
+            land = FlxG.save.data.lands[player];
             location = FlxG.save.data.locations[player];
         }
     }

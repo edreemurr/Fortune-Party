@@ -4,6 +4,7 @@ import flixel.FlxG;
 import flixel.FlxState;
 import flixel.FlxSprite;
 import flixel.text.FlxText;
+import flixel.group.FlxGroup.FlxTypedGroup;
 
 import assets.Card;
 import assets.Character;
@@ -26,8 +27,7 @@ class Everything extends FlxState
 
     var coins:Array<Int>;
     var starPieces:Array<Int>;
-    var lands:Array<Array<String>>;
-
+    
     var statsUI:Array<FlxSprite>;
 
     var canPause:Bool = false;
@@ -38,28 +38,26 @@ class Everything extends FlxState
 
     var curChar:Character;
     var characters:Array<Character> = [];
-    // var playerHands:Array<FlxTypedGroup<Card>> = [];
-
+    
     var coinsArray:Array<FlxText>;
     var piecesArray:Array<FlxText>;
-
+    
     var player1:Character;
     var player2:Character;
     var player3:Character;
     var player4:Character;
-
-    // var char1Land:Array<String>;
-    // var char2Land:Array<String>;
-    // var char3Land:Array<String>;
-    // var char4Land:Array<String>;
-    // var ownedLand:Array<Array<String>>;
-
-    // var playerLocations:Map<Character, Int>;
-
-    // var cards1:FlxTypedGroup<Card>;
-    // var cards2:FlxTypedGroup<Card>;
-    // var cards3:FlxTypedGroup<Card>;
-    // var cards4:FlxTypedGroup<Card>;
+    
+    var land1:Array<String>;
+    var land2:Array<String>;
+    var land3:Array<String>;
+    var land4:Array<String>;
+    var lands:Array<Array<String>>;
+    
+    var cards1:FlxTypedGroup<Card>;
+    var cards2:FlxTypedGroup<Card>;
+    var cards3:FlxTypedGroup<Card>;
+    var cards4:FlxTypedGroup<Card>;
+    // var playerHands:Array<FlxTypedGroup<Card>> = [];
 
     public var controls(get, never):Controls;
     public var variables:Map<String, Dynamic> = new Map<String, Dynamic>();
