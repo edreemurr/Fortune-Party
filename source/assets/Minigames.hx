@@ -19,21 +19,24 @@ class Minigames extends Everything
     var roundText:FlxText;
     var choiceText:FlxTypeText;
 
-    var buttons:FlxTypedGroup<FlxSprite>;
     var buttonNames:Array<String>;
+    var buttons:FlxTypedGroup<FlxSprite>;
 
     var participants:Array<Int>;
     var playerChoice:Array<Dynamic>;
+
+    var group1:Array<Int>;
+    var group2:Array<Int>;
+
+    var eliminated:Int = 0;
 
     public var START:Bool = false;
 
     override function create()
     {
-        playerCount = 4;
-
         canPause = true;
 
-        playerChoice = [];
+        playerCount = 4;
 
         if (FlxG.save.data.characters != null)
             participants = FlxG.save.data.characters;
@@ -43,17 +46,21 @@ class Minigames extends Everything
         super.create();
     }
 
-    function winner()
+    function winner(?players:Array<Int>)
     {
-        for (player in participants)
+        var screenDim:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, 0x000000);
+        screenDim.alpha = 0.5;
+        add(screenDim);
+
+        for (player in players)
         {        
-            var text:FlxText = new FlxText(0, 200 + (player * 100), 500, 'Player $player', 40);
+            var text:FlxText = new FlxText(0, 100 + (player * 100), 500, 'Player $player', 40);
             text.alignment = CENTER;
             text.screenCenter(X);
             add(text);
 
-            if (player == participants.length)
-                text.text += '\nwin';
+            if (player == players.length)
+                text.text += '\nwins';
         }
 
         new FlxTimer().start(3, function (timer:FlxTimer)

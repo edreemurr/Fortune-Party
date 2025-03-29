@@ -1,19 +1,52 @@
 package gameplay.minigames;
 
-import managers.Everything;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.text.FlxText;
+import flixel.util.FlxTimer;
 import flixel.addons.text.FlxTypeText;
+import flixel.group.FlxGroup.FlxTypedGroup;
 
 import assets.Minigames;
+import managers.Everything;
 
 class HueWont extends Minigames
 {
     var choice:String;
+    var choiceArray:Array<String>;
+
+    var colorChoice:FlxTypeText;
+    var textGroup:FlxTypedGroup<FlxTypeText>;
 
     override function create()
     {
+        group1 = [1];
+        group2 = [2, 3, 4];
+
+        choiceText = new FlxTypeText(500, 100, 500, '', 40);
+        add(choiceText);
+        
+        buttons = new FlxTypedGroup<FlxSprite>();
+        add(buttons);
+
+        textGroup = new FlxTypedGroup<FlxTypeText>();
+        add(textGroup);
+        
+        roundText = new FlxText('', 28);
+        add(roundText);
+        
         buttonNames = ['red', 'blue', 'green', 'yellow'];
+
+        for (num => color in buttonNames)
+        {
+            var button:FlxSprite = new FlxSprite(300 + (num * 150), 300, 'assets/images/buttons/$color.png');
+            button.alpha = 0.5;
+            buttons.add(button);
+        }
+
+        colorChoice = new FlxTypeText(0, 100, 500, '', 32);
+        colorChoice.screenCenter(X);
+        add(colorChoice);
 
         startRound();
 
@@ -53,46 +86,74 @@ class HueWont extends Minigames
         buttons.visible = false;
 
         choiceText.resetText('');
-
+        
         choice = color;
 
-        for (i in 0...playerCount)
+        playerChoice = [];
+
+        colorChoice.resetText('Player 1 chose: $color');
+        colorChoice.start(0.02);
+
+        for (num => player in group2)
         {
             playerChoice.push(FlxG.random.getObject(buttonNames));
 
-            var text:FlxTypeText = new FlxTypeText(0, 300 + (i * 50), 500, 'Player ${i + 1} chose: ${i > 0 ? playerChoice[i] : color}', 28);
+            var text:FlxTypeText = new FlxTypeText(0, 300 + (num * 50), 500, 'Player $player chose: ${playerChoice[num]}', 28);
             text.screenCenter(X);
+            textGroup.add(text);
             text.start(0.02);
-            add(text);
         }
 
         eliminate();
 
-        trace (participants);
+        new FlxTimer().start(3, function (timer:FlxTimer)
+        {
+            if (eliminated == 3 || round == 5)
+            {
+                textGroup.visible = false;
+                choiceText.visible = false;
+                colorChoice.visible = false;
+
+                winner(eliminated == 3 ? group1 : group2);
+            }
+            else
+                startRound();
+        });
     }
 
     function eliminate()
+    {
+        trace (choice);
+        trace (playerChoice);
+
         for (player => color in playerChoice)
-            if (color[player] == choice)
-                participants.remove(characters[player]);
+            if (color == choice)
+            {
+                group2.remove(player + 2);
+
+                eliminated += 1;
+            }
+
+        trace (eliminated);
+        trace (group2);
+    }
 
     function startRound()
     {
         round += 1;
 
         buttons.visible = true;
+        FlxG.mouse.visible = true;
+
+        for (text in textGroup)
+            textGroup.remove(text);
+
+        colorChoice.resetText('');
+
+        roundText.text = '$round';
 
         choiceText.resetText('Make your choice');
         choiceText.start(0.02);
-
-        FlxG.random.shuffle(buttonNames);
-
-        for (num => color in buttonNames)
-        {
-            var button:FlxSprite = new FlxSprite(300 + (num * 150), 300, 'assets/images/buttons/$color.png');
-            button.alpha = 0.5;
-            buttons.add(button);
-        }
     }
 
     function buttonHover(selection:Int)
