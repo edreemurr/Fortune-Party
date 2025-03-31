@@ -43,6 +43,9 @@ class Minigames extends Everything
         else
             participants = [1, 2, 3, 4];
 
+        choiceText = new FlxTypeText(500, 100, 500, '', 40);
+        add(choiceText);
+
         super.create();
     }
 

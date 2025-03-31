@@ -119,6 +119,7 @@ class CharacterSelect extends Everything
                         FlxG.save.data.board = buttonNames[selected].toLowerCase();
                         FlxG.save.data.charColors = charColors;
                         FlxG.save.flush();
+                        trace (FlxG.save.data.charColors);
 
                         FlxG.switchState(BoardGame.new);
                     }

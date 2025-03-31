@@ -4,27 +4,25 @@ import flixel.FlxSprite;
 import flixel.tweens.FlxTween;
 import flixel.input.mouse.FlxMouseEvent;
 
-import gameplay.minigames.Garbage;
-
-import managers.CardGame;
-import managers.Everything;
-
 class Card extends FlxSprite
 {
     var xCut:Int;
     var yCut:Int;
 
+    public var newX:Float;
+    public var newY:Float;
+
     public var card:Int;
     public var cardIndex:Int;
 
     public var usable:Bool;
-    public var discarded:Bool;
-
+    public var flipped:Bool;
+    public var selected:Bool;
+    
     public var drawn:Bool = false;
+    public var accepted:Bool = false;
+    public var discarded:Bool = false;
     public var interactable:Bool = false;
-
-    var game:CardGame;
-    var everything:Everything;
 
     public function new(type:String, x:Float, y:Float, index:Int, ?card:Int)
     {
@@ -53,6 +51,8 @@ class Card extends FlxSprite
     {
         if (interactable)
             FlxMouseEvent.add(this, select, null, hover, idle);
+        else
+            FlxMouseEvent.remove(this);
 
         if (usable)
             y = 200;
@@ -61,24 +61,44 @@ class Card extends FlxSprite
         {
             x = 1150;
             y = 0;
+
+            alpha = 1;
+        }
+
+        if (accepted)
+        {
+            x = newX;
+            y = newY;
+
+            alpha = 1;
+            
+            usable = false;
+            accepted = false;
+            selected = false;
         }
 
         super.update(elapsed);
     }
 
     public function select(_)
-        FlxTween.tween(scale, {x: 0}, 0.15, {onComplete: function(tween:FlxTween)
-        {
-            animation.frameIndex = card;
+    {
+        if (!flipped)
+            FlxTween.tween(scale, {x: 0}, 0.15, {onComplete: function(tween:FlxTween)
+            {
+                animation.frameIndex = card;
 
-            FlxTween.tween(scale, {x: 1}, 0.15);
+                FlxTween.tween(scale, {x: 1}, 0.15);
 
-            drawn = true;
-        }});
+                drawn = true;
+                flipped = true;
+            }});
+
+        selected = true;
+    }
 
     function hover(_)
-        alpha = 0.5;
+        alpha = 1;
 
     function idle(_)
-        alpha = 1;
+        alpha = 0.5;
 }

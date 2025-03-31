@@ -23,9 +23,6 @@ class HueWont extends Minigames
         group1 = [1];
         group2 = [2, 3, 4];
 
-        choiceText = new FlxTypeText(500, 100, 500, '', 40);
-        add(choiceText);
-        
         buttons = new FlxTypedGroup<FlxSprite>();
         add(buttons);
 
@@ -122,10 +119,6 @@ class HueWont extends Minigames
     }
 
     function eliminate()
-    {
-        trace (choice);
-        trace (playerChoice);
-
         for (player => color in playerChoice)
             if (color == choice)
             {
@@ -133,10 +126,6 @@ class HueWont extends Minigames
 
                 eliminated += 1;
             }
-
-        trace (eliminated);
-        trace (group2);
-    }
 
     function startRound()
     {

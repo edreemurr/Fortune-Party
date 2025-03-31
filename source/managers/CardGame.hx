@@ -10,11 +10,12 @@ class CardGame extends Minigames
 {
     public var game:String;
 
+    public var topDeck:Card;
     public var curCard:Card;
     public var nextCard:Card;
-    public var topDeck:Card;
 
-    public var cardNum:Int;
+    public var curCardNum:Int;
+    public var nextCardNum:Int;
 
     var cardType:String;
     var initCards:Array<Int>;
@@ -74,7 +75,9 @@ class CardGame extends Minigames
             var x:Float = start[0] + (i * offset);
             var y:Float = start[1] + i;
 
-            switch (player)
+            playerHands[player - 1].add(new Card(cardType, x, y, faceUp ? newCard : cardCount, newCard));
+
+/*             switch (player)
             {
                 case 1:
                     hand1.add(new Card(cardType, x, y, faceUp ? newCard : cardCount, newCard));
@@ -91,7 +94,7 @@ class CardGame extends Minigames
                 default:
 
             }
-        }
+ */        }
 
         switch (player)
         {
