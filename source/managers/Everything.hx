@@ -1,5 +1,6 @@
 package managers;
 
+import flixel.util.FlxTimer;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.FlxSprite;
@@ -59,6 +60,8 @@ class Everything extends FlxState
     var cards4:FlxTypedGroup<Card>;
     // var playerHands:Array<FlxTypedGroup<Card>> = [];
 
+    var timerComplete:Void -> Void;
+
     public var controls(get, never):Controls;
     public var variables:Map<String, Dynamic> = new Map<String, Dynamic>();
 
@@ -74,6 +77,29 @@ class Everything extends FlxState
             openSubState(new Pause(0xffffff));
 
         super.update(elapsed);
+    }
+
+    function timer(time:Int, x:Float, y:Float)
+    {
+        var text:FlxText = new FlxText(x, y, 100, '$time', 28);
+        add(text);
+
+        new FlxTimer().start(1, function (timer:FlxTimer)
+        {
+            time --;
+
+            text.text = '$time';
+
+            if (time == 0)
+            {
+                trace ('Time\'s up');
+
+                text.kill();
+                text.destroy();
+
+                timerComplete;
+            }
+        }, time);
     }
 
     function rollDice(min:Int = 1, max:Int = 6):Int
