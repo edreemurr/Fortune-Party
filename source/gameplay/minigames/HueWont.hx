@@ -31,6 +31,9 @@ class HueWont extends Minigames
         
         roundText = new FlxText('', 28);
         add(roundText);
+
+        choiceText = new FlxTypeText(500, 100, 500, '', 40);
+        add(choiceText);
         
         buttonNames = ['red', 'blue', 'green', 'yellow'];
 

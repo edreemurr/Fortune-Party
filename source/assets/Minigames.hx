@@ -36,15 +36,12 @@ class Minigames extends Everything
     {
         canPause = true;
 
-        playerCount = 4;
+        // playerCount = 4;
 
         if (FlxG.save.data.characters != null)
             participants = FlxG.save.data.characters;
         else
             participants = [1, 2, 3, 4];
-
-        choiceText = new FlxTypeText(500, 100, 500, '', 40);
-        add(choiceText);
 
         super.create();
     }
