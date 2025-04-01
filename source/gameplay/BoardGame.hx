@@ -149,6 +149,9 @@ class BoardGame extends Everything
 
         curChar = characters[activePlayer];
 
+        cycleText = new FlxText(1100, 0, 100, '$cycle', 28);
+        add(cycleText);
+
         initTurnOrder();
 
         super.create();
@@ -446,7 +449,12 @@ class BoardGame extends Everything
             activePlayer = FlxMath.wrap(activePlayer, 0, playerCount - 1);
             
             if (activePlayer == 0)
+            {
+                cycle ++;
+                cycleText.text = '$cycle';
+                
                 saveData();
+            }
         }
 
         curChar = characters[activePlayer];

@@ -21,7 +21,7 @@ class Everything extends FlxState
 
     var playerCount:Int;
 
-    public var cycle:Int = 1;
+    var cycle:Int = 1;
     var round:Int = 0;
 
     var board:String;
@@ -39,6 +39,8 @@ class Everything extends FlxState
 
     var curChar:Character;
     var characters:Array<Character> = [];
+
+    var cycleText:FlxText;
     
     var coinsArray:Array<FlxText>;
     var piecesArray:Array<FlxText>;
