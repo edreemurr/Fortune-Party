@@ -23,6 +23,16 @@ class HueWont extends Minigames
         group1 = [1];
         group2 = [2, 3, 4];
 
+/*         playerCount = FlxG.save.data.playerCount;
+
+        for (i in 1...playerCount)
+            if (i > 1)
+                group2.push(i);
+            else
+                group1.push(i);
+
+        trace (group1, group2);
+ */
         buttons = new FlxTypedGroup<FlxSprite>();
         add(buttons);
 

@@ -416,9 +416,11 @@ class BoardGame extends Everything
     {
         cycle += 1;
 
+        controlsFree = false;
+
         saveData();
 
-        FlxG.switchState(HueWont.new);
+        openSubState(new MinigameSelection(0x000000));
     }
 
     function checkOwnership():Character

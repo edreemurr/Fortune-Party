@@ -25,6 +25,7 @@ class Everything extends FlxState
     var round:Int = 0;
 
     var board:String;
+    public var curGame:String;
 
     var coins:Array<Int>;
     var starPieces:Array<Int>;
@@ -32,7 +33,7 @@ class Everything extends FlxState
     var statsUI:Array<FlxSprite>;
 
     var canPause:Bool = false;
-    var controlsFree:Bool = false;
+    public var controlsFree:Bool = false;
     
     public var activePlayer:Int;
     var locations:Array<Int>;
