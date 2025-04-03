@@ -13,10 +13,8 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 
 import assets.Card;
 import assets.Character;
-import gameplay.minigames.*;
 
 import managers.Everything;
-import menus.CharacterSelect;
 
 class BoardGame extends Everything
 {
@@ -152,7 +150,7 @@ class BoardGame extends Everything
         cycleText = new FlxText(1100, 0, 100, '$cycle', 28);
         add(cycleText);
 
-        initTurnOrder();
+        initBoard();
 
         super.create();
     }
@@ -432,10 +430,12 @@ class BoardGame extends Everything
         return null;
     }
 
-    function initTurnOrder()
+    function initBoard()
     {
         if (newGame)
             FlxG.random.shuffle(characters);
+        else
+            openSubState(new PostMinigame(playerCount));
 
         playerStats();
 

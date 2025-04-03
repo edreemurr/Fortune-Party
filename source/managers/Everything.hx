@@ -19,7 +19,7 @@ class Everything extends FlxState
 
     public var newGame:Bool;
 
-    var playerCount:Int;
+    public var playerCount:Int;
 
     var cycle:Int = 1;
     var round:Int = 0;

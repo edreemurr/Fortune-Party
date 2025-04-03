@@ -30,18 +30,13 @@ class Minigames extends Everything
 
     var eliminated:Int = 0;
 
+    public static var victory:Array<Int>;
+
     public var START:Bool = false;
 
     override function create()
     {
         canPause = true;
-
-        // playerCount = 4;
-
-        if (FlxG.save.data.characters != null)
-            participants = FlxG.save.data.characters;
-        else
-            participants = [1, 2, 3, 4];
 
         super.create();
     }
@@ -62,6 +57,8 @@ class Minigames extends Everything
             if (player == players.length)
                 text.text += '\nwins';
         }
+
+        victory = players;
 
         new FlxTimer().start(3, function (timer:FlxTimer)
             FlxG.switchState(BoardGame.new));

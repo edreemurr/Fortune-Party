@@ -78,8 +78,8 @@ class MinigameSelection extends FlxSubState
     function loadMinigame(minigame:String)
         switch (minigame)
         {
-            case 'Hue Won\'t': FlxG.switchState(HueWont.new);
             case 'Ur': FlxG.switchState(Ur.new);
             case 'Garbage': FlxG.switchState(Garbage.new);
+            case 'Hue Won\'t': FlxG.switchState(HueWont.new);
         }
 }
