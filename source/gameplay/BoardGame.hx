@@ -12,6 +12,7 @@ import flixel.addons.text.FlxTypeText;
 import flixel.group.FlxGroup.FlxTypedGroup;
 
 import assets.Card;
+import assets.Minigames;
 import assets.Character;
 
 import managers.Everything;
@@ -33,6 +34,8 @@ class BoardGame extends Everything
     var landPrompt:FlxTypedGroup<FlxButton>;
 
     var landText:FlxTypeText;
+
+    var minigameResults:PostMinigame;
 
     override function create()
     {
@@ -377,6 +380,16 @@ class BoardGame extends Everything
                             FlxG.save.data.coins = coins;
                             FlxG.save.flush();
                         }
+
+                    case 'minigame':
+                        for (winner in Minigames.victory)
+                        {
+                            coins[winner - 1] = FlxMath.maxAdd(coins[winner - 1], 10, 999, 0);
+                            coinsArray[winner - 1].text = '${coins[winner - 1]}';
+                        }
+
+                        FlxG.save.data.coins = coins;
+                        FlxG.save.flush();
                 }
         }
 
@@ -438,6 +451,9 @@ class BoardGame extends Everything
             openSubState(new PostMinigame(playerCount));
 
         playerStats();
+
+        if (!newGame)
+            playerStats('update', 'minigame');
 
         controlsFree = true;
     }

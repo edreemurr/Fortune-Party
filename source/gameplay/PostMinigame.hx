@@ -5,14 +5,12 @@ import flixel.text.FlxText;
 import flixel.group.FlxGroup.FlxTypedGroup;
 
 import assets.Minigames;
-import gameplay.BoardGame;
 import managers.Everything;
 
 class PostMinigame extends FlxSubState
 {
     var stats:FlxTypedGroup<FlxText>;
 
-    var board:BoardGame;
     var everything:Everything;
 
     public function new(players:Int)
@@ -28,8 +26,6 @@ class PostMinigame extends FlxSubState
             text.screenCenter(X);
             stats.add(text);
         }
-
-        trace (Minigames.victory);
 
         for (num => text in stats)
             for (winner in Minigames.victory)

@@ -27,8 +27,8 @@ class Everything extends FlxState
     var board:String;
     public var curGame:String;
 
-    var coins:Array<Int>;
-    var starPieces:Array<Int>;
+    public var coins:Array<Int>;
+    public var starPieces:Array<Int>;
     
     var statsUI:Array<FlxSprite>;
 

@@ -71,7 +71,7 @@ class MinigameSelection extends FlxSubState
             loops --;
 
             if (loops == 0)
-                loadMinigame(all[num]);
+                loadMinigame(all[/* num */0]);
         }, loops);
     }
 
