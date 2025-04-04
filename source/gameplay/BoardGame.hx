@@ -48,10 +48,11 @@ class BoardGame extends Everything
         canPause = true;
 
         newGame = FlxG.save.data.newGame;
+        turnOrder = FlxG.save.data.turnOrder;
 
         board = FlxG.save.data.board;
         playerCount = FlxG.save.data.playerCount;
-
+        
         cycle = FlxG.save.data.cycle;
         lands = FlxG.save.data.lands;
 
@@ -67,7 +68,7 @@ class BoardGame extends Everything
                 spacePos = [FlxPoint.get(634, 546), FlxPoint.get(500, 543), FlxPoint.get(380, 490), FlxPoint.get(294, 400), FlxPoint.get(325, 285), FlxPoint.get(413, 191), FlxPoint.get(511, 115), FlxPoint.get(633, 105), FlxPoint.get(766, 115), FlxPoint.get(872, 154), FlxPoint.get(948, 237), FlxPoint.get(971, 343), FlxPoint.get(887, 456), FlxPoint.get(768, 522)];
 
             case 'kingdom':
-                spaceCount = 20;
+                spaceCount = 19;
                 startPos = FlxPoint.get(300, 300);
                 spaceType = ['land1', 'land2', 'land3', 'land4', 'land5', 'land6', 'land7', 'land8', 'land9', 'land10', 'land11', 'land12', 'land13', 'land14', 'land15', 'land16', 'land17', 'land18', 'land19', 'start'];
                 spacePos = [FlxPoint.get(400, 300), FlxPoint.get(500, 300), FlxPoint.get(600, 300), FlxPoint.get(700, 300), FlxPoint.get(800, 300), FlxPoint.get(800, 350), FlxPoint.get(800, 400), FlxPoint.get(800, 450), FlxPoint.get(800, 500), FlxPoint.get(800, 550), FlxPoint.get(700, 550), FlxPoint.get(600, 550), FlxPoint.get(500, 550), FlxPoint.get(400, 550), FlxPoint.get(300, 550), FlxPoint.get(300, 500), FlxPoint.get(300, 450), FlxPoint.get(300, 400), FlxPoint.get(300, 350), FlxPoint.get(300, 300)];
@@ -88,29 +89,48 @@ class BoardGame extends Everything
         }
 
         player1 = new Character(0, startPos.x, startPos.y);
-        characters.push(player1);
         add(player1);
+
+        if (newGame)
+            characters.push(player1);
 
         if (playerCount >= 2)
         {
             player2 = new Character(1, startPos.x, startPos.y);
-            characters.push(player2);
             add(player2);
+
+            if (newGame)
+                characters.push(player2);
         }
 
         if (playerCount >= 3)
         {
             player3 = new Character(2, startPos.x, startPos.y);
-            characters.push(player3);
             add(player3);
+
+            if (newGame)
+                characters.push(player3);
         }
 
         if (playerCount >= 4)
         {
             player4 = new Character(3, startPos.x, startPos.y);
-            characters.push(player4);
             add(player4);
+
+            if (newGame)
+                characters.push(player4);
         }
+
+        if (!newGame)
+            for (num in turnOrder)
+                if (num == player1.player)
+                    characters.push(player1);
+                else if (num == player2.player)
+                    characters.push(player2);
+                else if (num == player3.player)
+                    characters.push(player3);
+                else
+                    characters.push(player4);
 
         landText = new FlxTypeText(0, 100, 500, 'Would you like to\npurchase this land?', 30);
         landText.screenCenter(X);
@@ -446,7 +466,17 @@ class BoardGame extends Everything
     function initBoard()
     {
         if (newGame)
+        {
+            turnOrder = [];
+
             FlxG.random.shuffle(characters);
+
+            for (player in characters)
+                turnOrder.push(player.player);
+
+            FlxG.save.data.turnOrder = turnOrder;
+            FlxG.save.flush();
+        }
         else
             openSubState(new PostMinigame(playerCount));
 
@@ -483,8 +513,8 @@ class BoardGame extends Everything
         FlxG.save.data.newGame = false;
 
         FlxG.save.data.cycle = cycle;
+        FlxG.save.data.turnOrder = turnOrder;
         FlxG.save.data.locations = locations;
-        FlxG.save.data.characters = characters;
         
         FlxG.save.data.coins = coins;
         FlxG.save.data.starPieces = starPieces;

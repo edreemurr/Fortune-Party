@@ -16,7 +16,8 @@ class CharacterSelect extends Everything
     var char2:String;
     var char3:String;
     var char4:String;
-    var charColors:Array<String>;
+
+    public static var charColors:Array<String>;
     
     var text:FlxText;
     var numText:FlxText;
@@ -119,7 +120,6 @@ class CharacterSelect extends Everything
                         FlxG.save.data.board = buttonNames[selected].toLowerCase();
                         FlxG.save.data.charColors = charColors;
                         FlxG.save.flush();
-                        trace (FlxG.save.data.charColors);
 
                         FlxG.switchState(BoardGame.new);
                     }

@@ -1,5 +1,6 @@
 package assets;
 
+import menus.CharacterSelect;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.util.FlxColor;
@@ -11,7 +12,7 @@ class Character extends FlxSprite
 {
     var game:BoardGame;
 
-    public var colorChoice:FlxColor;
+    public var colorChoice:String;
 
     public var coins:Int;
     public var starPieces:Int;
@@ -28,9 +29,9 @@ class Character extends FlxSprite
         super(x, y);
 
         this.player = player;
-        this.colorChoice = FlxColor.fromString(FlxG.save.data.charColors[player]);
-
-        makeGraphic(50, 50, colorChoice);
+        this.colorChoice = CharacterSelect.charColors[player];
+        
+        makeGraphic(50, 50, FlxColor.fromString(colorChoice));
 
         offset.x = offset.y = 25;
 
