@@ -60,6 +60,8 @@ class Minigames extends Everything
 
         victory = players;
 
+        trace (victory);
+
         new FlxTimer().start(3, function (timer:FlxTimer)
             FlxG.switchState(BoardGame.new));
     }

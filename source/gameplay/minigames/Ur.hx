@@ -8,7 +8,7 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 
 import assets.UrPiece;
 import managers.Everything;
-//managers.BoardGame.hx
+
 class Ur extends Everything
 {
     public static var roll:Int;
@@ -45,13 +45,15 @@ class Ur extends Everything
             'Hi Ryder',
             'Mitaplier',
             'Me when I-',
+            'Bummerland',
             'It wimdy fr',
             'Not the vibe',
             'My cabbages!',
             'Nitroglycerin',
             'Immunoglobulin',
             'I miss my\nwife, Tails',
-            'How\'d he know\nwhat time it was?'
+            'How\'d he know\nwhat time it was?',
+            'Ababugada\nscaba\nfaggot\nskaba\nfagaba\ngabagalaga'
         ];
 
         add(initPieces('light'));
