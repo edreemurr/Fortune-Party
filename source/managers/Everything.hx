@@ -1,5 +1,7 @@
 package managers;
 
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
 import flixel.util.FlxTimer;
 import flixel.FlxG;
 import flixel.FlxState;
@@ -19,6 +21,7 @@ class Everything extends FlxState
 
     public var newGame:Bool;
 
+    public var cycleCount:Int;
     public var playerCount:Int;
 
     var cycle:Int = 1;
@@ -42,7 +45,7 @@ class Everything extends FlxState
     var curChar:Character;
     var characters:Array<Character> = [];
 
-    var cycleText:FlxText;
+    public var cycleText:FlxText;
     
     var coinsArray:Array<FlxText>;
     var piecesArray:Array<FlxText>;

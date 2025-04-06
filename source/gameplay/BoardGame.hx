@@ -51,6 +51,7 @@ class BoardGame extends Everything
         turnOrder = FlxG.save.data.turnOrder;
 
         board = FlxG.save.data.board;
+        cycleCount = FlxG.save.data.cycleCount;
         playerCount = FlxG.save.data.playerCount;
         
         cycle = FlxG.save.data.cycle;
@@ -170,7 +171,7 @@ class BoardGame extends Everything
 
         curChar = characters[activePlayer];
 
-        cycleText = new FlxText(1100, 0, 100, '$cycle', 28);
+        cycleText = new FlxText(1100, 0, 100, '', 28);
         add(cycleText);
 
         initBoard();
@@ -467,6 +468,8 @@ class BoardGame extends Everything
     {
         if (newGame)
         {
+            openSubState(new BoardBegin(0x000000));
+
             turnOrder = [];
 
             FlxG.random.shuffle(characters);
@@ -478,7 +481,11 @@ class BoardGame extends Everything
             FlxG.save.flush();
         }
         else
+        {
             openSubState(new PostMinigame(playerCount));
+            
+            cycleText.text = '$cycle/$cycleCount';
+        }
 
         playerStats();
 
@@ -499,7 +506,7 @@ class BoardGame extends Everything
             if (activePlayer == 0)
             {
                 cycle ++;
-                cycleText.text = '$cycle';
+                cycleText.text = '$cycle/$cycleCount';
                 
                 saveData();
             }

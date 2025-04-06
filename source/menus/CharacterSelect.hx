@@ -6,7 +6,6 @@ import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.group.FlxGroup.FlxTypedGroup;
 
-// import assets.BoardSave;
 import gameplay.BoardGame;
 import managers.Everything;
 
@@ -59,7 +58,7 @@ class CharacterSelect extends Everything
     override function update(elapsed)
     {
         var mouseHover:Bool = false;
-
+        
         if (playerAmount)
         {
             numText.text = '$num';
