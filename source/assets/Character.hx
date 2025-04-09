@@ -1,41 +1,46 @@
 package assets;
 
-import menus.CharacterSelect;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.util.FlxColor;
 import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.graphics.frames.FlxAtlasFrames;
 
 import gameplay.BoardGame;
+import menus.CharacterSelect;
 
 class Character extends FlxSprite
-{
-    var game:BoardGame;
-
-    public var colorChoice:String;
-
+{    
+    public var colorChoice:FlxColor;
+    
     public var coins:Int;
     public var starPieces:Int;
-
+    
     public var player:Int;
     public var location:Int;
-
+    
     public var land:Array<String>;
     public var items:Array<String>;
     public var cards:FlxTypedGroup<Card>;
+
+    var sprite:String = 'assets/images/characters';
+    
+    var game:BoardGame;
 
     public function new(player:Int, x:Float, y:Float)
     {
         super(x, y);
 
         this.player = player;
-        this.colorChoice = CharacterSelect.charColors[player];
+        this.colorChoice = FlxColor.fromString(CharacterSelect.charColors[player]);
+
+        frames = FlxAtlasFrames.fromSparrow('$sprite/Character.png', '$sprite/Character.xml');
         
-        makeGraphic(50, 50, FlxColor.fromString(colorChoice));
+        animation.addByPrefix('idle', 'character idle');
+        animation.addByPrefix('walk', 'character walk');
+        animation.addByPrefix('think', 'character think');
 
-        offset.x = offset.y = 25;
-
-        updateHitbox();
+        color = colorChoice;
     }
 
     public function loadStats()

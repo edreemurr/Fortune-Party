@@ -11,6 +11,7 @@ import flixel.util.FlxArrayUtil;
 import flixel.addons.text.FlxTypeText;
 import flixel.group.FlxGroup.FlxTypedGroup;
 
+import assets.Dice;
 import assets.Card;
 import assets.Minigames;
 import assets.Character;
@@ -34,6 +35,8 @@ class BoardGame extends Everything
     var landPrompt:FlxTypedGroup<FlxButton>;
 
     var landText:FlxTypeText;
+
+    var dice:Dice;
 
     var minigameResults:PostMinigame;
 
@@ -90,6 +93,7 @@ class BoardGame extends Everything
         }
 
         player1 = new Character(0, startPos.x, startPos.y);
+        player1.animation.play('idle');
         add(player1);
 
         if (newGame)
@@ -98,6 +102,7 @@ class BoardGame extends Everything
         if (playerCount >= 2)
         {
             player2 = new Character(1, startPos.x, startPos.y);
+            player2.animation.play('idle');
             add(player2);
 
             if (newGame)
@@ -107,6 +112,7 @@ class BoardGame extends Everything
         if (playerCount >= 3)
         {
             player3 = new Character(2, startPos.x, startPos.y);
+            player3.animation.play('idle');
             add(player3);
 
             if (newGame)
@@ -116,6 +122,7 @@ class BoardGame extends Everything
         if (playerCount >= 4)
         {
             player4 = new Character(3, startPos.x, startPos.y);
+            player4.animation.play('idle');
             add(player4);
 
             if (newGame)
@@ -159,7 +166,7 @@ class BoardGame extends Everything
             {
                 locations = [-1, -1, -1, -1];
                 
-                char.setPosition(startPos.x, startPos.y - (num * 15));
+                char.setPosition(startPos.x + (num * 50), startPos.y);
             }
             else
             {
@@ -184,6 +191,9 @@ class BoardGame extends Everything
         if (controls.ENTER && controlsFree)
         {
             diceRoll = rollDice();
+            
+            dice.spinning = false;
+            dice.animation.frameIndex = diceRoll - 1;
 
             playerMove(diceRoll);
         }
@@ -212,6 +222,8 @@ class BoardGame extends Everything
 
             if (activePlayer == playerCount && board == 'demo')
                 minigame();
+            else
+                startTurn();
 
             space.destroy();
             space.kill();
@@ -417,6 +429,8 @@ class BoardGame extends Everything
         function playerMove(num:Int)
         {
             controlsFree = false;
+
+            curChar.animation.play('walk');
             
             if (num > 0)
             {
@@ -429,12 +443,19 @@ class BoardGame extends Everything
                     
                     curSpace = spaceType[locations[activePlayer]];
 
+                    dice.animation.frameIndex --;
+                    
                     num--;
     
                     playerMove(num);
                 }});
             }
             else
+            {
+                curChar.animation.play('idle');
+
+                remove(dice);
+
                 if (board == 'demo')
                     initEvent(curSpace);
                 else if (board == 'kingdom')
@@ -442,6 +463,7 @@ class BoardGame extends Everything
                         changeTurn();
                     else
                         land();
+            }
         }
 
     function minigame()
@@ -492,7 +514,17 @@ class BoardGame extends Everything
         if (!newGame)
             playerStats('update', 'minigame');
 
+        curChar.animation.play('think');
+
+        startTurn();
+
         controlsFree = true;
+    }
+
+    function startTurn()
+    {
+        dice = new Dice(curChar.x, curChar.y - 100);
+        add(dice);
     }
 
     function changeTurn()
@@ -510,9 +542,14 @@ class BoardGame extends Everything
                 
                 saveData();
             }
+
+            startTurn();
         }
 
         curChar = characters[activePlayer];
+
+        if (activePlayer < playerCount && !newGame)
+            curChar.animation.play('think');
     }
 
     function saveData()

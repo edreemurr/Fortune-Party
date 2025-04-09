@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='utf-8'?>
+<TextureAtlas imagePath="dice.png">
+<SubTexture name="dice one0000" x="0" y="0" width="75" height="75" frameX="0" frameY="0" frameWidth="75" frameHeight="75" />
+<SubTexture name="dice two0000" x="75" y="0" width="75" height="75" frameX="0" frameY="0" frameWidth="75" frameHeight="75" />
+<SubTexture name="dice three0000" x="0" y="75" width="75" height="75" frameX="0" frameY="0" frameWidth="75" frameHeight="75" />
+<SubTexture name="dice four0000" x="75" y="75" width="75" height="75" frameX="0" frameY="0" frameWidth="75" frameHeight="75" />
+<SubTexture name="dice five0000" x="150" y="0" width="75" height="75" frameX="0" frameY="0" frameWidth="75" frameHeight="75" />
+<SubTexture name="dice six0000" x="150" y="75" width="75" height="75" frameX="0" frameY="0" frameWidth="75" frameHeight="75" />
+</TextureAtlas>
