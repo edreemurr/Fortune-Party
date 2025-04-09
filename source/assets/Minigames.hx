@@ -8,6 +8,7 @@ import flixel.addons.text.FlxTypeText;
 import flixel.group.FlxGroup.FlxTypedGroup;
 
 import assets.Character;
+import gameplay.BoardEnd;
 import gameplay.BoardGame;
 import managers.Everything;
 
@@ -38,6 +39,9 @@ class Minigames extends Everything
     {
         canPause = true;
 
+        cycle = FlxG.save.data.cycle;
+        cycleCount = FlxG.save.data.cycleCount;
+
         super.create();
     }
 
@@ -60,10 +64,8 @@ class Minigames extends Everything
 
         victory = players;
 
-        trace (victory);
-
         new FlxTimer().start(3, function (timer:FlxTimer)
-            FlxG.switchState(BoardGame.new));
+            cycle > cycleCount ? FlxG.switchState(BoardEnd.new) : FlxG.switchState(BoardGame.new));
     }
 
     function start(time:Float)
