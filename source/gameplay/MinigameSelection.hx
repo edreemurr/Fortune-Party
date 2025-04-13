@@ -5,6 +5,7 @@ import flixel.FlxSprite;
 import flixel.FlxSubState;
 import flixel.text.FlxText;
 import flixel.util.FlxTimer;
+import flixel.tweens.FlxTween;
 import flixel.group.FlxGroup.FlxTypedGroup;
 
 import gameplay.minigames.*;
@@ -71,7 +72,8 @@ class MinigameSelection extends FlxSubState
             loops --;
 
             if (loops == 0)
-                loadMinigame(all[/* num */0]);
+                FlxG.sound.music.fadeOut(1.5, function (tween:FlxTween)
+                    loadMinigame(all[/* num */0]));
         }, loops);
     }
 

@@ -26,18 +26,19 @@ class BoardGame extends Everything
     var spaceCount:Int;
 
     var startPos:FlxPoint;
-    var spacePrice:Array<Null<Int>>;
     var spaceType:Array<String>;
     var spacePos:Array<FlxPoint>;
+    var spacePrice:Array<Null<Int>>;
 
-    var yes:FlxButton;
     var no:FlxButton;
+    var yes:FlxButton;
     var landPrompt:FlxTypedGroup<FlxButton>;
 
     var landText:FlxTypeText;
 
-    var dice:Dice;
+    var music:String = 'assets/music';
 
+    var dice:Dice;
     var minigameResults:PostMinigame;
 
     override function create()
@@ -62,6 +63,8 @@ class BoardGame extends Everything
 
         coins = FlxG.save.data.coins;
         starPieces = FlxG.save.data.starPieces;
+
+        FlxG.sound.playMusic('$music/board.ogg', 0.5);
 
         switch (board)
         {
@@ -324,7 +327,7 @@ class BoardGame extends Everything
                     // char.loadStats();
 
                     var ui:FlxSprite = new FlxSprite(20, 20 + (num * 100), 'assets/images/GUI/stats.png');
-                    // ui.color = char.color;
+                    ui.color = char.color;
                     // statsUI.push(ui);
                     add(ui);
 
