@@ -1,12 +1,12 @@
 package managers;
 
-import flixel.tweens.FlxEase;
-import flixel.tweens.FlxTween;
-import flixel.util.FlxTimer;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.FlxSprite;
 import flixel.text.FlxText;
+import flixel.util.FlxTimer;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
 import flixel.group.FlxGroup.FlxTypedGroup;
 
 import assets.Card;
