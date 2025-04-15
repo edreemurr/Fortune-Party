@@ -35,6 +35,8 @@ class Minigames extends Everything
 
     public var START:Bool = false;
 
+    var onStart:Void -> Void;
+
     override function create()
     {
         canPause = true;
@@ -80,6 +82,8 @@ class Minigames extends Everything
             startText.destroy();
 
             START = true;
+
+            onStart;
         });
     }
 }
