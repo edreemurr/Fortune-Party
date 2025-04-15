@@ -2,8 +2,10 @@ package gameplay.minigames;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.util.FlxTimer;
+import flixel.input.mouse.FlxMouseEvent;
 import flixel.group.FlxGroup.FlxTypedGroup;
 
 import assets.UrPiece;
@@ -13,13 +15,16 @@ class Ur extends Everything
 {
     public static var roll:Int;
 
-    public static var turn:String = 'light';
+    var newLocation:Int = -1;
 
     public static var rolled:Bool = false;
     public static var moving:Bool = false;
 
     var gameBoard:FlxSprite;
-    var pieces:FlxTypedGroup<UrPiece>;
+
+    var piecesDark:FlxTypedGroup<UrPiece>;
+    var piecesLight:FlxTypedGroup<UrPiece>;
+    var pieces:Array<FlxTypedGroup<UrPiece>>;
     
     var numText:FlxText;
     var basedText:FlxText;
@@ -56,10 +61,18 @@ class Ur extends Everything
             'Ababugada\nscaba\nfaggot\nskaba\nfagaba\ngabagalaga'
         ];
 
-        add(initPieces('light'));
-        add(initPieces('dark'));
+        piecesLight = new FlxTypedGroup<UrPiece>();
+        add(piecesLight);
 
-        basedText = new FlxText(250, '', 100);
+        piecesDark = new FlxTypedGroup<UrPiece>();
+        add(piecesDark);
+
+        add(initPieces('dark'));
+        add(initPieces('light'));
+
+        pieces = [piecesLight, piecesDark];
+
+        basedText = new FlxText(250, 0, 1000, '', 100);
         basedText.alignment = CENTER;
         basedText.screenCenter(Y);
         add(basedText);
@@ -84,7 +97,28 @@ class Ur extends Everything
                 new FlxTimer().start(5, function(timer:FlxTimer)
                 {
                     basedText.text = '';
+
+                    activePlayer += 1;
+                    activePlayer = FlxMath.wrap(activePlayer, 0, 1);
                 });
+            }
+        }
+
+        for (piece in pieces[activePlayer])
+        {
+            newLocation = piece.location + roll;
+            trace (newLocation, piece.location);
+
+            if (newLocation == piece.location && rolled)
+            {
+                trace ('FlxMouseEvent.remove');
+                FlxMouseEvent.remove(piece);
+            }
+
+            if (!piece.again)
+            {
+                activePlayer += 1;
+                activePlayer = FlxMath.wrap(activePlayer, 0, 1);
             }
         }
 
@@ -93,28 +127,24 @@ class Ur extends Everything
 
         super.update(elapsed);
     }
-    
+
     function initPieces(type:String):FlxTypedGroup<UrPiece>
     {
-        var x:Int = 0;
-        var y:Int = 0;
-        
-        pieces = new FlxTypedGroup<UrPiece>();
-
-        if (type == 'light')
+        switch (type)
         {
-            x = 300;
-            y = 650;
-        }
-        else if (type == 'dark')
-        {
-            x = 300;
-            y = 100;
+            case 'light':
+                for (i in 0...5)
+                    piecesLight.add(new UrPiece('light', 300 + (i * 100), 650));
+
+                return piecesLight;
+
+            case 'dark':
+                for (i in 0...5)
+                    piecesDark.add(new UrPiece('dark', 300 + (i * 100), 100));
+
+                return piecesDark;
         }
 
-        for (i in 0...5)
-            pieces.add(new UrPiece(type, x + (i * 100), y));
-
-        return pieces;
+        return null;
     }
 }
