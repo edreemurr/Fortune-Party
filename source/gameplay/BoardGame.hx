@@ -90,13 +90,30 @@ class BoardGame extends Everything
                 // playerHands = [cards1, cards2, cards3, cards4];
         }
 
-        for (spacePosAlt in spacePosAlt)
-            for (num => pos in [spacePos, spacePosAlt])
+        for (num => pos in spacePos)
+        {
+            var space:FlxSprite = new FlxSprite(pos.x, pos.y).loadGraphic('assets/images/spaces/space.png');
+            add(space);
+            
+            switch (spaceType[num])
             {
-                var space:FlxSprite = new FlxSprite(pos[num].x, pos[num].y).loadGraphic('assets/images/spaces/space.png');
+                case 'red': space.color = 0xff6363;
+                case 'blue': space.color = 0x0094ff;
+                case 'teal': space.color = 0x88cfb7;
+                case 'green': space.color = 0x3ece8f;
+                case 'brown': space.color = 0x7a5f4c;
+                case 'purple': space.color = 0xa270ff;
+                case 'direction': space.color = 0x858585;
+            }
+        }
+
+        for (index => spaceAlt in spacePosAlt)
+            for (num => pos in spaceAlt)
+            {
+                var space:FlxSprite = new FlxSprite(pos.x, pos.y).loadGraphic('assets/images/spaces/space.png');
                 add(space);
-                
-                switch (spaceType[num])
+
+                switch (spaceTypeAlt[index][num])
                 {
                     case 'red': space.color = 0xff6363;
                     case 'blue': space.color = 0x0094ff;
@@ -104,7 +121,6 @@ class BoardGame extends Everything
                     case 'green': space.color = 0x3ece8f;
                     case 'brown': space.color = 0x7a5f4c;
                     case 'purple': space.color = 0xa270ff;
-                    case 'direction': space.color = 0x858585;
                 }
             }
 
