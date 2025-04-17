@@ -8,9 +8,9 @@ import flixel.util.FlxTimer;
 import flixel.group.FlxGroup.FlxTypedGroup;
 
 import assets.UrPiece;
-import managers.Everything;
+import assets.Minigames;
 
-class Ur extends Everything
+class Ur extends Minigames
 {
     public static var roll:Int;
 
@@ -109,11 +109,17 @@ class Ur extends Everything
         if (turnEnd)
         {
             var jover:Bool = true;
-
-            var locations:Array<Int> = [];
-
+            var endGame:Bool = true;
             var inactivePlayer:Int = 0;
+            var locations:Array<Int> = [];
             
+            for (piece in pieces[activePlayer])
+                if (!piece.endGoal)
+                    endGame = false;
+
+            if (endGame)
+                winner([activePlayer + 1]);
+
             if (activePlayer == 0)
                 inactivePlayer = 1;
 
