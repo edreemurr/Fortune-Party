@@ -5,7 +5,6 @@ import flixel.FlxSprite;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.util.FlxTimer;
-import flixel.input.mouse.FlxMouseEvent;
 import flixel.group.FlxGroup.FlxTypedGroup;
 
 import assets.UrPiece;
@@ -19,6 +18,7 @@ class Ur extends Everything
 
     public static var rolled:Bool = false;
     public static var moving:Bool = false;
+    public static var turnEnd:Bool = false;
 
     var gameBoard:FlxSprite;
 
@@ -88,13 +88,11 @@ class Ur extends Everything
 
             numText.text = '$roll';
 
-            if (roll > 0)
-                rolled = true;
-            else
+            if (roll == 0)
             {
                 basedText.text = '${zero[FlxG.random.int(0, zero.length)]}';
 
-                new FlxTimer().start(5, function(timer:FlxTimer)
+                new FlxTimer().start(3, function(timer:FlxTimer)
                 {
                     basedText.text = '';
 
@@ -102,32 +100,84 @@ class Ur extends Everything
                     activePlayer = FlxMath.wrap(activePlayer, 0, 1);
                 });
             }
-        }
-
-        for (piece in pieces[activePlayer])
-        {
-            newLocation = piece.location + roll;
-            trace (newLocation, piece.location);
-
-            if (newLocation == piece.location && rolled)
-            {
-                trace ('FlxMouseEvent.remove');
-                FlxMouseEvent.remove(piece);
-            }
-
-            if (!piece.again)
-            {
-                activePlayer += 1;
-                activePlayer = FlxMath.wrap(activePlayer, 0, 1);
-            }
+            else
+                checkMoves();
         }
 
         if (moving)
             numText.text = '';
 
+        if (turnEnd)
+        {
+            var jover:Bool = true;
+
+            for (piece in pieces[activePlayer])
+            {
+                piece.usable = false;
+
+                if (piece.again)
+                {
+                    jover = false;
+                    piece.again = false;
+                }
+            }
+
+            if (jover)
+            {
+                activePlayer += 1;
+                activePlayer = FlxMath.wrap(activePlayer, 0, 1);
+            }
+
+            turnEnd = false;
+
+            trace ('turnEnd');
+        }
+
         super.update(elapsed);
     }
 
+    function checkMoves()
+    {
+        rolled = true;
+
+        var locations:Array<Int> = [];
+
+        for (piece in pieces[activePlayer])
+            locations.push(piece.location);
+
+        trace (activePlayer, locations);
+
+        for (index => num in locations)
+        {
+            newLocation = num + roll;
+            trace ('newLocation = $newLocation');
+
+            if (newLocation != num)
+            {
+                trace ('${locations[index]}.usable');
+                pieces[activePlayer].members[index].usable = true;
+            }
+            else
+            {
+                trace ('${locations[index]}.unusable');
+                pieces[activePlayer].members[index].usable = false;
+            }
+        }
+    }
+
+/*     function endMove()
+        for (num => piece in pieces[activePlayer])
+        {
+            trace (num, pieces[activePlayer].length);
+
+            if (!piece.again && num == pieces[activePlayer].length)
+            {
+                activePlayer += 1;
+                activePlayer = FlxMath.wrap(activePlayer, 0, 1);
+                trace ('activePlayer += 1');
+            }
+        }
+ */
     function initPieces(type:String):FlxTypedGroup<UrPiece>
     {
         switch (type)

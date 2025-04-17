@@ -5,8 +5,6 @@ import flixel.FlxState;
 import flixel.FlxSprite;
 import flixel.text.FlxText;
 import flixel.util.FlxTimer;
-import flixel.tweens.FlxEase;
-import flixel.tweens.FlxTween;
 import flixel.group.FlxGroup.FlxTypedGroup;
 
 import assets.Card;
@@ -38,7 +36,7 @@ class Everything extends FlxState
 
     var canPause:Bool = false;
     public var controlsFree:Bool = false;
-    
+
     public var activePlayer:Int;
     var locations:Array<Int>;
 

@@ -17,8 +17,12 @@ class UrPiece extends FlxSprite
     var spaces:Array<Array<Dynamic>>;
 
     public var again:Bool = false;
+    public var usable:Bool = false;
+
     var killed:Bool = false;
     var endGoal:Bool = false;
+
+    var ur:Ur;
 
     public function new(type:String, x:Float, y:Float)
     {
@@ -27,20 +31,27 @@ class UrPiece extends FlxSprite
         this.type = type;
 
         if (type == 'light')
-            spaces = [[FlxPoint.get(595, 466), false], [FlxPoint.get(441, 461), false], [FlxPoint.get(286, 462), false], [FlxPoint.get(122, 452), true], [FlxPoint.get(137, 331), false], [FlxPoint.get(293, 336), false], [FlxPoint.get(443, 344), false], [FlxPoint.get(587, 342), true], [FlxPoint.get(737, 348), false], [FlxPoint.get(874, 350), false], [FlxPoint.get(1003, 345), false], [FlxPoint.get(1139, 347), false], [FlxPoint.get(1184, 461), false], [FlxPoint.get(1048, 461), true], [FlxPoint.get(719, 535), false]];
+            spaces = [[FlxPoint.get(595, 466), true], [FlxPoint.get(441, 461), true], [FlxPoint.get(286, 462), true], [FlxPoint.get(122, 452), false], [FlxPoint.get(137, 331), true], [FlxPoint.get(293, 336), true], [FlxPoint.get(443, 344), true], [FlxPoint.get(587, 342), false], [FlxPoint.get(737, 348), true], [FlxPoint.get(874, 350), true], [FlxPoint.get(1003, 345), true], [FlxPoint.get(1139, 347), true], [FlxPoint.get(1184, 461), true], [FlxPoint.get(1048, 461), false], [FlxPoint.get(719, 535), true]];
         else if (type == 'dark')
-            spaces = [[FlxPoint.get(586, 241), false], [FlxPoint.get(446, 234), false], [FlxPoint.get(303, 226), false], [FlxPoint.get(161, 228), true], [FlxPoint.get(137, 331), false], [FlxPoint.get(293, 336), false], [FlxPoint.get(443, 344), false], [FlxPoint.get(587, 342), true], [FlxPoint.get(737, 348), false], [FlxPoint.get(874, 350), false], [FlxPoint.get(1003, 345), false], [FlxPoint.get(1139, 347), false], [FlxPoint.get(1112, 246), false], [FlxPoint.get(982, 228), true], [FlxPoint.get(698, 224), false]];
+            spaces = [[FlxPoint.get(586, 241), true], [FlxPoint.get(446, 234), true], [FlxPoint.get(303, 226), true], [FlxPoint.get(161, 228), false], [FlxPoint.get(137, 331), true], [FlxPoint.get(293, 336), true], [FlxPoint.get(443, 344), true], [FlxPoint.get(587, 342), false], [FlxPoint.get(737, 348), true], [FlxPoint.get(874, 350), true], [FlxPoint.get(1003, 345), true], [FlxPoint.get(1139, 347), true], [FlxPoint.get(1112, 246), true], [FlxPoint.get(982, 228), false], [FlxPoint.get(698, 224), true]];
 
         loadGraphic('assets/images/ur/$type.png');
 
         offset.x = width/2;
         offset.y = height/2;
-
-        FlxMouseEvent.add(this, pressed, null, hover, idle);
     }
 
     override function update(elapsed:Float)
     {
+        if (usable)
+            FlxMouseEvent.add(this, pressed, null, hover, idle);
+        else
+        {
+            alpha = 1;
+
+            FlxMouseEvent.remove(this);
+        }
+
         if (Ur.roll == 0)
             Ur.rolled = false;
 
@@ -54,15 +65,15 @@ class UrPiece extends FlxSprite
     }
 
     function pressed(_)
-        if (Ur.rolled && !Ur.moving && !endGoal)
+        // if (Ur.rolled && !Ur.moving && !endGoal)
             movePiece(Ur.roll);
 
     function hover(_)
-        if (Ur.rolled && !Ur.moving && !endGoal)
-            alpha = 0.5;
+        // if (Ur.rolled && !Ur.moving && !endGoal)
+            alpha = 1;
 
     function idle(_)
-        alpha = 1;
+        alpha = 0.5;
 
     function movePiece(num:Int)
     {
@@ -85,6 +96,8 @@ class UrPiece extends FlxSprite
             location += num;
 
             again = spaces[location][2];
+
+            Ur.turnEnd = true;
         }});
     }
 }
