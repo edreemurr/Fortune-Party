@@ -179,13 +179,11 @@ class BoardGame extends Everything
             }
         }
 
-        curChar = characters[activePlayer];
-
         cycleText = new FlxText(1100, 0, 100, '', 28);
         add(cycleText);
-
+        
         initBoard();
-
+        
         super.create();
     }
 
@@ -511,6 +509,8 @@ class BoardGame extends Everything
             
             cycleText.text = '$cycle/$cycleCount';
         }
+
+        curChar = characters[activePlayer];
 
         playerStats();
 
