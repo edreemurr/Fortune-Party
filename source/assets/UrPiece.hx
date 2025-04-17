@@ -44,7 +44,11 @@ class UrPiece extends FlxSprite
     override function update(elapsed:Float)
     {
         if (usable)
+        {
+            alpha = 0.5;
+
             FlxMouseEvent.add(this, pressed, null, hover, idle);
+        }
         else
         {
             alpha = 1;
@@ -65,12 +69,10 @@ class UrPiece extends FlxSprite
     }
 
     function pressed(_)
-        // if (Ur.rolled && !Ur.moving && !endGoal)
-            movePiece(Ur.roll);
+        movePiece(Ur.roll);
 
     function hover(_)
-        // if (Ur.rolled && !Ur.moving && !endGoal)
-            alpha = 1;
+        alpha = 1;
 
     function idle(_)
         alpha = 0.5;

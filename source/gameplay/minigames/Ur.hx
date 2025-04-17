@@ -96,8 +96,7 @@ class Ur extends Everything
                 {
                     basedText.text = '';
 
-                    activePlayer += 1;
-                    activePlayer = FlxMath.wrap(activePlayer, 0, 1);
+                    turnEnd = true;
                 });
             }
             else
@@ -117,6 +116,7 @@ class Ur extends Everything
 
                 if (piece.again)
                 {
+                    trace ('again');
                     jover = false;
                     piece.again = false;
                 }
@@ -129,8 +129,6 @@ class Ur extends Everything
             }
 
             turnEnd = false;
-
-            trace ('turnEnd');
         }
 
         super.update(elapsed);
@@ -145,39 +143,17 @@ class Ur extends Everything
         for (piece in pieces[activePlayer])
             locations.push(piece.location);
 
-        trace (activePlayer, locations);
-
         for (index => num in locations)
         {
             newLocation = num + roll;
-            trace ('newLocation = $newLocation');
 
-            if (newLocation != num)
-            {
-                trace ('${locations[index]}.usable');
-                pieces[activePlayer].members[index].usable = true;
-            }
-            else
-            {
-                trace ('${locations[index]}.unusable');
+            if (locations.contains(newLocation))
                 pieces[activePlayer].members[index].usable = false;
-            }
+            else
+                pieces[activePlayer].members[index].usable = true;
         }
     }
 
-/*     function endMove()
-        for (num => piece in pieces[activePlayer])
-        {
-            trace (num, pieces[activePlayer].length);
-
-            if (!piece.again && num == pieces[activePlayer].length)
-            {
-                activePlayer += 1;
-                activePlayer = FlxMath.wrap(activePlayer, 0, 1);
-                trace ('activePlayer += 1');
-            }
-        }
- */
     function initPieces(type:String):FlxTypedGroup<UrPiece>
     {
         switch (type)
