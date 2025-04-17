@@ -110,13 +110,27 @@ class Ur extends Everything
         {
             var jover:Bool = true;
 
+            var locations:Array<Int> = [];
+
+            var inactivePlayer:Int = 0;
+            
+            if (activePlayer == 0)
+                inactivePlayer = 1;
+
+            var otherPlayer = pieces[inactivePlayer];
+
+            for (otherPiece in otherPlayer)
+                locations.push(otherPiece.location);
+
             for (piece in pieces[activePlayer])
             {
+                if (locations.contains(piece.location) && (piece.location > 3 && piece.location < 12))
+                    otherPlayer.members[locations.indexOf(piece.location)].killed = true;
+
                 piece.usable = false;
 
                 if (piece.again)
                 {
-                    trace ('again');
                     jover = false;
                     piece.again = false;
                 }
