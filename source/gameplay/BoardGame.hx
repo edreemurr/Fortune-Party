@@ -539,6 +539,8 @@ class BoardGame extends Everything
 
     function startTurn()
     {
+        FlxG.camera.follow(curChar);
+
         dice = new Dice(curChar.x, curChar.y - 100);
         add(dice);
     }
