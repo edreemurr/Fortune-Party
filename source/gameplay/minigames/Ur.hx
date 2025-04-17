@@ -161,7 +161,7 @@ class Ur extends Everything
         {
             newLocation = num + roll;
 
-            if (locations.contains(newLocation))
+            if (locations.contains(newLocation) && newLocation < 14)
                 pieces[activePlayer].members[index].usable = false;
             else
                 pieces[activePlayer].members[index].usable = true;

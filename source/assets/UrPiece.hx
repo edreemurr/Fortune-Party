@@ -18,8 +18,7 @@ class UrPiece extends FlxSprite
     public var again:Bool = false;
     public var usable:Bool = false;
     public var killed:Bool = false;
-
-    var endGoal:Bool = false;
+    public var endGoal:Bool = false;
 
     var ur:Ur;
 
@@ -82,17 +81,17 @@ class UrPiece extends FlxSprite
     {
         Ur.moving = true;
 
-        var newX:Float = spaces[FlxMath.maxAdd(location, num, spaces.length - 1, -1)][0].x;
-        var newY:Float = spaces[FlxMath.maxAdd(location, num, spaces.length - 1, -1)][0].y;
+        var newX:Float = spaces[FlxMath.maxAdd(location, num, 14, -1)][0].x;
+        var newY:Float = spaces[FlxMath.maxAdd(location, num, 14, -1)][0].y;
 
         FlxTween.tween(this, {x: newX, y: newY}, 0.5, {onComplete: function(tween:FlxTween)
         {
             Ur.moving = false;
             Ur.rolled = false;
 
-            location += num;
+            location = FlxMath.maxAdd(location, num, 14, -1);
 
-            if (location == spaces.length - 1)
+            if (location == 14)
                 endGoal = true;
 
             again = spaces[location][1];
