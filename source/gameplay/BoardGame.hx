@@ -30,6 +30,9 @@ class BoardGame extends Everything
     var spacePos:Array<FlxPoint>;
     var spacePrice:Array<Null<Int>>;
 
+    var spaceTypeAlt:Array<Array<String>>;
+    var spacePosAlt:Array<Array<FlxPoint>>;
+
     var no:FlxButton;
     var yes:FlxButton;
     var landPrompt:FlxTypedGroup<FlxButton>;
@@ -44,10 +47,6 @@ class BoardGame extends Everything
     override function create()
     {
         FlxG.mouse.visible = false;
-
-        #if DEBUG
-        FlxG.watch.add(activePlayer, 'Active Player');
-        #end
 
         canPause = true;
 
@@ -69,10 +68,12 @@ class BoardGame extends Everything
         switch (board)
         {
             case 'demo':
-                spaceCount = 13;
-                startPos = FlxPoint.get(600, 650);
-                spaceType = ['blue', 'blue', 'red', 'blue', 'green', 'red', 'brown', 'blue', 'blue', 'brown', 'green', 'blue', 'brown', 'red'];
-                spacePos = [FlxPoint.get(634, 546), FlxPoint.get(500, 543), FlxPoint.get(380, 490), FlxPoint.get(294, 400), FlxPoint.get(325, 285), FlxPoint.get(413, 191), FlxPoint.get(511, 115), FlxPoint.get(633, 105), FlxPoint.get(766, 115), FlxPoint.get(872, 154), FlxPoint.get(948, 237), FlxPoint.get(971, 343), FlxPoint.get(887, 456), FlxPoint.get(768, 522)];
+                spaceCount = 42;
+                startPos = FlxPoint.get(900, 1500);
+                spaceType = ['blue', 'blue', 'blue', 'red', 'blue', 'direction', 'blue', 'red', 'blue', 'green', 'blue', 'red', 'red', 'blue', 'green', 'blue', 'blue', 'red', 'blue', 'blue', 'green', 'purple', 'red', 'red', 'blue', 'teal', 'brown', 'red', 'green', 'green', 'blue', 'blue', 'blue', 'red', 'blue', 'direction', 'red', 'red', 'red', 'red', 'purple', 'red'];
+                spaceTypeAlt = [['green', 'brown', 'red', 'red', 'brown'], ['blue', 'blue', 'blue', 'blue', 'blue', 'green', 'red', 'blue', 'brown']];
+                spacePos = [FlxPoint.get(1010, 1410), FlxPoint.get(900, 1280), FlxPoint.get(780, 1150), FlxPoint.get(680, 1010), FlxPoint.get(550, 940), FlxPoint.get(400, 860), FlxPoint.get(260, 800), FlxPoint.get(190, 685), FlxPoint.get(130, 530), FlxPoint.get(170, 380), FlxPoint.get(240, 260), FlxPoint.get(380, 150), FlxPoint.get(540, 100), FlxPoint.get(690, 105), FlxPoint.get(870, 105), FlxPoint.get(1030, 160), FlxPoint.get(1215, 190), FlxPoint.get(1370, 200), FlxPoint.get(1530, 220), FlxPoint.get(1700, 270), FlxPoint.get(1885, 340), FlxPoint.get(2040, 440), FlxPoint.get(2000, 580), FlxPoint.get(1855, 635), FlxPoint.get(1700, 660), FlxPoint.get(1535, 675), FlxPoint.get(1380, 700), FlxPoint.get(1325, 850), FlxPoint.get(1450, 950), FlxPoint.get(1590, 1010), FlxPoint.get(1750, 1030), FlxPoint.get(1910, 1050), FlxPoint.get(2065, 1065), FlxPoint.get(2215, 1150), FlxPoint.get(2305, 1305), FlxPoint.get(2245, 1450), FlxPoint.get(2095, 1570), FlxPoint.get(1925, 1615), FlxPoint.get(1735, 1630), FlxPoint.get(1540, 1620), FlxPoint.get(1340, 1580), FlxPoint.get(1160, 1520)];
+                spacePosAlt = [[FlxPoint.get(510, 760), FlxPoint.get(630, 640), FlxPoint.get(735, 520), FlxPoint.get(800, 390), FlxPoint.get(890, 280)], [FlxPoint.get(2260, 1660), FlxPoint.get(2200, 1810), FlxPoint.get(2080, 1900), FlxPoint.get(1925, 1920), FlxPoint.get(1770, 1920), FlxPoint.get(1615, 1910), FlxPoint.get(1460, 1885), FlxPoint.get(1315, 1830), FlxPoint.get(1185, 1710)]];
 
             case 'kingdom':
                 spaceCount = 19;
@@ -89,11 +90,23 @@ class BoardGame extends Everything
                 // playerHands = [cards1, cards2, cards3, cards4];
         }
 
-        for (i in 0...spacePos.length)
-        {
-            var space:FlxSprite = new FlxSprite(spacePos[i].x, spacePos[i].y).loadGraphic('assets/images/spaces/${spaceType[i]}.png');
-            add(space);
-        }
+        for (spacePosAlt in spacePosAlt)
+            for (num => pos in [spacePos, spacePosAlt])
+            {
+                var space:FlxSprite = new FlxSprite(pos[num].x, pos[num].y).loadGraphic('assets/images/spaces/space.png');
+                add(space);
+                
+                switch (spaceType[num])
+                {
+                    case 'red': space.color = 0xff6363;
+                    case 'blue': space.color = 0x0094ff;
+                    case 'teal': space.color = 0x88cfb7;
+                    case 'green': space.color = 0x3ece8f;
+                    case 'brown': space.color = 0x7a5f4c;
+                    case 'purple': space.color = 0xa270ff;
+                    case 'direction': space.color = 0x858585;
+                }
+            }
 
         player1 = new Character(0, startPos.x, startPos.y);
         player1.animation.play('idle');
