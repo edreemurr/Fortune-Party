@@ -28,7 +28,11 @@ class Card extends FlxSprite
     {
         super(x, y);
 
-        this.card = card;
+        if (card == null)
+            this.card = index;
+        else
+            this.card = card;
+
         this.cardIndex = index;
 
         switch (type)
@@ -52,7 +56,11 @@ class Card extends FlxSprite
         if (interactable)
             FlxMouseEvent.add(this, select, null, hover, idle);
         else
+        {
+            alpha = 1;
+
             FlxMouseEvent.remove(this);
+        }
 
         if (usable)
             y = 200;

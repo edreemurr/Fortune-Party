@@ -83,7 +83,8 @@ class Minigames extends Everything
 
             START = true;
 
-            onStart;
+            if (onStart != null)
+                onStart;
         });
     }
 }

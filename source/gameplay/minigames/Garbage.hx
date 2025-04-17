@@ -2,6 +2,7 @@ package gameplay.minigames;
 
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
+import flixel.addons.text.FlxTypeText;
 
 import assets.Card;
 import managers.CardGame;
@@ -18,10 +19,16 @@ class Garbage extends CardGame
     {
         game = 'garbage';
 
+        choiceText = new FlxTypeText(0, 50, 500, 'Player ${activePlayer + 1}\nDraw a card', 32);
+        choiceText.screenCenter(X);
+        add(choiceText);
+
         cardPlaces1 = [FlxPoint.get(250, 400), FlxPoint.get(350, 400), FlxPoint.get(450, 400), FlxPoint.get(550, 400), FlxPoint.get(650, 400), FlxPoint.get(250, 500), FlxPoint.get(350, 500), FlxPoint.get(450, 500), FlxPoint.get(550, 500), FlxPoint.get(650, 500)];
         cardPlaces2 = [FlxPoint.get(250, 100), FlxPoint.get(350, 100), FlxPoint.get(450, 100), FlxPoint.get(550, 100), FlxPoint.get(650, 100), FlxPoint.get(250, 200), FlxPoint.get(350, 200), FlxPoint.get(450, 200), FlxPoint.get(550, 200), FlxPoint.get(650, 200)];
 
         cardPlaces = [cardPlaces1, cardPlaces2];
+
+        playerHands = [hand1, hand2];
 
         start(1);
 
@@ -76,23 +83,20 @@ class Garbage extends CardGame
 
         for (index in 0...playerHands[activePlayer].length)
         {
-            curCardNum = Std.int(index/4);
-            trace ('curCardNum = $curCardNum');
+            curCardNum = Std.int(curCard.card/4) + 2;
 
-            if (card.card <= 9)
+            if (curCardNum < 10)
             {
                 nextCard = playerHands[activePlayer].members[curCardNum];
-                nextCardNum = Std.int(nextCard.card/4);
-                trace ('nextCardNum = $nextCardNum');
+                nextCardNum = Std.int(nextCard.card/4) + 2;
 
                 nextCard.interactable = true;
 
-                card.usable = true;
-                // card.accepted = true;
-                card.interactable = false;
+                curCard.usable = true;
+                curCard.interactable = false;
 
-                card.newX = cardPlaces[activePlayer][curCardNum].x;
-                card.newY = cardPlaces[activePlayer][curCardNum].y;
+                curCard.newX = cardPlaces[activePlayer][curCardNum].x;
+                curCard.newY = cardPlaces[activePlayer][curCardNum].y;
 
                 yippee = true;
 
@@ -101,34 +105,31 @@ class Garbage extends CardGame
 
                 cardCheck = false;
 
+                trace ('yes');
+
                 break;
             }
         }
 
         if (!yippee)
         {
-            trace ('!yippee');
-            card.discarded = true;
-            card.interactable = false;
+            // deck.remove(card);
+            discard.add(curCard);
+            
+            curCard.discarded = true;
+            curCard.interactable = false;
 
-            deck.remove(card);
-            discard.add(card);
-
-            activePlayer += 1;
-            activePlayer = FlxMath.wrap(activePlayer, 0, 1);
+            trace ('no');
 
             changeTurn();
         }
     }
 
-/*     public function newPos():FlxPoint
-    {
-        trace (cardPlaces[activePlayer][curCardNum]);
-        return cardPlaces[activePlayer][curCardNum];
-    }
- */
     function changeTurn()
     {
+        activePlayer += 1;
+        activePlayer = FlxMath.wrap(activePlayer, 0, 1);
+
         choiceText.y = 0;
 
         choiceText.resetText('Player ${activePlayer + 1}\nDraw a card');
@@ -140,7 +141,6 @@ class Garbage extends CardGame
         topDeck = deck.members[cardCount];
         topDeck.interactable = true;
 
-        // turnEnd = false;
         turnStart = true;
     }
 }

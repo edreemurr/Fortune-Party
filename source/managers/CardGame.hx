@@ -53,6 +53,9 @@ class CardGame extends Minigames
 
         drawnCards = [];
 
+        deck = new FlxTypedGroup<Card>();
+        discard = new FlxTypedGroup<Card>();
+
         hand1 = new FlxTypedGroup<Card>();
         hand2 = new FlxTypedGroup<Card>();
         hand3 = new FlxTypedGroup<Card>();
@@ -75,43 +78,15 @@ class CardGame extends Minigames
             var x:Float = start[0] + (i * offset);
             var y:Float = start[1] + i;
 
-            playerHands[player - 1].add(new Card(cardType, x, y, faceUp ? newCard : cardCount, newCard));
+            playerHands[player].add(new Card(cardType, x, y, faceUp ? newCard : cardCount, newCard));
 
-/*             switch (player)
-            {
-                case 1:
-                    hand1.add(new Card(cardType, x, y, faceUp ? newCard : cardCount, newCard));
-
-                case 2:
-                    hand2.add(new Card(cardType, x, y, faceUp ? newCard : cardCount, newCard));
-
-                case 3:
-                    hand3.add(new Card(cardType, x, y, faceUp ? newCard : cardCount, newCard));
-
-                case 4:
-                    hand4.add(new Card(cardType, x, y, faceUp ? newCard : cardCount, newCard));
-
-                default:
-
-            }
- */        }
-
-        switch (player)
-        {
-            case 1: return hand1;
-            case 2: return hand2;
-            case 3: return hand3;
-            case 4: return hand4;
         }
 
-        return null;
+        return playerHands[player];
     }
 
     function buildDeck(x:Float, y:Float):FlxTypedGroup<Card>
     {
-        deck = new FlxTypedGroup<Card>();
-        discard = new FlxTypedGroup<Card>();
-
         initCards = [];
 
         for (i in 0...cardCount)
@@ -119,7 +94,7 @@ class CardGame extends Minigames
             var card = FlxG.random.int(0, cardCount, initCards);
             initCards.push(card);
 
-            deck.add(new Card(cardType, x + (i * 0.05), y + (i * 0.05), cardCount));
+            deck.add(new Card(cardType, x + (i * 0.05), y + (i * 0.05), cardCount, card));
         }
 
         topDeck = deck.members[cardCount];
