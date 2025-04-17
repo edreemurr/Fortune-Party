@@ -2,6 +2,7 @@ package assets;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.tweens.FlxTween;
 import flixel.input.mouse.FlxMouseEvent;
@@ -11,8 +12,6 @@ import gameplay.minigames.Ur;
 class UrPiece extends FlxSprite
 {
     public var location:Int = -1;
-
-    // var type:String;
 
     var spaces:Array<Array<Dynamic>>;
 
@@ -28,8 +27,6 @@ class UrPiece extends FlxSprite
     {
         super(x, y);
 
-        // this.type = type;
-
         if (type == 'light')
             spaces = [[FlxPoint.get(595, 466), false], [FlxPoint.get(441, 461), false], [FlxPoint.get(286, 462), false], [FlxPoint.get(122, 452), true], [FlxPoint.get(137, 331), false], [FlxPoint.get(293, 336), false], [FlxPoint.get(443, 344), false], [FlxPoint.get(587, 342), true], [FlxPoint.get(737, 348), false], [FlxPoint.get(874, 350), false], [FlxPoint.get(1003, 345), false], [FlxPoint.get(1139, 347), false], [FlxPoint.get(1184, 461), false], [FlxPoint.get(1048, 461), true], [FlxPoint.get(719, 535), false]];
         else if (type == 'dark')
@@ -43,7 +40,7 @@ class UrPiece extends FlxSprite
 
     override function update(elapsed:Float)
     {
-        if (usable)
+        if (usable && !endGoal)
         {
             alpha = 0.5;
 
@@ -85,14 +82,8 @@ class UrPiece extends FlxSprite
     {
         Ur.moving = true;
 
-        var newX:Float = spaces[location + num][0].x;
-        var newY:Float = spaces[location + num][0].y;
-
-        if (location + num >= spaces.length)
-        {
-            newX = spaces[13][0].x;
-            newY = spaces[13][0].y;
-        }
+        var newX:Float = spaces[FlxMath.maxAdd(location, num, spaces.length - 1, -1)][0].x;
+        var newY:Float = spaces[FlxMath.maxAdd(location, num, spaces.length - 1, -1)][0].y;
 
         FlxTween.tween(this, {x: newX, y: newY}, 0.5, {onComplete: function(tween:FlxTween)
         {
@@ -100,6 +91,9 @@ class UrPiece extends FlxSprite
             Ur.rolled = false;
 
             location += num;
+
+            if (location == spaces.length - 1)
+                endGoal = true;
 
             again = spaces[location][1];
 
