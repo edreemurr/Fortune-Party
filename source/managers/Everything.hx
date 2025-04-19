@@ -25,6 +25,8 @@ class Everything extends FlxState
     var cycle:Int = 1;
     var round:Int = 0;
 
+    var rng:Int = 0;
+
     var board:String;
     public var curGame:String;
 
@@ -108,6 +110,9 @@ class Everything extends FlxState
     }
 
     function rollDice(min:Int = 1, max:Int = 6):Int
+        return FlxG.random.int(min, max);
+
+    function RNG(min:Int, max:Int):Int
         return FlxG.random.int(min, max);
 
     private function get_controls()

@@ -238,10 +238,30 @@ class BoardGame extends Everything
 
         switch (event)
         {
-            case 'blue': space.text = '+3';
-            case 'red': space.text = '-3';
-            case 'green': space.text = 'lucky';
-            case 'brown': space.text = 'chance time';
+            case 'blue':
+                rng = RNG(3, 5);
+
+                space.text = '+$rng';
+
+            case 'red':
+                rng = RNG(2, 6);
+
+                space.text = '-$rng';
+
+            case 'green':
+                space.text = 'lucky';
+
+            case 'brown':
+                space.text = 'chance time';
+
+            case 'purple':
+
+            case 'teal':
+                rng = RNG(3, 8);
+
+                space.text = '$rng';
+
+            case 'direction':
         }
 
         playerStats('update', event);
@@ -370,18 +390,13 @@ class BoardGame extends Everything
                     piecesArray.push(pieces);
                     add(pieces);
 
-/*                     if (newGame)
-                    {
-                        FlxG.save.data.coins.push(10);
-                        FlxG.save.flush();
-                    }
- */             }
+                }
 
             case 'update':
                 switch (statChange)
                 {
                     case 'blue':
-                        coins[activePlayer] = FlxMath.maxAdd(coins[activePlayer], 3, 999, 0);
+                        coins[activePlayer] = FlxMath.maxAdd(coins[activePlayer], rng, 999, 0);
                         coinsArray[activePlayer].text = '${coins[activePlayer]}';
 
                         coins = FlxArrayUtil.fastSplice(coins, activePlayer);
@@ -389,7 +404,7 @@ class BoardGame extends Everything
                         FlxG.save.flush();
 
                     case 'red':
-                        coins[activePlayer] = FlxMath.maxAdd(coins[activePlayer], -3, 999, 0);
+                        coins[activePlayer] = FlxMath.maxAdd(coins[activePlayer], -rng, 999, 0);
                         coinsArray[activePlayer].text = '${coins[activePlayer]}';
 
                         coins = FlxArrayUtil.fastSplice(coins, activePlayer);
@@ -411,6 +426,9 @@ class BoardGame extends Everything
                         coins = FlxArrayUtil.fastSplice(coins, activePlayer);
                         FlxG.save.data.coins = coins;
                         FlxG.save.flush();
+
+                    case 'teal':
+                        playerMove(FlxG.random.int(0, 1) == 0 ? rng : -rng);
 
                     case 'land buy':
                         coins[activePlayer] -= spacePrice[locations[activePlayer]];
@@ -462,9 +480,9 @@ class BoardGame extends Everything
 
             curChar.animation.play('walk');
             
-            if (num > 0)
+            if (num != 0)
             {
-                var wrap:Int = (locations[activePlayer] + 1) > spaceCount ? -spaceCount : 1;
+                var wrap:Int = num < 0 ? (locations[activePlayer] - 1 < 0 ? spaceCount : -1) : (locations[activePlayer] + 1 > spaceCount ? -spaceCount : 1);
                 var nextSpace = spacePos[locations[activePlayer] + wrap];
 
                 FlxTween.tween(characters[activePlayer], {x: nextSpace.x, y: nextSpace.y}, 0.5, {onComplete: function(tween:FlxTween)
@@ -474,8 +492,11 @@ class BoardGame extends Everything
                     curSpace = spaceType[locations[activePlayer]];
 
                     dice.animation.frameIndex --;
-                    
-                    num--;
+
+                    if (num < 0)
+                        num++;
+                    else
+                        num--;
     
                     playerMove(num);
                 }});
