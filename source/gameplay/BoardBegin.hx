@@ -18,6 +18,8 @@ class BoardBegin extends FlxSubState
 
     override function create()
     {
+        cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
+
         text = new FlxText(0, 200, 500, 'How many turns?', 36);
         text.screenCenter(X);
         add(text);

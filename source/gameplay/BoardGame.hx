@@ -217,8 +217,12 @@ class BoardGame extends Everything
         GUI = new FlxCamera();
         GUI.bgColor.alpha = 0;
 
+        subCam = new FlxCamera();
+        subCam.bgColor.alpha = 0;
+
         FlxG.cameras.add(gayCam, true);
         FlxG.cameras.add(GUI, false);
+        FlxG.cameras.add(subCam, false);
         
         initBoard();
         

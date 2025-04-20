@@ -1,5 +1,6 @@
 package gameplay;
 
+import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxSubState;
@@ -25,6 +26,8 @@ class MinigameSelection extends FlxSubState
 
     override function create()
     {
+        cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
+
         // var dim:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, 0x000000);
         // dim.alpha = 0.5;
         // add(dim);

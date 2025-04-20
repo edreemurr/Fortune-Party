@@ -25,6 +25,8 @@ class Everything extends FlxState
     var cam4:FlxCamera;
     var gayCam:FlxCamera;
 
+    public var subCam:FlxCamera;
+
     public var newGame:Bool;
 
     public var cycleCount:Int;
