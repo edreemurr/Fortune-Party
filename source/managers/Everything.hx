@@ -3,6 +3,7 @@ package managers;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.FlxSprite;
+import flixel.FlxCamera;
 import flixel.text.FlxText;
 import flixel.util.FlxTimer;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -16,6 +17,13 @@ import gameplay.BoardGame;
 class Everything extends FlxState
 {
     var selected:Int = -1;
+
+    var GUI:FlxCamera;
+    var cam1:FlxCamera;
+    var cam2:FlxCamera;
+    var cam3:FlxCamera;
+    var cam4:FlxCamera;
+    var gayCam:FlxCamera;
 
     public var newGame:Bool;
 

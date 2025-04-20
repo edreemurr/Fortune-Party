@@ -2,6 +2,7 @@ package gameplay;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.FlxCamera;
 import flixel.ui.FlxButton;
 import flixel.text.FlxText;
 import flixel.math.FlxMath;
@@ -210,6 +211,14 @@ class BoardGame extends Everything
 
         cycleText = new FlxText(1100, 0, 100, '', 28);
         add(cycleText);
+
+        gayCam = new FlxCamera();
+
+        GUI = new FlxCamera();
+        GUI.bgColor.alpha = 0;
+
+        FlxG.cameras.add(gayCam, true);
+        FlxG.cameras.add(GUI, false);
         
         initBoard();
         
@@ -376,10 +385,13 @@ class BoardGame extends Everything
                     var ui:FlxSprite = new FlxSprite(20, 20 + (num * 100), 'assets/images/GUI/stats.png');
                     ui.color = char.color;
                     // statsUI.push(ui);
+                    ui.cameras = [GUI];
                     add(ui);
+
 
                     var player:FlxSprite = new FlxSprite(ui.x, ui.y).loadGraphicFromSprite(char);
                     player.setGraphicSize(25);
+                    player.cameras = [GUI];
                     add(player);
 
                     var coins:FlxText = new FlxText(ui.x + 160, ui.y + 30, '${coins[num]}', 20);
@@ -576,7 +588,7 @@ class BoardGame extends Everything
 
     function startTurn()
     {
-        FlxG.camera.follow(curChar);
+        gayCam.follow(curChar);
 
         dice = new Dice(curChar.x, curChar.y - 100);
         add(dice);
