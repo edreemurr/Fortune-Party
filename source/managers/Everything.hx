@@ -24,6 +24,7 @@ class Everything extends FlxState
     var cam3:FlxCamera;
     var cam4:FlxCamera;
     var gayCam:FlxCamera;
+    var textCam:FlxCamera;
 
     public var subCam:FlxCamera;
 
@@ -120,7 +121,7 @@ class Everything extends FlxState
     }
 
     function rollDice(min:Int = 1, max:Int = 6):Int
-        return FlxG.random.int(min, max);
+        return RNG(min, max);
 
     function RNG(min:Int, max:Int):Int
         return FlxG.random.int(min, max);

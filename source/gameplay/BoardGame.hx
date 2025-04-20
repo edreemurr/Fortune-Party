@@ -217,11 +217,15 @@ class BoardGame extends Everything
         GUI = new FlxCamera();
         GUI.bgColor.alpha = 0;
 
+        textCam = new FlxCamera();
+        textCam.bgColor.alpha = 0;
+
         subCam = new FlxCamera();
         subCam.bgColor.alpha = 0;
 
         FlxG.cameras.add(gayCam, true);
         FlxG.cameras.add(GUI, false);
+        FlxG.cameras.add(textCam, false);
         FlxG.cameras.add(subCam, false);
         
         initBoard();
@@ -247,6 +251,7 @@ class BoardGame extends Everything
     function initEvent(event:String)
     {
         var space:FlxText = new FlxText(FlxG.width/2, FlxG.height/2, '', 40);
+        space.cameras = [textCam];
         add(space);
 
         switch (event)
@@ -256,10 +261,14 @@ class BoardGame extends Everything
 
                 space.text = '+$rng';
 
+                starPieceCheck();
+
             case 'red':
                 rng = RNG(2, 6);
 
                 space.text = '-$rng';
+
+                starPieceCheck();
 
             case 'green':
                 space.text = 'lucky';
@@ -551,6 +560,23 @@ class BoardGame extends Everything
                 return characters[char];
 
         return null;
+    }
+
+    function starPieceCheck()
+    {
+        var num = RNG(0, 4);
+
+        if (num == 4)
+        {
+            starPieces[activePlayer] += 1;
+            piecesArray[activePlayer].text = '${starPieces[activePlayer]}';
+
+            starPieces = FlxArrayUtil.fastSplice(starPieces, activePlayer);
+            FlxG.save.data.starPieces = starPieces;
+            FlxG.save.flush();
+        }
+        else
+            trace ('nah fam');
     }
 
     function initBoard()
