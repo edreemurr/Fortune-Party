@@ -1,5 +1,6 @@
 package gameplay;
 
+import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxCamera;
@@ -40,6 +41,7 @@ class BoardGame extends Everything
 
     var landText:FlxTypeText;
 
+    var image:String = 'assets/images';
     var music:String = 'assets/music';
 
     var dice:Dice;
@@ -61,8 +63,8 @@ class BoardGame extends Everything
         cycle = FlxG.save.data.cycle;
         lands = FlxG.save.data.lands;
 
-        coins = FlxG.save.data.coins;
-        starPieces = FlxG.save.data.starPieces;
+        chen = FlxG.save.data.chen;
+        sprouts = FlxG.save.data.sprouts;
 
         FlxG.sound.playMusic('$music/board.ogg', 0.5);
 
@@ -261,14 +263,16 @@ class BoardGame extends Everything
 
                 space.text = '+$rng';
 
-                starPieceCheck();
+                if (cycle > 4)
+                    sproutCheck();
 
             case 'red':
                 rng = RNG(2, 6);
 
                 space.text = '-$rng';
 
-                starPieceCheck();
+                if (cycle > 4)
+                    sproutCheck();
 
             case 'green':
                 space.text = 'lucky';
@@ -314,16 +318,16 @@ class BoardGame extends Everything
 
         if (owner != null)
         {
-            landText.resetText('Pay 2 coins');
+            landText.resetText('Pay 2 chen');
             
             landOption('rent');
         }
         else
         {
-            if (coins[activePlayer] < spacePrice[locations[activePlayer]])
+            if (chen[activePlayer] < spacePrice[locations[activePlayer]])
                 changeTurn();
             else
-                landText.resetText('Would you like to\npurchase this land for ${spacePrice[locations[activePlayer]]} coins?');
+                landText.resetText('Would you like to\npurchase this land for ${spacePrice[locations[activePlayer]]} chen?');
 
             landPrompt.visible = true;
         }
@@ -364,11 +368,11 @@ class BoardGame extends Everything
         switch (event)
         {
             case 'create':
-                coins = [];
-                starPieces = [];
+                chen = [];
+                sprouts = [];
 
-                coinsArray = [];
-                piecesArray = [];
+                chenArray = [];
+                sproutArray = [];
 
                 land1 = [];
                 land2 = [];
@@ -380,14 +384,14 @@ class BoardGame extends Everything
                 {
                     if (newGame)
                     {
-                        coins.push(10);
-                        starPieces.push(0);
+                        chen.push(10);
+                        sprouts.push(0);
                         // lands.push(char.land);
                     }
                     else
                     {
-                        coins = FlxG.save.data.coins;
-                        starPieces = FlxG.save.data.starPieces;
+                        chen = FlxG.save.data.chen;
+                        sprouts = FlxG.save.data.sprouts;
                         locations = FlxG.save.data.locations;
 
                         lands = FlxG.save.data.lands;
@@ -395,81 +399,114 @@ class BoardGame extends Everything
 
                     // char.loadStats();
 
-                    var ui:FlxSprite = new FlxSprite(20, 20 + (num * 100), 'assets/images/GUI/stats.png');
+                    var ui:FlxSprite = new FlxSprite(20, 20 + (num * 150), 'assets/images/GUI/stats.png');
                     ui.color = char.color;
                     // statsUI.push(ui);
                     ui.cameras = [GUI];
                     add(ui);
 
+                    var space:FlxSprite = new FlxSprite(ui.x, ui.y, 'assets/images/GUI/space.png');
+                    space.cameras = [GUI];
+                    add(space);
 
-                    var player:FlxSprite = new FlxSprite(ui.x, ui.y).loadGraphicFromSprite(char);
-                    player.setGraphicSize(25);
-                    player.cameras = [GUI];
-                    add(player);
+                    var chen:FlxSprite = new FlxSprite(ui.x + 60, ui.y + 15, '$image/GUI/chen.png');
+                    chen.cameras = [GUI];
+                    add(chen);
 
-                    var coins:FlxText = new FlxText(ui.x + 160, ui.y + 30, '${coins[num]}', 20);
-                    coinsArray.push(coins);
-                    add(coins);
+                    var sprout:FlxSprite = new FlxSprite(ui.x + 175, ui.y + 15, '$image/GUI/sprout.png');
+                    sprout.cameras = [GUI];
+                    add(sprout);
 
-                    var pieces:FlxText = new FlxText(ui.x + 250, ui.y + 30, '${starPieces[num]}', 20);
-                    piecesArray.push(pieces);
-                    add(pieces);
+                    var chenNum:FlxSprite = new FlxSprite(chen.x + 50, chen.y + 15);
+                    chenNum.frames = FlxAtlasFrames.fromSparrow('$image/GUI/numbers.png', '$image/GUI/numbers.xml');
+                    chenNum.animation.addByPrefix('zero', 'numbers zero');
+                    chenNum.animation.addByPrefix('one', 'numbers one');
+                    chenNum.animation.addByPrefix('two', 'numbers two');
+                    chenNum.animation.addByPrefix('three', 'numbers three');
+                    chenNum.animation.addByPrefix('four', 'numbers four');
+                    chenNum.animation.addByPrefix('five', 'numbers five');
+                    chenNum.animation.addByPrefix('six', 'numbers six');
+                    chenNum.animation.addByPrefix('seven', 'numbers seven');
+                    chenNum.animation.addByPrefix('eight', 'numbers eight');
+                    chenNum.animation.addByPrefix('nine', 'numbers nine');
+                    chenNum.cameras = [GUI];
+                    chenArray.push(chenNum);
+                    add(chenNum);
 
+                    chenNum.animation.play('zero');
+
+                    var sproutNum:FlxSprite = new FlxSprite(sprout.x + 75, sprout.y + 15);
+                    sproutNum.frames = FlxAtlasFrames.fromSparrow('$image/GUI/numbers.png', '$image/GUI/numbers.xml');
+                    sproutNum.animation.addByPrefix('zero', 'numbers zero');
+                    sproutNum.animation.addByPrefix('one', 'numbers one');
+                    sproutNum.animation.addByPrefix('two', 'numbers two');
+                    sproutNum.animation.addByPrefix('three', 'numbers three');
+                    sproutNum.animation.addByPrefix('four', 'numbers four');
+                    sproutNum.animation.addByPrefix('five', 'numbers five');
+                    sproutNum.animation.addByPrefix('six', 'numbers six');
+                    sproutNum.animation.addByPrefix('seven', 'numbers seven');
+                    sproutNum.animation.addByPrefix('eight', 'numbers eight');
+                    sproutNum.animation.addByPrefix('nine', 'numbers nine');
+                    sproutNum.cameras = [GUI];
+                    sproutArray.push(sproutNum);
+                    add(sproutNum);
+
+                    sproutNum.animation.play('zero');
                 }
 
             case 'update':
                 switch (statChange)
                 {
                     case 'blue':
-                        coins[activePlayer] = FlxMath.maxAdd(coins[activePlayer], rng, 999, 0);
-                        coinsArray[activePlayer].text = '${coins[activePlayer]}';
+                        chen[activePlayer] = FlxMath.maxAdd(chen[activePlayer], rng, 999, 0);
+                        chenArray[activePlayer].animation.play('${chen[activePlayer]}');
 
-                        coins = FlxArrayUtil.fastSplice(coins, activePlayer);
-                        FlxG.save.data.coins = coins;
+                        chen = FlxArrayUtil.fastSplice(chen, activePlayer);
+                        FlxG.save.data.chen = chen;
                         FlxG.save.flush();
 
                     case 'red':
-                        coins[activePlayer] = FlxMath.maxAdd(coins[activePlayer], -rng, 999, 0);
-                        coinsArray[activePlayer].text = '${coins[activePlayer]}';
+                        chen[activePlayer] = FlxMath.maxAdd(chen[activePlayer], -rng, 999, 0);
+                        chenArray[activePlayer].animation.play('${chen[activePlayer]}');
 
-                        coins = FlxArrayUtil.fastSplice(coins, activePlayer);
-                        FlxG.save.data.coins = coins;
+                        chen = FlxArrayUtil.fastSplice(chen, activePlayer);
+                        FlxG.save.data.chen = chen;
                         FlxG.save.flush();
 
                     case 'green':
-                        starPieces[activePlayer] = FlxMath.maxAdd(starPieces[activePlayer], 1, 5, 0);
-                        piecesArray[activePlayer].text = '${starPieces[activePlayer]}';
+                        sprouts[activePlayer] = FlxMath.maxAdd(sprouts[activePlayer], 1, 5, 0);
+                        sproutArray[activePlayer].animation.play('${sprouts[activePlayer]}');
 
-                        starPieces = FlxArrayUtil.fastSplice(starPieces, activePlayer);
-                        FlxG.save.data.starPieces = starPieces;
+                        sprouts = FlxArrayUtil.fastSplice(sprouts, activePlayer);
+                        FlxG.save.data.sprouts = sprouts;
                         FlxG.save.flush();
 
                     case 'brown':
-                        coins[activePlayer] = FlxMath.maxAdd(coins[activePlayer], 100, 999, 0);
-                        coinsArray[activePlayer].text = '${coins[activePlayer]}';
+                        chen[activePlayer] = FlxMath.maxAdd(chen[activePlayer], 100, 999, 0);
+                        chenArray[activePlayer].animation.play('${chen[activePlayer]}');
 
-                        coins = FlxArrayUtil.fastSplice(coins, activePlayer);
-                        FlxG.save.data.coins = coins;
+                        chen = FlxArrayUtil.fastSplice(chen, activePlayer);
+                        FlxG.save.data.chen = chen;
                         FlxG.save.flush();
 
                     case 'teal':
                         playerMove(FlxG.random.int(0, 1) == 0 ? rng : -rng);
 
                     case 'land buy':
-                        coins[activePlayer] -= spacePrice[locations[activePlayer]];
-                        coinsArray[activePlayer].text = '${coins[activePlayer]}';
+                        chen[activePlayer] -= spacePrice[locations[activePlayer]];
+                        chenArray[activePlayer].animation.play('${chen[activePlayer]}');
 
                         // curChar.land.push(curSpace);
                         lands[activePlayer].push(curSpace);
 
-                        coins = FlxArrayUtil.fastSplice(coins, activePlayer);
+                        chen = FlxArrayUtil.fastSplice(chen, activePlayer);
 
-                        FlxG.save.data.coins = coins;
+                        FlxG.save.data.chen = chen;
                         FlxG.save.data.lands = lands;
                         FlxG.save.flush();
 
                     case 'land rent':
-                        if (coins[activePlayer] < spacePrice[locations[activePlayer]])
+                        if (chen[activePlayer] < spacePrice[locations[activePlayer]])
                         {
                             trace ('Can\'t afford');
 
@@ -477,24 +514,24 @@ class BoardGame extends Everything
                         }
                         else
                         {
-                            coins[activePlayer] -= 2;
-                            checkOwnership().coins += 2;
+                            chen[activePlayer] -= 2;
+                            checkOwnership().chen += 2;
 
-                            coins = FlxArrayUtil.fastSplice(coins, activePlayer);
-                            coins = FlxArrayUtil.fastSplice(coins, characters.indexOf(checkOwnership()));
+                            chen = FlxArrayUtil.fastSplice(chen, activePlayer);
+                            chen = FlxArrayUtil.fastSplice(chen, characters.indexOf(checkOwnership()));
 
-                            FlxG.save.data.coins = coins;
+                            FlxG.save.data.chen = chen;
                             FlxG.save.flush();
                         }
 
                     case 'minigame':
                         for (winner in Minigames.victory)
                         {
-                            coins[winner - 1] = FlxMath.maxAdd(coins[winner - 1], 10, 999, 0);
-                            coinsArray[winner - 1].text = '${coins[winner - 1]}';
+                            chen[winner - 1] = FlxMath.maxAdd(chen[winner - 1], 10, 999, 0);
+                            chenArray[winner - 1].animation.play('${chen[winner - 1]}');
                         }
 
-                        FlxG.save.data.coins = coins;
+                        FlxG.save.data.chen = chen;
                         FlxG.save.flush();
                 }
         }
@@ -562,22 +599,16 @@ class BoardGame extends Everything
         return null;
     }
 
-    function starPieceCheck()
-    {
-        var num = RNG(0, 4);
-
-        if (num == 4)
+    function sproutCheck()
+        if (RNG(0, 4) == 4)
         {
-            starPieces[activePlayer] += 1;
-            piecesArray[activePlayer].text = '${starPieces[activePlayer]}';
+            sprouts[activePlayer] += 1;
+            sproutArray[activePlayer].animation.play('${sprouts[activePlayer]}');
 
-            starPieces = FlxArrayUtil.fastSplice(starPieces, activePlayer);
-            FlxG.save.data.starPieces = starPieces;
+            sprouts = FlxArrayUtil.fastSplice(sprouts, activePlayer);
+            FlxG.save.data.sprouts = sprouts;
             FlxG.save.flush();
         }
-        else
-            trace ('nah fam');
-    }
 
     function initBoard()
     {
@@ -657,8 +688,8 @@ class BoardGame extends Everything
         FlxG.save.data.turnOrder = turnOrder;
         FlxG.save.data.locations = locations;
         
-        FlxG.save.data.coins = coins;
-        FlxG.save.data.starPieces = starPieces;
+        FlxG.save.data.chen = chen;
+        FlxG.save.data.sprouts = sprouts;
 
         FlxG.save.data.lands = lands;
         FlxG.save.flush();

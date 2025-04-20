@@ -13,8 +13,8 @@ class Character extends FlxSprite
 {    
     public var colorChoice:FlxColor;
     
-    public var coins:Int;
-    public var starPieces:Int;
+    public var chen:Int;
+    public var sprouts:Int;
     
     public var player:Int;
     public var location:Int;
@@ -47,16 +47,16 @@ class Character extends FlxSprite
     {
         if (FlxG.save.data.newGame == true)
         {
-            coins = 10;
-            starPieces = 0;
+            chen = 10;
+            sprouts = 0;
             
             land = [];
             location = -1;
         }
         else
         {
-            coins = FlxG.save.data.coins[player];
-            starPieces = FlxG.save.data.starPieces[player];
+            chen = FlxG.save.data.chen[player];
+            sprouts = FlxG.save.data.sprouts[player];
 
             land = FlxG.save.data.lands[player];
             location = FlxG.save.data.locations[player];
@@ -66,8 +66,8 @@ class Character extends FlxSprite
     public function updateStat(stat:String, num:Int)
         switch (stat)
         {
-            case 'coins': coins += num;
-            case 'starPiece': starPieces += num;
+            case 'chen': chen += num;
+            case 'starPiece': sprouts += num;
             case 'land': land.push(game.curSpace);
         }
 }

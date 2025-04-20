@@ -42,10 +42,13 @@ class Everything extends FlxState
     public var curGame:String;
 
     var turnOrder:Array<Int>;
-    public var coins:Array<Int>;
-    public var starPieces:Array<Int>;
+    public var chen:Array<Int>;
+    public var sprouts:Array<Int>;
     
+    var numbers:FlxSprite;
+
     var statsUI:Array<FlxSprite>;
+    var charNum:Array<FlxSprite>;
 
     var canPause:Bool = false;
     public var controlsFree:Bool = false;
@@ -58,8 +61,8 @@ class Everything extends FlxState
 
     public var cycleText:FlxText;
     
-    var coinsArray:Array<FlxText>;
-    var piecesArray:Array<FlxText>;
+    var chenArray:Array<FlxSprite>;
+    var sproutArray:Array<FlxSprite>;
     
     var player1:Character;
     var player2:Character;

@@ -16,21 +16,21 @@ class BoardEnd extends Everything
 
     override function create()
     {
-        coins = FlxG.save.data.coins;
-        starPieces = FlxG.save.data.starPieces;
+        chen = FlxG.save.data.chen;
+        sprouts = FlxG.save.data.sprouts;
 
         turnOrder = FlxG.save.data.turnOrder;
         playerCount = FlxG.save.data.playerCount;
 
         trace ('turnOrder = $turnOrder');
-        trace ('coins = $coins');
+        trace ('chen = $chen');
 
         playerAssets = new FlxTypedGroup<FlxText>();
         add(playerAssets);
 
         for (i in 0...playerCount)
         {
-            var text:FlxText = new FlxText(0, 200 + (i * 100), 500, 'Player ${turnOrder[i] + 1}: ${coins[i]}, ${starPieces[i]}', 28);
+            var text:FlxText = new FlxText(0, 200 + (i * 100), 500, 'Player ${turnOrder[i] + 1}: ${chen[i]}, ${sprouts[i]}', 28);
             text.screenCenter(X);
             playerAssets.add(text);
         }
@@ -49,17 +49,17 @@ class BoardEnd extends Everything
 
         for (i in 0...playerCount)
         {
-            num = FlxMath.maxInt(num, coins[i]);
-            index = coins.indexOf(num);
+            num = FlxMath.maxInt(num, chen[i]);
+            index = chen.indexOf(num);
             trace ('i = $i, $num, $index');
         }
 
         // results.push(turnOrder[index]);
         // trace ('results = $results');
 
-        // FlxArrayUtil.fastSplice(coins, num);
+        // FlxArrayUtil.fastSplice(chen, num);
         // FlxArrayUtil.fastSplice(turnOrder, index);
-        // trace ('coins = $coins');
+        // trace ('chen = $chen');
         // trace ('turnOrder = $turnOrder');
 
         // playerCount --;
