@@ -41,6 +41,8 @@ class Everything extends FlxState
     var board:String;
     public var curGame:String;
 
+    var numArray:Array<String> = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
+
     var turnOrder:Array<Int>;
     public var chen:Array<Int>;
     public var sprouts:Array<Int>;
@@ -61,7 +63,7 @@ class Everything extends FlxState
 
     public var cycleText:FlxText;
     
-    var chenArray:Array<FlxSprite>;
+    var chenArray:Array<Array<FlxSprite>>;
     var sproutArray:Array<FlxSprite>;
     
     var player1:Character;

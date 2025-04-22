@@ -380,8 +380,11 @@ class BoardGame extends Everything
                 land4 = [];
                 lands = [land1, land2, land3, land4];
 
+                
                 for (num => char in characters)
                 {
+                    var chenNumbers:Array<FlxSprite> = [];
+
                     if (newGame)
                     {
                         chen.push(10);
@@ -417,23 +420,31 @@ class BoardGame extends Everything
                     sprout.cameras = [GUI];
                     add(sprout);
 
-                    var chenNum:FlxSprite = new FlxSprite(chen.x + 50, chen.y + 15);
-                    chenNum.frames = FlxAtlasFrames.fromSparrow('$image/GUI/numbers.png', '$image/GUI/numbers.xml');
-                    chenNum.animation.addByPrefix('zero', 'numbers zero');
-                    chenNum.animation.addByPrefix('one', 'numbers one');
-                    chenNum.animation.addByPrefix('two', 'numbers two');
-                    chenNum.animation.addByPrefix('three', 'numbers three');
-                    chenNum.animation.addByPrefix('four', 'numbers four');
-                    chenNum.animation.addByPrefix('five', 'numbers five');
-                    chenNum.animation.addByPrefix('six', 'numbers six');
-                    chenNum.animation.addByPrefix('seven', 'numbers seven');
-                    chenNum.animation.addByPrefix('eight', 'numbers eight');
-                    chenNum.animation.addByPrefix('nine', 'numbers nine');
-                    chenNum.cameras = [GUI];
-                    chenArray.push(chenNum);
-                    add(chenNum);
+                    for (i in 0...2)
+                    {
+                        var chenNum:FlxSprite = new FlxSprite(chen.x + 50 + (i * 20), chen.y + 15);
+                        chenNum.frames = FlxAtlasFrames.fromSparrow('$image/GUI/numbers.png', '$image/GUI/numbers.xml');
+                        chenNum.animation.addByPrefix('zero', 'numbers zero');
+                        chenNum.animation.addByPrefix('one', 'numbers one');
+                        chenNum.animation.addByPrefix('two', 'numbers two');
+                        chenNum.animation.addByPrefix('three', 'numbers three');
+                        chenNum.animation.addByPrefix('four', 'numbers four');
+                        chenNum.animation.addByPrefix('five', 'numbers five');
+                        chenNum.animation.addByPrefix('six', 'numbers six');
+                        chenNum.animation.addByPrefix('seven', 'numbers seven');
+                        chenNum.animation.addByPrefix('eight', 'numbers eight');
+                        chenNum.animation.addByPrefix('nine', 'numbers nine');
+                        chenNum.cameras = [GUI];
+                        chenNumbers.push(chenNum);
+                        add(chenNum);
+                        
+                        if (i == 0)
+                            chenNum.animation.play('one');
+                        else
+                            chenNum.animation.play('zero');
+                    }
 
-                    chenNum.animation.play('zero');
+                    chenArray.push(chenNumbers);
 
                     var sproutNum:FlxSprite = new FlxSprite(sprout.x + 75, sprout.y + 15);
                     sproutNum.frames = FlxAtlasFrames.fromSparrow('$image/GUI/numbers.png', '$image/GUI/numbers.xml');
@@ -459,19 +470,21 @@ class BoardGame extends Everything
                 {
                     case 'blue':
                         chen[activePlayer] = FlxMath.maxAdd(chen[activePlayer], rng, 999, 0);
-                        chenArray[activePlayer].animation.play('${chen[activePlayer]}');
-
+                        
                         chen = FlxArrayUtil.fastSplice(chen, activePlayer);
                         FlxG.save.data.chen = chen;
                         FlxG.save.flush();
+                        
+                        updateNum(activePlayer, chen[activePlayer]);
 
                     case 'red':
                         chen[activePlayer] = FlxMath.maxAdd(chen[activePlayer], -rng, 999, 0);
-                        chenArray[activePlayer].animation.play('${chen[activePlayer]}');
 
                         chen = FlxArrayUtil.fastSplice(chen, activePlayer);
                         FlxG.save.data.chen = chen;
                         FlxG.save.flush();
+                        
+                        updateNum(activePlayer, chen[activePlayer]);
 
                     case 'green':
                         sprouts[activePlayer] = FlxMath.maxAdd(sprouts[activePlayer], 1, 5, 0);
@@ -483,18 +496,18 @@ class BoardGame extends Everything
 
                     case 'brown':
                         chen[activePlayer] = FlxMath.maxAdd(chen[activePlayer], 100, 999, 0);
-                        chenArray[activePlayer].animation.play('${chen[activePlayer]}');
-
+                        
                         chen = FlxArrayUtil.fastSplice(chen, activePlayer);
                         FlxG.save.data.chen = chen;
                         FlxG.save.flush();
+                        
+                        updateNum(activePlayer, chen[activePlayer]);
 
                     case 'teal':
                         playerMove(FlxG.random.int(0, 1) == 0 ? rng : -rng);
 
                     case 'land buy':
                         chen[activePlayer] -= spacePrice[locations[activePlayer]];
-                        chenArray[activePlayer].animation.play('${chen[activePlayer]}');
 
                         // curChar.land.push(curSpace);
                         lands[activePlayer].push(curSpace);
@@ -504,6 +517,8 @@ class BoardGame extends Everything
                         FlxG.save.data.chen = chen;
                         FlxG.save.data.lands = lands;
                         FlxG.save.flush();
+
+                        updateNum(activePlayer, chen[activePlayer]);
 
                     case 'land rent':
                         if (chen[activePlayer] < spacePrice[locations[activePlayer]])
@@ -528,7 +543,8 @@ class BoardGame extends Everything
                         for (winner in Minigames.victory)
                         {
                             chen[winner - 1] = FlxMath.maxAdd(chen[winner - 1], 10, 999, 0);
-                            chenArray[winner - 1].animation.play('${chen[winner - 1]}');
+                            // chenArray[winner - 1].animation.play('${chen[winner - 1]}');
+                            updateNum(winner - 1, chen[winner - 1]);
                         }
 
                         FlxG.save.data.chen = chen;
@@ -609,6 +625,19 @@ class BoardGame extends Everything
             FlxG.save.data.sprouts = sprouts;
             FlxG.save.flush();
         }
+
+    function updateNum(player:Int, num:Int, tens:Int = 0)
+    {
+        var curArray = chenArray[player];
+
+        if (num > 9)
+            updateNum(player, num - 10, tens + 1);
+        else
+        {
+            curArray[0].animation.play('${numArray[tens]}');
+            curArray[1].animation.play('${numArray[num]}');
+        }
+    }
 
     function initBoard()
     {
