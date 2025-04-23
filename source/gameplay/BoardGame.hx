@@ -25,6 +25,8 @@ class BoardGame extends Everything
     var spaceCount:Int;
     var spaceCountAlt:Array<Int>;
 
+    var playerPaths:Array<Int>;
+
     var curFork:Int = 0;
     var merge:Array<Int>;
 
@@ -65,9 +67,6 @@ class BoardGame extends Everything
         
         cycle = FlxG.save.data.cycle;
         lands = FlxG.save.data.lands;
-
-        chen = FlxG.save.data.chen;
-        sprouts = FlxG.save.data.sprouts;
 
         FlxG.sound.playMusic('$music/board.ogg', 0.5);
 
@@ -208,26 +207,29 @@ class BoardGame extends Everything
             button.y = landText.y + 200 + (num * 150);
         }
 
-        if (newGame)
-        {
-            locations = [-1, -1, -1, -1];
-            locationsAlt = [[-1, -1], [-1, -1], [-1, -1], [-1, -1]];
-        }
-        else
-        {
-            locations = FlxG.save.data.locations;
-            locationsAlt = FlxG.save.data.locationsAlt;
-        }
-
-        trace (locationsAlt);
-
         for (num => char in characters)
-        {
             if (newGame)
+            {
+                playerPaths = [-1, -1, -1, -1];
+
+                locations = [-1, -1, -1, -1];
+                locationsAlt = [[-1, -1], [-1, -1], [-1, -1], [-1, -1]];
+                
                 char.setPosition(startPos.x + (num * 50), startPos.y);
+            }
             else
-                char.setPosition(spacePos[locations[num]].x, spacePos[locations[num]].y);
-        }
+            {
+                locations = FlxG.save.data.locations;
+                playerPaths = FlxG.save.data.playerPaths;
+                locationsAlt = FlxG.save.data.locationsAlt;
+
+                var pathCheck = playerPaths[num];
+    
+                if (pathCheck > -1)
+                    char.setPosition(spacePosAlt[pathCheck][locationsAlt[num][pathCheck]].x, spacePosAlt[pathCheck][locationsAlt[num][pathCheck]].y);
+                else
+                    char.setPosition(spacePos[locations[num]].x, spacePos[locations[num]].y);
+            }
 
         cycleText = new FlxText(1100, 0, 100, '', 28);
         add(cycleText);
@@ -443,7 +445,6 @@ class BoardGame extends Everything
                     {
                         chen = FlxG.save.data.chen;
                         sprouts = FlxG.save.data.sprouts;
-                        locations = FlxG.save.data.locations;
 
                         lands = FlxG.save.data.lands;
                     }
@@ -631,7 +632,6 @@ class BoardGame extends Everything
             var wrap:Int = 1;
 
             var path = curChar.altPath;
-            trace ('path = $path');
 
             if (num < 0)
                 if (locations[activePlayer] - 1 < 0)
@@ -646,7 +646,11 @@ class BoardGame extends Everything
 
             if (altPath)
                 if (locationsAlt[activePlayer][path] + 1 > spaceCountAlt[path])
+                {
                     nextSpace = spacePos[merge[path]];
+
+                    playerPaths[activePlayer] = -1;
+                }
                 else
                     nextSpace = spacePosAlt[path][locationsAlt[path][activePlayer] + 1];
 
@@ -654,6 +658,7 @@ class BoardGame extends Everything
             {
                 if (altPath)
                 {
+                    playerPaths[activePlayer] += 1;
                     locationsAlt[activePlayer][path] += 1;
                     curSpace = spaceTypeAlt[path][locations[activePlayer]];
                 }
@@ -820,6 +825,8 @@ class BoardGame extends Everything
         FlxG.save.data.turnOrder = turnOrder;
         FlxG.save.data.locations = locations;
         FlxG.save.data.locationsAlt = locationsAlt;
+
+        FlxG.save.data.playerPaths = playerPaths;
         
         FlxG.save.data.chen = chen;
         FlxG.save.data.sprouts = sprouts;
