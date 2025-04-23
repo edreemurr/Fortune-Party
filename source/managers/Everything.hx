@@ -58,7 +58,7 @@ class Everything extends FlxState
     public var activePlayer:Int;
 
     var locations:Array<Int>;
-    var locationsAlt:Array<Array<Int>>;
+    var locationsAlt:Array<Int>;
 
     var curChar:Character;
     var characters:Array<Character> = [];

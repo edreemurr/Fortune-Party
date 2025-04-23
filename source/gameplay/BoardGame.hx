@@ -213,7 +213,7 @@ class BoardGame extends Everything
                 playerPaths = [-1, -1, -1, -1];
 
                 locations = [-1, -1, -1, -1];
-                locationsAlt = [[-1, -1], [-1, -1], [-1, -1], [-1, -1]];
+                locationsAlt = [-1, -1, -1, -1];
                 
                 char.setPosition(startPos.x + (num * 50), startPos.y);
             }
@@ -226,7 +226,11 @@ class BoardGame extends Everything
                 var pathCheck = playerPaths[num];
     
                 if (pathCheck > -1)
-                    char.setPosition(spacePosAlt[pathCheck][locationsAlt[num][pathCheck]].x, spacePosAlt[pathCheck][locationsAlt[num][pathCheck]].y);
+                {
+                    char.setPosition(spacePosAlt[pathCheck][locationsAlt[num]].x, spacePosAlt[pathCheck][locationsAlt[num]].y);
+
+                    char.altPath = pathCheck;
+                }
                 else
                     char.setPosition(spacePos[locations[num]].x, spacePos[locations[num]].y);
             }
@@ -267,6 +271,8 @@ class BoardGame extends Everything
                     dice.spinning = false;
                     dice.animation.frameIndex = diceRoll - 1;
 
+                    turnStart = false;
+
                     playerMove(diceRoll);
                 }
             
@@ -274,7 +280,7 @@ class BoardGame extends Everything
             {
                 if (controls.LEFT || controls.UP)
                 {
-                    curChar.altPath = -1;
+                    playerPaths[activePlayer] = -1;
 
                     FlxTween.cancelTweensOf(arrow);
                     FlxTween.tween(arrow, {angle: -45}, 0.5);
@@ -282,7 +288,7 @@ class BoardGame extends Everything
 
                 if (controls.RIGHT || controls.DOWN)
                 {
-                    curChar.altPath = curFork;
+                    playerPaths[activePlayer] = curFork;
 
                     FlxTween.cancelTweensOf(arrow);
                     FlxTween.tween(arrow, {angle: 45}, 0.5);
@@ -620,18 +626,17 @@ class BoardGame extends Everything
 
     function playerMove(num:Int)
     {
-        turnStart = false;
         controlsFree = false;
 
         curChar.animation.play('walk');
 
-        var altPath:Bool = curChar.altPath > -1 ? true : false;
+        var altPath:Bool = playerPaths[activePlayer] > -1 ? true : false;
 
         if (num != 0)
         {
             var wrap:Int = 1;
 
-            var path = curChar.altPath;
+            var path = playerPaths[activePlayer];
 
             if (num < 0)
                 if (locations[activePlayer] - 1 < 0)
@@ -645,26 +650,28 @@ class BoardGame extends Everything
             var nextSpace = spacePos[locations[activePlayer] + wrap];
 
             if (altPath)
-                if (locationsAlt[activePlayer][path] + 1 > spaceCountAlt[path])
+                if (locationsAlt[activePlayer] + 1 > spaceCountAlt[path])
                 {
                     nextSpace = spacePos[merge[path]];
 
                     playerPaths[activePlayer] = -1;
+                    locations[activePlayer] = merge[path];
+
+                    altPath = false;
                 }
                 else
-                    nextSpace = spacePosAlt[path][locationsAlt[path][activePlayer] + 1];
+                    nextSpace = spacePosAlt[path][locationsAlt[activePlayer] + 1];
 
             FlxTween.tween(curChar, {x: nextSpace.x, y: nextSpace.y}, 0.5, {onComplete: function(tween:FlxTween)
             {
                 if (altPath)
                 {
-                    playerPaths[activePlayer] += 1;
-                    locationsAlt[activePlayer][path] += 1;
+                    locationsAlt[activePlayer] += 1;
                     curSpace = spaceTypeAlt[path][locations[activePlayer]];
                 }
                 else
                 {
-                    locations[activePlayer] += wrap;                
+                    locations[activePlayer] += wrap;
                     curSpace = spaceType[locations[activePlayer]];
                 }
 
