@@ -58,14 +58,14 @@ class Dilemma extends Minigames
         points1 = 10;
         points2 = 10;
 
-        onStart = turnStart;
+        onStart = roundBegin;
 
         start(1);
 
         super.create();
     }
 
-    function turnStart()
+    function roundBegin()
     {
         round += 1;
 
@@ -152,7 +152,7 @@ class Dilemma extends Minigames
             if (round == 10)
                 winner(points1 > points2 ? group1 : group2);
             else
-                turnStart();
+                roundBegin();
         });
     }
 }

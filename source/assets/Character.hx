@@ -18,6 +18,8 @@ class Character extends FlxSprite
     
     public var player:Int;
     public var location:Int;
+
+    public var altPath:Int = -1;
     
     public var land:Array<String>;
     public var items:Array<String>;

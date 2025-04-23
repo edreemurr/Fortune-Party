@@ -1,6 +1,5 @@
 package gameplay;
 
-import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxCamera;
@@ -12,11 +11,9 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxArrayUtil;
 import flixel.addons.text.FlxTypeText;
 import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.graphics.frames.FlxAtlasFrames;
 
-import assets.Dice;
-import assets.Card;
-import assets.Minigames;
-import assets.Character;
+import assets.*;
 
 import managers.Everything;
 
@@ -26,6 +23,12 @@ class BoardGame extends Everything
 
     var diceRoll:Int;
     var spaceCount:Int;
+    var spaceCountAlt:Array<Int>;
+
+    var curFork:Int = 0;
+    var merge:Array<Int>;
+
+    var arrow:FlxSprite;
 
     var startPos:FlxPoint;
     var spaceType:Array<String>;
@@ -41,8 +44,8 @@ class BoardGame extends Everything
 
     var landText:FlxTypeText;
 
-    var image:String = 'assets/images';
     var music:String = 'assets/music';
+    var image:String = 'assets/images';
 
     var dice:Dice;
     var minigameResults:PostMinigame;
@@ -72,17 +75,27 @@ class BoardGame extends Everything
         {
             case 'demo':
                 spaceCount = 42;
+                spaceCountAlt = [4, 8];
+
+                merge = [15, 41];
+
                 startPos = FlxPoint.get(900, 1500);
+
                 spaceType = ['blue', 'blue', 'blue', 'red', 'blue', 'direction', 'blue', 'red', 'blue', 'green', 'blue', 'red', 'red', 'blue', 'green', 'blue', 'blue', 'red', 'blue', 'blue', 'green', 'purple', 'red', 'red', 'blue', 'teal', 'brown', 'red', 'green', 'green', 'blue', 'blue', 'blue', 'red', 'blue', 'direction', 'red', 'red', 'red', 'red', 'purple', 'red'];
                 spaceTypeAlt = [['green', 'brown', 'red', 'red', 'brown'], ['blue', 'blue', 'blue', 'blue', 'blue', 'green', 'red', 'blue', 'brown']];
+
                 spacePos = [FlxPoint.get(1010, 1410), FlxPoint.get(900, 1280), FlxPoint.get(780, 1150), FlxPoint.get(680, 1010), FlxPoint.get(550, 940), FlxPoint.get(400, 860), FlxPoint.get(260, 800), FlxPoint.get(190, 685), FlxPoint.get(130, 530), FlxPoint.get(170, 380), FlxPoint.get(240, 260), FlxPoint.get(380, 150), FlxPoint.get(540, 100), FlxPoint.get(690, 105), FlxPoint.get(870, 105), FlxPoint.get(1030, 160), FlxPoint.get(1215, 190), FlxPoint.get(1370, 200), FlxPoint.get(1530, 220), FlxPoint.get(1700, 270), FlxPoint.get(1885, 340), FlxPoint.get(2040, 440), FlxPoint.get(2000, 580), FlxPoint.get(1855, 635), FlxPoint.get(1700, 660), FlxPoint.get(1535, 675), FlxPoint.get(1380, 700), FlxPoint.get(1325, 850), FlxPoint.get(1450, 950), FlxPoint.get(1590, 1010), FlxPoint.get(1750, 1030), FlxPoint.get(1910, 1050), FlxPoint.get(2065, 1065), FlxPoint.get(2215, 1150), FlxPoint.get(2305, 1305), FlxPoint.get(2245, 1450), FlxPoint.get(2095, 1570), FlxPoint.get(1925, 1615), FlxPoint.get(1735, 1630), FlxPoint.get(1540, 1620), FlxPoint.get(1340, 1580), FlxPoint.get(1160, 1520)];
                 spacePosAlt = [[FlxPoint.get(510, 760), FlxPoint.get(630, 640), FlxPoint.get(735, 520), FlxPoint.get(800, 390), FlxPoint.get(890, 280)], [FlxPoint.get(2260, 1660), FlxPoint.get(2200, 1810), FlxPoint.get(2080, 1900), FlxPoint.get(1925, 1920), FlxPoint.get(1770, 1920), FlxPoint.get(1615, 1910), FlxPoint.get(1460, 1885), FlxPoint.get(1315, 1830), FlxPoint.get(1185, 1710)]];
 
             case 'kingdom':
                 spaceCount = 19;
+
                 startPos = FlxPoint.get(300, 300);
+
                 spaceType = ['land1', 'land2', 'land3', 'land4', 'land5', 'land6', 'land7', 'land8', 'land9', 'land10', 'land11', 'land12', 'land13', 'land14', 'land15', 'land16', 'land17', 'land18', 'land19', 'start'];
+
                 spacePos = [FlxPoint.get(400, 300), FlxPoint.get(500, 300), FlxPoint.get(600, 300), FlxPoint.get(700, 300), FlxPoint.get(800, 300), FlxPoint.get(800, 350), FlxPoint.get(800, 400), FlxPoint.get(800, 450), FlxPoint.get(800, 500), FlxPoint.get(800, 550), FlxPoint.get(700, 550), FlxPoint.get(600, 550), FlxPoint.get(500, 550), FlxPoint.get(400, 550), FlxPoint.get(300, 550), FlxPoint.get(300, 500), FlxPoint.get(300, 450), FlxPoint.get(300, 400), FlxPoint.get(300, 350), FlxPoint.get(300, 300)];
+
                 spacePrice = [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, null];
 
                 // cards1 = new FlxTypedGroup<Card>();
@@ -195,20 +208,25 @@ class BoardGame extends Everything
             button.y = landText.y + 200 + (num * 150);
         }
 
+        if (newGame)
+        {
+            locations = [-1, -1, -1, -1];
+            locationsAlt = [[-1, -1], [-1, -1], [-1, -1], [-1, -1]];
+        }
+        else
+        {
+            locations = FlxG.save.data.locations;
+            locationsAlt = FlxG.save.data.locationsAlt;
+        }
+
+        trace (locationsAlt);
+
         for (num => char in characters)
         {
             if (newGame)
-            {
-                locations = [-1, -1, -1, -1];
-                
                 char.setPosition(startPos.x + (num * 50), startPos.y);
-            }
             else
-            {
-                locations = FlxG.save.data.locations;
-
                 char.setPosition(spacePos[locations[num]].x, spacePos[locations[num]].y);
-            }
         }
 
         cycleText = new FlxText(1100, 0, 100, '', 28);
@@ -229,7 +247,7 @@ class BoardGame extends Everything
         FlxG.cameras.add(GUI, false);
         FlxG.cameras.add(textCam, false);
         FlxG.cameras.add(subCam, false);
-        
+
         initBoard();
         
         super.create();
@@ -237,14 +255,46 @@ class BoardGame extends Everything
 
     override function update(elapsed:Float)
     {
-        if (controls.ENTER && controlsFree)
+        if (controlsFree)
         {
-            diceRoll = rollDice();
-            
-            dice.spinning = false;
-            dice.animation.frameIndex = diceRoll - 1;
+            if (turnStart)
+                if (controls.ENTER)
+                {
+                    diceRoll = rollDice();
+                    
+                    dice.spinning = false;
+                    dice.animation.frameIndex = diceRoll - 1;
 
-            playerMove(diceRoll);
+                    playerMove(diceRoll);
+                }
+            
+            if (deciding)
+            {
+                if (controls.LEFT || controls.UP)
+                {
+                    curChar.altPath = -1;
+
+                    FlxTween.cancelTweensOf(arrow);
+                    FlxTween.tween(arrow, {angle: -45}, 0.5);
+                }
+
+                if (controls.RIGHT || controls.DOWN)
+                {
+                    curChar.altPath = curFork;
+
+                    FlxTween.cancelTweensOf(arrow);
+                    FlxTween.tween(arrow, {angle: 45}, 0.5);
+                }
+
+                if (controls.ENTER)
+                {
+                    deciding = false;
+
+                    arrow.destroy();
+
+                    playerMove(diceRoll);
+                }
+            }
         }
 
         super.update(elapsed);
@@ -286,8 +336,6 @@ class BoardGame extends Everything
                 rng = RNG(3, 8);
 
                 space.text = '$rng';
-
-            case 'direction':
         }
 
         playerStats('update', event);
@@ -552,48 +600,101 @@ class BoardGame extends Everything
                 }
         }
 
-        function playerMove(num:Int)
+    function directionChoice()
+    {
+        deciding = true;
+        controlsFree = true;
+
+        arrow = new FlxSprite(curChar.x, curChar.y).loadGraphic('assets/images/GUI/arrow.png');
+        add(arrow);
+
+        curChar.animation.play('think');
+
+        switch (locations[activePlayer])
         {
-            controlsFree = false;
+            case 5: curFork = 0;
+            case 36: curFork = 1;
+        };
+    }
 
-            curChar.animation.play('walk');
-            
-            if (num != 0)
+    function playerMove(num:Int)
+    {
+        turnStart = false;
+        controlsFree = false;
+
+        curChar.animation.play('walk');
+
+        var altPath:Bool = curChar.altPath > -1 ? true : false;
+
+        if (num != 0)
+        {
+            var wrap:Int = 1;
+
+            var path = curChar.altPath;
+            trace ('path = $path');
+
+            if (num < 0)
+                if (locations[activePlayer] - 1 < 0)
+                    wrap = spaceCount;
+                else
+                    wrap = -1;
+            else
+                if (locations[activePlayer] + 1 > spaceCount)
+                        wrap = -spaceCount;
+
+            var nextSpace = spacePos[locations[activePlayer] + wrap];
+
+            if (altPath)
+                if (locationsAlt[activePlayer][path] + 1 > spaceCountAlt[path])
+                    nextSpace = spacePos[merge[path]];
+                else
+                    nextSpace = spacePosAlt[path][locationsAlt[path][activePlayer] + 1];
+
+            FlxTween.tween(curChar, {x: nextSpace.x, y: nextSpace.y}, 0.5, {onComplete: function(tween:FlxTween)
             {
-                var wrap:Int = num < 0 ? (locations[activePlayer] - 1 < 0 ? spaceCount : -1) : (locations[activePlayer] + 1 > spaceCount ? -spaceCount : 1);
-                var nextSpace = spacePos[locations[activePlayer] + wrap];
-
-                FlxTween.tween(characters[activePlayer], {x: nextSpace.x, y: nextSpace.y}, 0.5, {onComplete: function(tween:FlxTween)
+                if (altPath)
                 {
-                    locations[activePlayer] += wrap;
-                    
+                    locationsAlt[activePlayer][path] += 1;
+                    curSpace = spaceTypeAlt[path][locations[activePlayer]];
+                }
+                else
+                {
+                    locations[activePlayer] += wrap;                
                     curSpace = spaceType[locations[activePlayer]];
+                }
 
+                if (curSpace == 'direction')
+                    directionChoice();
+                else
+                {
                     dice.animation.frameIndex --;
 
                     if (num < 0)
                         num++;
                     else
                         num--;
+
+                    diceRoll = num;
     
                     playerMove(num);
-                }});
-            }
-            else
-            {
-                curChar.animation.play('idle');
-
-                remove(dice);
-
-                if (board == 'demo')
-                    initEvent(curSpace);
-                else if (board == 'kingdom')
-                    if (spaceType[locations[activePlayer]] == null)
-                        changeTurn();
-                    else
-                        land();
-            }
+                }
+            }});
         }
+        else
+        {
+            curChar.animation.play('idle');
+
+            dice.destroy();
+
+            if (board == 'demo')
+                initEvent(curSpace);
+            else if (board == 'kingdom')
+                if (spaceType[locations[activePlayer]] == null)
+                    changeTurn();
+                else
+                    land();
+        }
+    }
 
     function minigame()
     {
@@ -682,6 +783,8 @@ class BoardGame extends Everything
 
         dice = new Dice(curChar.x, curChar.y - 100);
         add(dice);
+
+        turnStart = true;
     }
 
     function changeTurn()
@@ -716,6 +819,7 @@ class BoardGame extends Everything
         FlxG.save.data.cycle = cycle;
         FlxG.save.data.turnOrder = turnOrder;
         FlxG.save.data.locations = locations;
+        FlxG.save.data.locationsAlt = locationsAlt;
         
         FlxG.save.data.chen = chen;
         FlxG.save.data.sprouts = sprouts;

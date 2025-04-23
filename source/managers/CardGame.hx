@@ -23,7 +23,7 @@ class CardGame extends Minigames
     
     var firstDraw:Bool = false;
 
-    public var turnStart:Bool = false;
+    // public var turnStart:Bool = false;
     // public var turnEnd:Bool = false;
     public var interactable:Bool = false;
     

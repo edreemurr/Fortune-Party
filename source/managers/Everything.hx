@@ -56,7 +56,9 @@ class Everything extends FlxState
     public var controlsFree:Bool = false;
 
     public var activePlayer:Int;
+
     var locations:Array<Int>;
+    var locationsAlt:Array<Array<Int>>;
 
     var curChar:Character;
     var characters:Array<Character> = [];
@@ -82,6 +84,9 @@ class Everything extends FlxState
     var cards3:FlxTypedGroup<Card>;
     var cards4:FlxTypedGroup<Card>;
     // var playerHands:Array<FlxTypedGroup<Card>> = [];
+
+    var deciding:Bool = false;
+    var turnStart:Bool = false;
 
     var timerComplete:Void -> Void;
 
