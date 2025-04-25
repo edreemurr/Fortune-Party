@@ -467,17 +467,17 @@ class BoardGame extends Everything
                     space.cameras = [GUI];
                     add(space);
 
-                    var chen:FlxSprite = new FlxSprite(ui.x + 60, ui.y + 15, '$image/GUI/chen.png');
-                    chen.cameras = [GUI];
-                    add(chen);
+                    var chenIcon:FlxSprite = new FlxSprite(ui.x + 60, ui.y + 15, '$image/GUI/chen.png');
+                    chenIcon.cameras = [GUI];
+                    add(chenIcon);
 
-                    var sprout:FlxSprite = new FlxSprite(ui.x + 175, ui.y + 15, '$image/GUI/sprout.png');
-                    sprout.cameras = [GUI];
-                    add(sprout);
+                    var sproutIcon:FlxSprite = new FlxSprite(ui.x + 175, ui.y + 15, '$image/GUI/sprout.png');
+                    sproutIcon.cameras = [GUI];
+                    add(sproutIcon);
 
                     for (i in 0...2)
                     {
-                        var chenNum:FlxSprite = new FlxSprite(chen.x + 50 + (i * 20), chen.y + 15);
+                        var chenNum:FlxSprite = new FlxSprite(chenIcon.x + 50 + (i * 20), chenIcon.y + 15);
                         chenNum.frames = FlxAtlasFrames.fromSparrow('$image/GUI/numbers.png', '$image/GUI/numbers.xml');
                         chenNum.animation.addByPrefix('zero', 'numbers zero');
                         chenNum.animation.addByPrefix('one', 'numbers one');
@@ -492,16 +492,11 @@ class BoardGame extends Everything
                         chenNum.cameras = [GUI];
                         chenNumbers.push(chenNum);
                         add(chenNum);
-                        
-                        if (i == 0)
-                            chenNum.animation.play('one');
-                        else
-                            chenNum.animation.play('zero');
                     }
 
                     chenArray.push(chenNumbers);
 
-                    var sproutNum:FlxSprite = new FlxSprite(sprout.x + 75, sprout.y + 15);
+                    var sproutNum:FlxSprite = new FlxSprite(sproutIcon.x + 75, sproutIcon.y + 15);
                     sproutNum.frames = FlxAtlasFrames.fromSparrow('$image/GUI/numbers.png', '$image/GUI/numbers.xml');
                     sproutNum.animation.addByPrefix('zero', 'numbers zero');
                     sproutNum.animation.addByPrefix('one', 'numbers one');
@@ -517,7 +512,8 @@ class BoardGame extends Everything
                     sproutArray.push(sproutNum);
                     add(sproutNum);
 
-                    sproutNum.animation.play('zero');
+                    updateNum(num, 'chen', chen[num]);
+                    updateNum(num, 'sprout', sprouts[num]);
                 }
 
             case 'update':
@@ -529,8 +525,8 @@ class BoardGame extends Everything
                         chen = FlxArrayUtil.fastSplice(chen, activePlayer);
                         FlxG.save.data.chen = chen;
                         FlxG.save.flush();
-                        
-                        updateNum(activePlayer, chen[activePlayer]);
+
+                        updateNum(activePlayer, 'chen', chen[activePlayer]);
 
                     case 'red':
                         chen[activePlayer] = FlxMath.maxAdd(chen[activePlayer], -rng, 999, 0);
@@ -539,7 +535,7 @@ class BoardGame extends Everything
                         FlxG.save.data.chen = chen;
                         FlxG.save.flush();
                         
-                        updateNum(activePlayer, chen[activePlayer]);
+                        updateNum(activePlayer, 'chen', chen[activePlayer]);
 
                     case 'green':
                         sprouts[activePlayer] = FlxMath.maxAdd(sprouts[activePlayer], 1, 5, 0);
@@ -556,7 +552,7 @@ class BoardGame extends Everything
                         FlxG.save.data.chen = chen;
                         FlxG.save.flush();
                         
-                        updateNum(activePlayer, chen[activePlayer]);
+                        updateNum(activePlayer, 'chen', chen[activePlayer]);
 
                     case 'teal':
                         playerMove(FlxG.random.int(0, 1) == 0 ? rng : -rng);
@@ -573,7 +569,7 @@ class BoardGame extends Everything
                         FlxG.save.data.lands = lands;
                         FlxG.save.flush();
 
-                        updateNum(activePlayer, chen[activePlayer]);
+                        updateNum(activePlayer, 'chen', chen[activePlayer]);
 
                     case 'land rent':
                         if (chen[activePlayer] < spacePrice[locations[activePlayer]])
@@ -598,8 +594,8 @@ class BoardGame extends Everything
                         for (winner in Minigames.victory)
                         {
                             chen[winner - 1] = FlxMath.maxAdd(chen[winner - 1], 10, 999, 0);
-                            // chenArray[winner - 1].animation.play('${chen[winner - 1]}');
-                            updateNum(winner - 1, chen[winner - 1]);
+
+                            updateNum(winner - 1, 'chen', chen[winner - 1]);
                         }
 
                         FlxG.save.data.chen = chen;
@@ -739,18 +735,22 @@ class BoardGame extends Everything
             FlxG.save.flush();
         }
 
-    function updateNum(player:Int, num:Int, tens:Int = 0)
-    {
-        var curArray = chenArray[player];
-
-        if (num > 9)
-            updateNum(player, num - 10, tens + 1);
-        else
+    function updateNum(player:Int, stat:String, num:Int, tens:Int = 0)
+        switch (stat)
         {
-            curArray[0].animation.play('${numArray[tens]}');
-            curArray[1].animation.play('${numArray[num]}');
+            case 'chen':
+                var curArray = chenArray[player];
+
+                if (num > 9)
+                    updateNum(player, stat, num - 10, tens + 1);
+                else
+                {
+                    curArray[0].animation.play('${numArray[tens]}');
+                    curArray[1].animation.play('${numArray[num]}');
+                }
+            case 'sprout':
+                sproutArray[player].animation.play('${numArray[num]}');
         }
-    }
 
     function initBoard()
     {
