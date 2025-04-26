@@ -84,7 +84,7 @@ class Ur extends Minigames
     {
         if (controls.ENTER && !moving && !rolled)
         {
-            roll = rollDice(0, 4);
+            roll = FlxG.random.int(0, 4);
 
             numText.text = '$roll';
 

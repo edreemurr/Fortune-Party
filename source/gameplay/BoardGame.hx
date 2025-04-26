@@ -266,7 +266,33 @@ class BoardGame extends Everything
             if (turnStart)
                 if (controls.ENTER)
                 {
-                    diceRoll = rollDice();
+                    var min:Int = 1;
+                    var max:Int = 6;
+
+                    var exclude:Array<Int> = [];
+
+                    switch (dice.type)
+                    {
+                        case 'low':
+                            min = 1;
+                            max = 3;
+
+                        case 'high':
+                            min = 4;
+                            max = 6;
+
+                        case 'odd':
+                            min = 1;
+                            max = 5;
+                            exclude = [2, 4, 6];
+
+                        case 'even':
+                            min = 2;
+                            max = 6;
+                            exclude = [1, 3, 5];
+                    }
+
+                    diceRoll = FlxG.random.int(min, max, exclude);
                     
                     dice.spinning = false;
                     dice.animation.frameIndex = diceRoll - 1;
@@ -317,7 +343,7 @@ class BoardGame extends Everything
         switch (event)
         {
             case 'blue':
-                rng = RNG(3, 5);
+                rng = FlxG.random.int(3, 5);
 
                 space.text = '+$rng';
 
@@ -325,7 +351,7 @@ class BoardGame extends Everything
                     sproutCheck();
 
             case 'red':
-                rng = RNG(2, 6);
+                rng = FlxG.random.int(2, 6);
 
                 space.text = '-$rng';
 
@@ -341,7 +367,7 @@ class BoardGame extends Everything
             case 'purple':
 
             case 'teal':
-                rng = RNG(3, 8);
+                rng = FlxG.random.int(3, 8);
 
                 space.text = '$rng';
         }
@@ -725,7 +751,7 @@ class BoardGame extends Everything
     }
 
     function sproutCheck()
-        if (RNG(0, 4) == 4)
+        if (FlxG.random.int(0, 4) == 4)
         {
             sprouts[activePlayer] += 1;
             sproutArray[activePlayer].animation.play('${sprouts[activePlayer]}');

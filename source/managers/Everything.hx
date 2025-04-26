@@ -130,12 +130,6 @@ class Everything extends FlxState
         }, time);
     }
 
-    function rollDice(min:Int = 1, max:Int = 6):Int
-        return RNG(min, max);
-
-    function RNG(min:Int, max:Int):Int
-        return FlxG.random.int(min, max);
-
     private function get_controls()
         return Controls.instance;
 }
