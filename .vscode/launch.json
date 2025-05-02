@@ -2,20 +2,28 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
+			"name": "(Windows) Launch",
+			"type": "haxe-eval",
+			"request": "launch",
+			"program": "${workspaceFolder}/export/release/windows/bin/Fortune_Party.exe",
+		},
+		{
 			"name": "Build + Debug",
-			"type": "lime",
-			"request": "launch"
+			"type": "hl",
+			"request": "launch",
+			"program": "${workspaceFolder}/export/release/windows/bin/Fortune_Party.exe"
 		},
 		{
 			"name": "Debug",
 			"type": "lime",
 			"request": "launch",
-			"preLaunchTask": null
+			"program": "${workspaceFolder}/export/release/windows/bin/Fortune_Party.exe"
 		},
 		{
 			"name": "Macro",
 			"type": "haxe-eval",
-			"request": "launch"
+			"request": "launch",
+			"program": "${workspaceFolder}/export/release/windows/bin/Fortune_Party.exe"
 		}
 	]
 }
