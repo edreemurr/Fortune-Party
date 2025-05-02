@@ -28,10 +28,19 @@ class ClockStop extends Minigames
             timeTrack += elapsed;
 
         if (controls.ENTER)
+        {
             stop = true;
+            finish();
+        }
 
         time.text = '${FlxMath.roundDecimal(timeTrack, 2)}';
 
         super.update(elapsed);
+    }
+
+    function finish()
+    {
+        var timeLeft:FlxText = new FlxText(time.x, time.y + 50, 500, '${FlxMath.roundDecimal(10 - timeTrack, 2)}', 32);
+        add(timeLeft);
     }
 }
