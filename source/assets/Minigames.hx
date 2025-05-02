@@ -44,6 +44,8 @@ class Minigames extends Everything
         cycle = FlxG.save.data.cycle;
         cycleCount = FlxG.save.data.cycleCount;
 
+        FlxG.sound.playMusic('assets/music/minigame.ogg', 0.5);
+
         super.create();
     }
 
