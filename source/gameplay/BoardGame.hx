@@ -21,6 +21,8 @@ class BoardGame extends Everything
 {
     public var curSpace:String;
 
+    var shopping = false;
+
     var diceRoll:Int;
     var spaceCount:Int;
     var spaceCountAlt:Array<Int>;
@@ -40,11 +42,20 @@ class BoardGame extends Everything
     var spaceTypeAlt:Array<Array<String>>;
     var spacePosAlt:Array<Array<FlxPoint>>;
 
+    var itemSprites:Array<Array<FlxSprite>>;
+
     var no:FlxButton;
     var yes:FlxButton;
     var landPrompt:FlxTypedGroup<FlxButton>;
 
     var landText:FlxTypeText;
+
+    var stock:Array<Array<Dynamic>>;
+    var items:Array<Array<Dynamic>>;
+
+    var stockSprites:Array<FlxSprite>;
+
+    var itemText:FlxText;
 
     var music:String = 'assets/music';
     var image:String = 'assets/images';
@@ -139,7 +150,9 @@ class BoardGame extends Everything
                 }
             }
 
-        player1 = new Character(0, startPos.x, startPos.y);
+        var curItems:Array<String> = FlxG.save.data.inventory1;
+
+        player1 = new Character(0, startPos.x, startPos.y, curItems);
         player1.animation.play('idle');
         add(player1);
 
@@ -148,7 +161,9 @@ class BoardGame extends Everything
 
         if (playerCount >= 2)
         {
-            player2 = new Character(1, startPos.x, startPos.y);
+            curItems = FlxG.save.data.inventory2;
+
+            player2 = new Character(1, startPos.x, startPos.y, curItems);
             player2.animation.play('idle');
             add(player2);
 
@@ -158,7 +173,9 @@ class BoardGame extends Everything
 
         if (playerCount >= 3)
         {
-            player3 = new Character(2, startPos.x, startPos.y);
+            curItems = FlxG.save.data.inventory3;
+
+            player3 = new Character(2, startPos.x, startPos.y, curItems);
             player3.animation.play('idle');
             add(player3);
 
@@ -168,7 +185,9 @@ class BoardGame extends Everything
 
         if (playerCount >= 4)
         {
-            player4 = new Character(3, startPos.x, startPos.y);
+            curItems = FlxG.save.data.inventory4;
+
+            player4 = new Character(3, startPos.x, startPos.y, curItems);
             player4.animation.play('idle');
             add(player4);
 
@@ -187,6 +206,15 @@ class BoardGame extends Everything
                 else
                     characters.push(player4);
 
+/*         items = [
+            ['high', 5, 'Can roll only between 4 and 6'],
+            ['low', 5, 'Can only only between 1 and 3'],
+            ['odd', 6, 'Can only roll 1, 3, and 5'],
+            ['even', 7, 'Can only roll 2, 4, and 6'],
+            ['slow', 10, 'The dice rolls slowly, allowing for easy manipulation'],
+            ['choice', 15, 'The dice shows whatever you choose']
+        ];
+ */
         landText = new FlxTypeText(0, 100, 500, 'Would you like to\npurchase this land?', 30);
         landText.screenCenter(X);
         add(landText);
@@ -255,7 +283,7 @@ class BoardGame extends Everything
         FlxG.cameras.add(subCam, false);
 
         initBoard();
-        
+
         super.create();
     }
 
@@ -327,6 +355,27 @@ class BoardGame extends Everything
                     arrow.destroy();
 
                     playerMove(diceRoll);
+                }
+            }
+
+            if (shopping)
+            {
+                if (controls.LEFT)
+                    changeSelection(-1);
+
+                if (controls.RIGHT)
+                    changeSelection(1);
+
+                if (controls.ENTER)
+                {
+                    curChar.inventory.push(Std.string(stock[selected][0]));
+                    chen[activePlayer] -= Std.int(stock[selected][1]);
+
+                    updateItem(activePlayer - 1);
+
+                    shopping = false;
+
+                    startTurn();
                 }
             }
         }
@@ -456,13 +505,15 @@ class BoardGame extends Everything
                 chenArray = [];
                 sproutArray = [];
 
+                statsUI = [];
+                itemSprites = [];
+
                 land1 = [];
                 land2 = [];
                 land3 = [];
                 land4 = [];
                 lands = [land1, land2, land3, land4];
 
-                
                 for (num => char in characters)
                 {
                     var chenNumbers:Array<FlxSprite> = [];
@@ -478,6 +529,8 @@ class BoardGame extends Everything
                         chen = FlxG.save.data.chen;
                         sprouts = FlxG.save.data.sprouts;
 
+                        itemSprites = FlxG.save.data.itemSprites;
+
                         lands = FlxG.save.data.lands;
                     }
 
@@ -485,8 +538,8 @@ class BoardGame extends Everything
 
                     var ui:FlxSprite = new FlxSprite(20, 20 + (num * 150), 'assets/images/GUI/stats.png');
                     ui.color = char.color;
-                    // statsUI.push(ui);
                     ui.cameras = [GUI];
+                    statsUI.push(ui);
                     add(ui);
 
                     var space:FlxSprite = new FlxSprite(ui.x, ui.y, 'assets/images/GUI/space.png');
@@ -540,6 +593,8 @@ class BoardGame extends Everything
 
                     updateNum(num, 'chen', chen[num]);
                     updateNum(num, 'sprout', sprouts[num]);
+
+                    updateItem(num);
                 }
 
             case 'update':
@@ -627,6 +682,11 @@ class BoardGame extends Everything
                         FlxG.save.data.chen = chen;
                         FlxG.save.flush();
                 }
+
+            case 'item':
+                curChar.inventory.push(statChange);
+
+                updateItem(activePlayer);
         }
 
     function directionChoice()
@@ -730,6 +790,22 @@ class BoardGame extends Everything
         }
     }
 
+    public function updateItem(player:Int)
+    {
+        itemSprites[player] = [];
+
+        for (num => item in characters[player].inventory)
+        {
+            trace (num, item);
+            var sprite:FlxSprite = new FlxSprite(statsUI[player].x + 50 + (num * 20), statsUI[player].y + 50).loadGraphic('assets/images/dice/$item.png');
+            sprite.setGraphicSize(25);
+            sprite.updateHitbox();
+            sprite.cameras = [GUI];
+            itemSprites[player].push(sprite);
+            add(sprite);
+        }
+    }
+
     function minigame()
     {
         cycle += 1;
@@ -739,6 +815,34 @@ class BoardGame extends Everything
         saveData();
 
         openSubState(new MinigameSelection(0x000000));
+    }
+
+    function shop()
+    {
+        shopping = true;
+        controlsFree = true;
+
+        stock = [];
+        stockSprites = [];
+
+        var forSale:Array<Int> = [];
+
+        for (i in 0...3)
+        {
+            var rng = FlxG.random.int(0, items.length - 1, forSale);
+
+            forSale.push(rng);
+            stock.push(items[rng]);
+
+            var sprite:FlxSprite = new FlxSprite(400 + (i * 200), 250).loadGraphic('assets/images/dice/${Std.string(items[rng])}.png');
+            sprite.cameras = [subCam];
+            stockSprites.push(sprite);
+            add(sprite);
+        }
+
+        itemText = new FlxText(0, 500, 500, '${stock[0]}', 28);
+        itemText.screenCenter(X);
+        add(itemText);
     }
 
     function checkOwnership():Character
@@ -850,6 +954,16 @@ class BoardGame extends Everything
             curChar.animation.play('think');
     }
 
+    function changeSelection(num:Int)
+    {
+        selected = FlxMath.maxAdd(selected, num, stock.length - 1, 0);
+
+        for (num => item in stockSprites)
+            item.alpha = (num == selected) ? 1 : 0.5;
+
+        itemText.text = stock[selected][2];
+    }
+
     function saveData()
     {
         FlxG.save.data.newGame = false;
@@ -865,6 +979,14 @@ class BoardGame extends Everything
         FlxG.save.data.sprouts = sprouts;
 
         FlxG.save.data.lands = lands;
+
+        FlxG.save.data.itemSprites = itemSprites;
+
+        FlxG.save.data.inventory1 = characters[0].inventory;
+        FlxG.save.data.inventory2 = characters[1].inventory;
+        FlxG.save.data.inventory3 = characters[2].inventory;
+        FlxG.save.data.inventory4 = characters[3].inventory;
+
         FlxG.save.flush();
     }
 }

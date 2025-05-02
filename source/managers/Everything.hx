@@ -60,13 +60,13 @@ class Everything extends FlxState
     var locations:Array<Int>;
     var locationsAlt:Array<Int>;
 
-    var curChar:Character;
+    public var curChar:Character;
     var characters:Array<Character> = [];
 
     public var cycleText:FlxText;
     
-    var chenArray:Array<Array<FlxSprite>>;
     var sproutArray:Array<FlxSprite>;
+    var chenArray:Array<Array<FlxSprite>>;
     
     var player1:Character;
     var player2:Character;
@@ -83,7 +83,7 @@ class Everything extends FlxState
     var cards2:FlxTypedGroup<Card>;
     var cards3:FlxTypedGroup<Card>;
     var cards4:FlxTypedGroup<Card>;
-    // var playerHands:Array<FlxTypedGroup<Card>> = [];
+    // var playerHands:Array<FlxTypedGroup<Card>>;
 
     var deciding:Bool = false;
     var turnStart:Bool = false;

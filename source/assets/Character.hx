@@ -20,7 +20,9 @@ class Character extends FlxSprite
     public var location:Int;
 
     public var altPath:Int = -1;
-    
+
+    public var inventory:Array<String>;
+
     public var land:Array<String>;
     public var items:Array<String>;
     public var cards:FlxTypedGroup<Card>;
@@ -29,11 +31,12 @@ class Character extends FlxSprite
     
     var game:BoardGame;
 
-    public function new(player:Int, x:Float, y:Float)
+    public function new(player:Int, x:Float, y:Float, ?items:Array<String>)
     {
         super(x, y);
 
         this.player = player;
+        this.inventory = items;
         this.colorChoice = FlxColor.fromString(CharacterSelect.charColors[player]);
 
         frames = FlxAtlasFrames.fromSparrow('$sprite/Character.png', '$sprite/Character.xml');
@@ -43,6 +46,8 @@ class Character extends FlxSprite
         animation.addByPrefix('think', 'character think');
 
         color = colorChoice;
+//first player gets no item? how to save & load items?
+        inventory = [];
     }
 
     public function loadStats()
