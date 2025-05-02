@@ -19,7 +19,7 @@ class Minigames extends Everything
         buttons = new FlxTypedGroup<FlxButton>();
         add(buttons);
 
-        buttonNames = ['Hue Won\'t', 'Dilemma', 'Garbage', 'Ur'];
+        buttonNames = ['Hue Won\'t', 'Clock Stop', 'Dilemma', 'Garbage', 'Ur'];
 
         for (i in 0...buttonNames.length)
         {
@@ -41,6 +41,7 @@ class Minigames extends Everything
         switch (state)
         {
             case 'Hue Won\'t': FlxG.switchState(HueWont.new);
+            case 'Clock Stop': FlxG.switchState(ClockStop.new);
             case 'Dilemma': FlxG.switchState(Dilemma.new);
             case 'Garbage': FlxG.switchState(Garbage.new);
             case 'Ur': FlxG.switchState(Ur.new);
