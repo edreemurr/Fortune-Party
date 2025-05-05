@@ -68,6 +68,7 @@ class BoardGame extends Everything
         FlxG.mouse.visible = false;
 
         canPause = true;
+        boardGame = true;
 
         newGame = FlxG.save.data.newGame;
         turnOrder = FlxG.save.data.turnOrder;
@@ -900,7 +901,7 @@ class BoardGame extends Everything
         }
         else
         {
-            openSubState(new PostMinigame(playerCount));
+            // openSubState(new PostMinigame(playerCount));
             
             cycleText.text = '$cycle/$cycleCount';
         }

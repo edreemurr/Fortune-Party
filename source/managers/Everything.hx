@@ -29,6 +29,7 @@ class Everything extends FlxState
     public var subCam:FlxCamera;
 
     public var newGame:Bool;
+    var boardGame:Bool;
 
     public var cycleCount:Int;
     public var playerCount:Int;

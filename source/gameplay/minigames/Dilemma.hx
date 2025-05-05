@@ -28,6 +28,8 @@ class Dilemma extends Minigames
 
     override function create()
     {
+        FlxG.mouse.visible = true;
+
         roundText = new FlxText(FlxG.width - 50, 50, 500, '', 28);
         add(roundText);
 

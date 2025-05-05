@@ -35,7 +35,7 @@ class CharacterSelect extends Everything
         FlxG.save.data.cycle = 1;
         FlxG.save.flush();
 
-        text = new FlxText(0, 50, 'How many players?', 40);
+        text = new FlxText(0, 50, 'How many players?\n(4 required to not crash)', 40);
         text.screenCenter(X);
         add(text);
 

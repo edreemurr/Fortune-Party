@@ -1,6 +1,7 @@
 package gameplay;
 
 import flixel.FlxG;
+import flixel.FlxSprite;
 import flixel.FlxSubState;
 import flixel.text.FlxText;
 import flixel.util.FlxTimer;
@@ -26,11 +27,11 @@ class MinigameSelection extends FlxSubState
     {
         cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
 
-        // var dim:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, 0x000000);
-        // dim.alpha = 0.5;
-        // add(dim);
+        var dim:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, 0x000000);
+        dim.alpha = 0.5;
+        add(dim);
 
-        all = ['Hue Won\'t', 'Ur', 'Garbage'];
+        all = ['Hue Won\'t', 'Dilemma', 'Clock Stop'/* 'Ur', 'Garbage' */];
 
         chosen = [];
 
@@ -82,7 +83,9 @@ class MinigameSelection extends FlxSubState
         switch (minigame)
         {
             case 'Ur': FlxG.switchState(Ur.new);
+            case 'Dilemma': FlxG.switchState(Dilemma.new);
             case 'Garbage': FlxG.switchState(Garbage.new);
             case 'Hue Won\'t': FlxG.switchState(HueWont.new);
+            case 'Clock Stop': FlxG.switchState(ClockStop.new);
         }
 }

@@ -16,10 +16,12 @@ class Minigames extends Everything
     {
         FlxG.mouse.visible = true;
 
+        boardGame = false;
+
         buttons = new FlxTypedGroup<FlxButton>();
         add(buttons);
 
-        buttonNames = ['Hue Won\'t', 'Clock Stop', 'Dilemma', 'Garbage', 'Ur'];
+        buttonNames = ['Hue Won\'t', 'Clock Stop', 'Dilemma',/*  'Garbage',  */'Ur'];
 
         for (i in 0...buttonNames.length)
         {
@@ -40,10 +42,10 @@ class Minigames extends Everything
     function button(state:String)
         switch (state)
         {
-            case 'Hue Won\'t': FlxG.switchState(HueWont.new);
-            case 'Clock Stop': FlxG.switchState(ClockStop.new);
+            case 'Ur': FlxG.switchState(Ur.new);
             case 'Dilemma': FlxG.switchState(Dilemma.new);
             case 'Garbage': FlxG.switchState(Garbage.new);
-            case 'Ur': FlxG.switchState(Ur.new);
+            case 'Hue Won\'t': FlxG.switchState(HueWont.new);
+            case 'Clock Stop': FlxG.switchState(ClockStop.new);
         }
 }

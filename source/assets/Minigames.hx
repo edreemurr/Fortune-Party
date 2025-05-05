@@ -69,7 +69,7 @@ class Minigames extends Everything
         victory = players;
 
         new FlxTimer().start(3, function (timer:FlxTimer)
-            cycle > cycleCount ? FlxG.switchState(BoardEnd.new) : FlxG.switchState(BoardGame.new));
+            boardGame ? (cycle > cycleCount ? FlxG.switchState(BoardEnd.new) : FlxG.switchState(BoardGame.new)) : FlxG.switchState(menus.Minigames.new));
     }
 
     function start(time:Float)
