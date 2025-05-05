@@ -58,7 +58,7 @@ class Main extends Sprite
 
 		SaveData.loadDefaultButtons();
 
-		addChild(new FlxGame(menus.Title, true));
+		addChild(new FlxGame(menus.Intro, true));
 
 		#if CRASH_HANDLER
 		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);
