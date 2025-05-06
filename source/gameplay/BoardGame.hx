@@ -44,6 +44,8 @@ class BoardGame extends Everything
 
     var itemSprites:Array<Array<FlxSprite>>;
 
+    var events:Array<String>;
+
     var no:FlxButton;
     var yes:FlxButton;
     var landPrompt:FlxTypedGroup<FlxButton>;
@@ -81,6 +83,8 @@ class BoardGame extends Everything
         lands = FlxG.save.data.lands;
 
         FlxG.sound.playMusic('$music/board.ogg', 0.5);
+
+        events = [/* 'Chance Time',  */'Random Space', 'Gain/Lose Chen', 'Star Sprout'];
 
         switch (board)
         {
@@ -207,7 +211,7 @@ class BoardGame extends Everything
                 else
                     characters.push(player4);
 
-/*         items = [
+        items = [
             ['high', 5, 'Can roll only between 4 and 6'],
             ['low', 5, 'Can only only between 1 and 3'],
             ['odd', 6, 'Can only roll 1, 3, and 5'],
@@ -215,7 +219,7 @@ class BoardGame extends Everything
             ['slow', 10, 'The dice rolls slowly, allowing for easy manipulation'],
             ['choice', 15, 'The dice shows whatever you choose']
         ];
- */
+
         landText = new FlxTypeText(0, 100, 500, 'Would you like to\npurchase this land?', 30);
         landText.screenCenter(X);
         add(landText);
@@ -409,12 +413,15 @@ class BoardGame extends Everything
                     sproutCheck();
 
             case 'green':
-                space.text = 'lucky';
+                space.text = 'Random Item';
 
             case 'brown':
-                space.text = 'chance time';
+                space.text = 'Solo Minigame';
 
             case 'purple':
+                rng = FlxG.random.int(0, events.length - 1);
+
+                space.text = 'Random Event\n${events[rng]}';
 
             case 'teal':
                 rng = FlxG.random.int(3, 8);
@@ -605,8 +612,8 @@ class BoardGame extends Everything
                         chen[activePlayer] = FlxMath.maxAdd(chen[activePlayer], rng, 999, 0);
                         
                         chen = FlxArrayUtil.fastSplice(chen, activePlayer);
-                        FlxG.save.data.chen = chen;
-                        FlxG.save.flush();
+                        // FlxG.save.data.chen = chen;
+                        // FlxG.save.flush();
 
                         updateNum(activePlayer, 'chen', chen[activePlayer]);
 
@@ -614,27 +621,35 @@ class BoardGame extends Everything
                         chen[activePlayer] = FlxMath.maxAdd(chen[activePlayer], -rng, 999, 0);
 
                         chen = FlxArrayUtil.fastSplice(chen, activePlayer);
-                        FlxG.save.data.chen = chen;
-                        FlxG.save.flush();
+                        // FlxG.save.data.chen = chen;
+                        // FlxG.save.flush();
                         
                         updateNum(activePlayer, 'chen', chen[activePlayer]);
 
                     case 'green':
-                        sprouts[activePlayer] = FlxMath.maxAdd(sprouts[activePlayer], 1, 5, 0);
-                        sproutArray[activePlayer].animation.play('${sprouts[activePlayer]}');
-
-                        sprouts = FlxArrayUtil.fastSplice(sprouts, activePlayer);
-                        FlxG.save.data.sprouts = sprouts;
-                        FlxG.save.flush();
+                        curChar.inventory.push(items[FlxG.random.int(0, items.length - 1)][0]);
+                        
+                        updateItem(activePlayer);
 
                     case 'brown':
-                        chen[activePlayer] = FlxMath.maxAdd(chen[activePlayer], 100, 999, 0);
-                        
-                        chen = FlxArrayUtil.fastSplice(chen, activePlayer);
-                        FlxG.save.data.chen = chen;
-                        FlxG.save.flush();
-                        
-                        updateNum(activePlayer, 'chen', chen[activePlayer]);
+                        minigame();
+
+                    case 'purple':
+                        switch (rng)
+                        {
+                            case 0:
+                                playerMove(FlxG.random.int(1, spaceCount));
+
+                            case 1:
+                                chen[activePlayer] = FlxMath.maxAdd(chen[activePlayer], FlxG.random.int(-10, 20), 999, 0);
+
+                                updateNum(activePlayer, 'chen', chen[activePlayer]);
+
+                            case 2:
+                                sprouts[activePlayer] += 1;
+
+                                updateNum(activePlayer, 'sprout', sprouts[activePlayer]);
+                        }
 
                     case 'teal':
                         playerMove(FlxG.random.int(0, 1) == 0 ? rng : -rng);
@@ -647,9 +662,9 @@ class BoardGame extends Everything
 
                         chen = FlxArrayUtil.fastSplice(chen, activePlayer);
 
-                        FlxG.save.data.chen = chen;
-                        FlxG.save.data.lands = lands;
-                        FlxG.save.flush();
+                        // FlxG.save.data.chen = chen;
+                        // FlxG.save.data.lands = lands;
+                        // FlxG.save.flush();
 
                         updateNum(activePlayer, 'chen', chen[activePlayer]);
 
@@ -668,8 +683,8 @@ class BoardGame extends Everything
                             chen = FlxArrayUtil.fastSplice(chen, activePlayer);
                             chen = FlxArrayUtil.fastSplice(chen, characters.indexOf(checkOwnership()));
 
-                            FlxG.save.data.chen = chen;
-                            FlxG.save.flush();
+                            // FlxG.save.data.chen = chen;
+                            // FlxG.save.flush();
                         }
 
                     case 'minigame':
