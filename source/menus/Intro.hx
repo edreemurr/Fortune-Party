@@ -24,7 +24,7 @@ class Intro extends Everything
         text.screenCenter(X);
         add(text);
 
-        var skipText:FlxText = new FlxText(1050, 700, 500, 'ESC to menu', 20);
+        var skipText:FlxText = new FlxText(1100, 675, 500, 'ESC to menu', 20);
         add(skipText);
 
         dialogue = [

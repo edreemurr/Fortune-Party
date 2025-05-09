@@ -401,7 +401,8 @@ class BoardGame extends Everything
 
                 space.text = '+$rng';
 
-                if (cycle > 4)
+                // if (/* cycle > 4 &&  */FlxG.random.int(1, 3) == 3)
+                //     initEvent('sprout');
                     sproutCheck();
 
             case 'red':
@@ -427,6 +428,9 @@ class BoardGame extends Everything
                 rng = FlxG.random.int(3, 8);
 
                 space.text = '$rng';
+
+            case 'sprout':
+                space.text = 'Found Star Sprout';
         }
 
         playerStats('update', event);
@@ -600,7 +604,7 @@ class BoardGame extends Everything
                     add(sproutNum);
 
                     updateNum(num, 'chen', chen[num]);
-                    updateNum(num, 'sprout', sprouts[num]);
+                    updateNum(num, 'sprouts', sprouts[num]);
 
                     updateItem(num);
                 }
@@ -648,11 +652,16 @@ class BoardGame extends Everything
                             case 2:
                                 sprouts[activePlayer] += 1;
 
-                                updateNum(activePlayer, 'sprout', sprouts[activePlayer]);
+                                updateNum(activePlayer, 'sprouts', sprouts[activePlayer]);
                         }
 
                     case 'teal':
                         playerMove(FlxG.random.int(0, 1) == 0 ? rng : -rng);
+
+                    case 'sprout':
+                        sprouts[activePlayer] = FlxMath.maxAdd(sprouts[activePlayer], 1, 5, 0);
+
+                        updateNum(activePlayer, 'sprouts', sprouts[activePlayer]);
 
                     case 'land buy':
                         chen[activePlayer] -= spacePrice[locations[activePlayer]];
@@ -871,15 +880,21 @@ class BoardGame extends Everything
     }
 
     function sproutCheck()
-        if (FlxG.random.int(0, 4) == 4)
-        {
-            sprouts[activePlayer] += 1;
-            sproutArray[activePlayer].animation.play('${sprouts[activePlayer]}');
-
-            sprouts = FlxArrayUtil.fastSplice(sprouts, activePlayer);
-            FlxG.save.data.sprouts = sprouts;
-            FlxG.save.flush();
-        }
+    {
+        // if (FlxG.random.int(1, 3) == 1)
+        // {
+            // sprouts[activePlayer] += 1;
+            // sproutArray[activePlayer].animation.play('${sprouts[activePlayer]}');
+            playerStats('update', 'sprout');
+        // }
+/*             switch (FlxG.random.int(0, 4))
+            {
+                case 0: //purchase
+                case 1: //minigame
+                case 2: //loop board to same space
+                case 3: //random question
+            }
+ */    }
 
     function updateNum(player:Int, stat:String, num:Int, tens:Int = 0)
         switch (stat)
@@ -894,7 +909,7 @@ class BoardGame extends Everything
                     curArray[0].animation.play('${numArray[tens]}');
                     curArray[1].animation.play('${numArray[num]}');
                 }
-            case 'sprout':
+            case 'sprouts':
                 sproutArray[player].animation.play('${numArray[num]}');
         }
 
@@ -1002,6 +1017,8 @@ class BoardGame extends Everything
         FlxG.save.data.inventory2 = characters[1].inventory;
         FlxG.save.data.inventory3 = characters[2].inventory;
         FlxG.save.data.inventory4 = characters[3].inventory;
+
+        FlxG.save.data.boardGame = boardGame;
 
         FlxG.save.flush();
     }

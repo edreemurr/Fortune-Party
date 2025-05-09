@@ -8,8 +8,12 @@ import flixel.addons.text.FlxTypeText;
 import flixel.group.FlxGroup.FlxTypedGroup;
 
 import assets.Character;
+
+import menus.Minigames;
+
 import gameplay.BoardEnd;
 import gameplay.BoardGame;
+
 import managers.Everything;
 
 class Minigames extends Everything
@@ -44,6 +48,8 @@ class Minigames extends Everything
         cycle = FlxG.save.data.cycle;
         cycleCount = FlxG.save.data.cycleCount;
 
+        boardGame = FlxG.save.data.boardGame;
+
         FlxG.sound.playMusic('assets/music/minigame.ogg', 0.5);
 
         super.create();
@@ -69,7 +75,7 @@ class Minigames extends Everything
         victory = players;
 
         new FlxTimer().start(3, function (timer:FlxTimer)
-            boardGame ? (cycle > cycleCount ? FlxG.switchState(BoardEnd.new) : FlxG.switchState(BoardGame.new)) : FlxG.switchState(menus.Minigames.new));
+            boardGame ? (cycle > cycleCount ? FlxG.switchState(BoardEnd.new) : FlxG.switchState(BoardGame.new)) : FlxG.switchState(Minigames.new));
     }
 
     function start(time:Float)
