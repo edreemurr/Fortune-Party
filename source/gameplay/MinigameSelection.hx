@@ -31,7 +31,7 @@ class MinigameSelection extends FlxSubState
         dim.alpha = 0.5;
         add(dim);
 
-        all = ['Hue Won\'t', 'Dilemma', 'Clock Stop'/* 'Ur', 'Garbage' */];
+        all = ['Hue Won\'t', 'Dilemma', /*'Clock Stop', 'Ur', 'Garbage' */];
 
         chosen = [];
 
@@ -75,7 +75,7 @@ class MinigameSelection extends FlxSubState
 
             if (loops == 0)
                 FlxG.sound.music.fadeOut(1.5, function (tween:FlxTween)
-                    loadMinigame(all[/* num */0]));
+                    loadMinigame(all[num]));
         }, loops);
     }
 

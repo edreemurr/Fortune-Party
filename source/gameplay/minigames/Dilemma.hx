@@ -35,10 +35,22 @@ class Dilemma extends Minigames
 
         ally = new FlxButton(0, 200, 'Ally', () -> choice('Ally'));
         ally.screenCenter(X);
+        ally.setGraphicSize(200, 50);
+        ally.updateHitbox();
+        ally.label.setFormat(25);
+        ally.label.fieldWidth = ally.width;
+        ally.label.alignment = CENTER;
+        ally.label.offset.y -= 5;
         add(ally);
 
         betray = new FlxButton(0, 400, 'Betray', () -> choice('Betray'));
         betray.screenCenter(X);
+        betray.setGraphicSize(200, 50);
+        betray.updateHitbox();
+        betray.label.setFormat(25);
+        betray.label.fieldWidth = betray.width;
+        betray.label.alignment = CENTER;
+        betray.label.offset.y -= 5;
         add(betray);
 
         choiceText = new FlxTypeText(0, 50, 500, 'Make your choice...', 32);

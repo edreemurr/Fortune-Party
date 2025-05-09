@@ -7,6 +7,7 @@ import flixel.ui.FlxButton;
 import flixel.text.FlxText;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
+import flixel.util.FlxColor;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxArrayUtil;
 import flixel.addons.text.FlxTypeText;
@@ -33,6 +34,9 @@ class BoardGame extends Everything
     var merge:Array<Int>;
 
     var arrow:FlxSprite;
+
+    var playerSpaces:Array<FlxSprite>;
+    var spaceColors:Map<String, FlxColor>;
 
     var startPos:FlxPoint;
     var spaceType:Array<String>;
@@ -83,6 +87,12 @@ class BoardGame extends Everything
         lands = FlxG.save.data.lands;
 
         FlxG.sound.playMusic('$music/board.ogg', 0.5);
+
+        var background:FlxSprite = new FlxSprite().makeGraphic(3000, 2000, 0x919191);
+        add(background);
+
+        playerSpaces = new Array<FlxSprite>();
+        spaceColors = new Map<String, FlxColor>();
 
         events = [/* 'Chance Time',  */'Random Space', 'Gain/Lose Chen', 'Star Sprout'];
 
@@ -136,6 +146,9 @@ class BoardGame extends Everything
                 case 'purple': space.color = 0xa270ff;
                 case 'direction': space.color = 0x858585;
             }
+
+            if (!spaceColors.exists(spaceType[num]))
+                spaceColors.set(spaceType[num], space.color);
         }
 
         for (index => spaceAlt in spacePosAlt)
@@ -401,8 +414,7 @@ class BoardGame extends Everything
 
                 space.text = '+$rng';
 
-                // if (/* cycle > 4 &&  */FlxG.random.int(1, 3) == 3)
-                //     initEvent('sprout');
+                if (/* cycle > 4 &&  */FlxG.random.int(1, 3) == 3)
                     sproutCheck();
 
             case 'red':
@@ -410,7 +422,7 @@ class BoardGame extends Everything
 
                 space.text = '-$rng';
 
-                if (cycle > 4)
+                if (/* cycle > 4 && */FlxG.random.int(1, 3) == 3)
                     sproutCheck();
 
             case 'green':
@@ -439,10 +451,11 @@ class BoardGame extends Everything
         {
             changeTurn();
 
-            if (activePlayer == playerCount && board == 'demo')
-                minigame();
-            else
-                startTurn();
+            if (event != 'brown')
+                if (activePlayer == playerCount && board == 'demo')
+                    minigame();
+                else
+                    startTurn();
 
             space.destroy();
             space.kill();
@@ -556,6 +569,7 @@ class BoardGame extends Everything
 
                     var space:FlxSprite = new FlxSprite(ui.x, ui.y, 'assets/images/GUI/space.png');
                     space.cameras = [GUI];
+                    playerSpaces.push(space);
                     add(space);
 
                     var chenIcon:FlxSprite = new FlxSprite(ui.x + 60, ui.y + 15, '$image/GUI/chen.png');
@@ -774,7 +788,7 @@ class BoardGame extends Everything
                 if (altPath)
                 {
                     locationsAlt[activePlayer] += 1;
-                    curSpace = spaceTypeAlt[path][locations[activePlayer]];
+                    curSpace = spaceTypeAlt[path][locationsAlt[activePlayer]];
                 }
                 else
                 {
@@ -803,6 +817,8 @@ class BoardGame extends Everything
         {
             curChar.animation.play('idle');
 
+            playerSpaces[activePlayer].color = spaceColors.get(curSpace);
+
             dice.destroy();
 
             if (board == 'demo')
@@ -821,7 +837,6 @@ class BoardGame extends Everything
 
         for (num => item in characters[player].inventory)
         {
-            trace (num, item);
             var sprite:FlxSprite = new FlxSprite(statsUI[player].x + 50 + (num * 20), statsUI[player].y + 50).loadGraphic('assets/images/dice/$item.png');
             sprite.setGraphicSize(25);
             sprite.updateHitbox();
@@ -881,13 +896,9 @@ class BoardGame extends Everything
 
     function sproutCheck()
     {
-        // if (FlxG.random.int(1, 3) == 1)
-        // {
-            // sprouts[activePlayer] += 1;
-            // sproutArray[activePlayer].animation.play('${sprouts[activePlayer]}');
-            playerStats('update', 'sprout');
-        // }
-/*             switch (FlxG.random.int(0, 4))
+        playerStats('update', 'sprout');
+
+/*          switch (FlxG.random.int(0, 4))
             {
                 case 0: //purchase
                 case 1: //minigame
