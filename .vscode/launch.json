@@ -2,28 +2,32 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
+			"name": "Build and Debug",
+			"type": "hxcpp",
+			"request": "launch",
+			"program": "${workspaceFolder}/export/debug/windows/bin/Fortune_Party.exe",
+			"preLaunchTask": "lime: build windows -debug",
+		},
+		{
+			"name": "Debug",
+			"type": "hxcpp",
+			"request": "launch",
+			"program": "${workspaceFolder}/export/debug/windows/bin/Fortune_Party.exe"
+		}
+/* 		{
 			"name": "(Windows) Launch",
 			"type": "haxe-eval",
 			"request": "launch",
-			"program": "${workspaceFolder}/export/release/windows/bin/Fortune_Party.exe",
-		},
-		{
-			"name": "Build + Debug",
-			"type": "hl",
-			"request": "launch",
-			"program": "${workspaceFolder}/export/release/windows/bin/Fortune_Party.exe"
 		},
 		{
 			"name": "Debug",
 			"type": "lime",
 			"request": "launch",
-			"program": "${workspaceFolder}/export/release/windows/bin/Fortune_Party.exe"
 		},
 		{
 			"name": "Macro",
 			"type": "haxe-eval",
 			"request": "launch",
-			"program": "${workspaceFolder}/export/release/windows/bin/Fortune_Party.exe"
 		}
-	]
+ */	]
 }

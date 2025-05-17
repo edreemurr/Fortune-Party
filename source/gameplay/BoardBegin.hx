@@ -1,20 +1,17 @@
 package gameplay;
 
 import flixel.FlxG;
-import flixel.FlxSubState;
 import flixel.text.FlxText;
 import flixel.math.FlxMath;
 
-import managers.Everything;
+import managers.EverythingSub;
 
-class BoardBegin extends FlxSubState
+class BoardBegin extends EverythingSub
 {
-    var num:Int = 5;
+    var num:Int;
     
     var text:FlxText;
     var numText:FlxText;
-
-    var everything:Everything;
 
     override function create()
     {
@@ -35,11 +32,11 @@ class BoardBegin extends FlxSubState
     {
         numText.text = '$num';
 
-        if (everything.controls.UP)
+        if (FlxG.keys.justPressed.UP)
             num = FlxMath.maxAdd(num, 5, 100, 5);
-        if (everything.controls.DOWN)
+        if (FlxG.keys.justPressed.DOWN)
             num = FlxMath.maxAdd(num, -5, 100, 5);
-        if (everything.controls.ENTER)
+        if (FlxG.keys.justPressed.ENTER)
         {
             FlxG.save.data.cycleCount = num;
             FlxG.save.flush();

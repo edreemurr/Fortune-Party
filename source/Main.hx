@@ -9,7 +9,6 @@ import openfl.Lib;
 import openfl.display.Sprite;
 import openfl.events.Event;
 
-import managers.Controls;
 import managers.FileNans;
 import managers.Settings.GameSettings;
 import managers.Settings.SaveData;
@@ -43,8 +42,8 @@ class Main extends Sprite
 
 	private function init(?E:Event):Void
 	{
-		if (hasEventListener(Event.ADDED_TO_STAGE))
-			removeEventListener(Event.ADDED_TO_STAGE, init);
+		// if (hasEventListener(Event.ADDED_TO_STAGE))
+		// 	removeEventListener(Event.ADDED_TO_STAGE, init);
 
 		bootUp();
 	}
@@ -54,11 +53,9 @@ class Main extends Sprite
 		if (FlxG.save.data == null)
 			FlxG.save.bind('saveFile', FileNans.locateSave());
 
-		Controls.instance = new Controls();
-
 		SaveData.loadDefaultButtons();
 
-		addChild(new FlxGame(menus.Intro, true));
+		addChild(new FlxGame(menus.Title, true));
 
 		#if CRASH_HANDLER
 		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);

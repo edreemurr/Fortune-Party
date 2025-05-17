@@ -44,8 +44,6 @@
 	<haxelib name="flixel" />
 	<haxelib name="flixel-addons" />
 
-	<haxelib name="hashlink" />
-
 	<!--In case you want to use the ui package-->
 	<!--<haxelib name="flixel-ui" />-->
 
@@ -87,6 +85,10 @@
 
 	<!-- Show debug traces for hxCodec -->
 	<haxedef name="HXC_DEBUG_TRACE" if="debug" />
+
+	<!-- Show debug traces for HXCPP -->
+	<haxedef name="HXCPP_DEBUG" />
+	<haxedef name="HXCPP_DEBUG_LINK" />
 
 	<!--Disable the Flixel core debugger. Automatically gets set whenever you compile in release mode-->
 	<haxedef name="FLX_NO_DEBUG" unless="debug" />

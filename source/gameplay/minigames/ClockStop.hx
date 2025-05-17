@@ -32,12 +32,12 @@ class ClockStop extends Minigames
         if (!stop)
             timeTrack += elapsed;
 
-        if (controls.ENTER)
+/*         if (controls.interact.triggered)
         {
             stop = true;
             finish();
         }
-
+ */
         time.text = '${FlxMath.roundDecimal(timeTrack, 2)}';
 
         super.update(elapsed);

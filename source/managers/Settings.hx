@@ -1,9 +1,9 @@
 package managers;
 
 import flixel.FlxG;
-import flixel.input.gamepad.FlxGamepadInputID;
-import flixel.input.keyboard.FlxKey;
 import flixel.util.FlxSave;
+import flixel.input.keyboard.FlxKey;
+import flixel.input.gamepad.FlxGamepadInputID;
 
 @:structInit class GameSettings
 {

@@ -83,7 +83,7 @@ class Dilemma extends Minigames
     {
         round += 1;
 
-        roundText.text = '$round';
+        roundText.text = 'Round $round';
 
         choiceText.resetText('Make your choice...');
         choiceText.start(0.02);

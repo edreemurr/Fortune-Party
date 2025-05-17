@@ -63,11 +63,11 @@ class CharacterSelect extends Everything
         {
             numText.text = '$num';
 
-            if (controls.UP)
+            if (FlxG.keys.justPressed.UP)
                 num = FlxMath.maxAdd(num, 1, 4, 1);
-            if (controls.DOWN)
+            if (FlxG.keys.justPressed.DOWN)
                 num = FlxMath.maxAdd(num, -1, 4, 1);
-            if (controls.ENTER)
+            if (FlxG.keys.justPressed.ENTER)
             {
                 numText.visible = false;
 
@@ -210,7 +210,7 @@ class CharacterSelect extends Everything
     {
         buttons.killMembers();
 
-        buttonNames = ['Demo', 'Kingdom'];
+        buttonNames = ['Demo'/* , 'Kingdom' */];
 
         text.text = 'Choose a board';
 

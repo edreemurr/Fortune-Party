@@ -5,13 +5,12 @@ import flixel.text.FlxText;
 import flixel.group.FlxGroup.FlxTypedGroup;
 
 import assets.Minigames;
-import managers.Everything;
 
-class PostMinigame extends FlxSubState
+import managers.EverythingSub;
+
+class PostMinigame extends EverythingSub
 {
     var stats:FlxTypedGroup<FlxText>;
-
-    var everything:Everything;
 
     public function new(players:Int)
     {
@@ -35,7 +34,7 @@ class PostMinigame extends FlxSubState
 
     override function update(elapsed:Float)
     {
-        if (everything.controls.ENTER)
+        // if (controls.interact.triggered)
             close();
 
         super.update(elapsed);

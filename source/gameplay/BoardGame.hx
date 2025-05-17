@@ -14,6 +14,11 @@ import flixel.addons.text.FlxTypeText;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.graphics.frames.FlxAtlasFrames;
 
+import flixel.input.actions.FlxActionSet;
+import flixel.input.actions.FlxActionManager;
+import flixel.input.actions.FlxAction.FlxActionAnalog;
+import flixel.input.actions.FlxAction.FlxActionDigital;
+
 import assets.*;
 
 import managers.Everything;
@@ -66,6 +71,21 @@ class BoardGame extends Everything
     var music:String = 'assets/music';
     var image:String = 'assets/images';
 
+    var inputs:FlxActionManager;
+
+    var buttons:FlxActionSet;
+    var directions:FlxActionSet;
+
+    var joystick:FlxActionAnalog;
+    
+    var interact:FlxActionDigital;
+    var withdraw:FlxActionDigital;
+
+    var up:FlxActionDigital;
+    var down:FlxActionDigital;
+    var left:FlxActionDigital;
+    var right:FlxActionDigital;
+
     var dice:Dice;
     var minigameResults:PostMinigame;
 
@@ -88,13 +108,36 @@ class BoardGame extends Everything
 
         FlxG.sound.playMusic('$music/board.ogg', 0.5);
 
-        var background:FlxSprite = new FlxSprite().makeGraphic(3000, 2000, 0x919191);
-        add(background);
-
         playerSpaces = new Array<FlxSprite>();
         spaceColors = new Map<String, FlxColor>();
 
         events = [/* 'Chance Time',  */'Random Space', 'Gain/Lose Chen', 'Star Sprout'];
+
+        joystick = new FlxActionAnalog();
+
+        up = new FlxActionDigital();
+        down = new FlxActionDigital();
+        left = new FlxActionDigital();
+        right = new FlxActionDigital();
+
+        interact = new FlxActionDigital();
+        withdraw = new FlxActionDigital();
+
+        buttons = new FlxActionSet('buttons', [interact, withdraw]);
+        directions = new FlxActionSet('directions', [up, down, left, right]);
+
+        inputs = FlxG.inputs.addInput(new FlxActionManager());
+
+        inputs.addAction(joystick);
+        inputs.addActions([up, down, left, right, interact, withdraw]);
+
+        up.addKey(UP, PRESSED);
+        down.addKey(DOWN, PRESSED);
+        left.addKey(LEFT, PRESSED);
+        right.addKey(RIGHT, PRESSED);
+        
+        interact.addKey(SPACE, PRESSED);
+        withdraw.addKey(ESCAPE, PRESSED);
 
         switch (board)
         {
@@ -310,7 +353,7 @@ class BoardGame extends Everything
         if (controlsFree)
         {
             if (turnStart)
-                if (controls.ENTER)
+                if (interact.triggered)
                 {
                     var min:Int = 1;
                     var max:Int = 6;
@@ -350,7 +393,7 @@ class BoardGame extends Everything
             
             if (deciding)
             {
-                if (controls.LEFT || controls.UP)
+                if (down.triggered || left.triggered)
                 {
                     playerPaths[activePlayer] = -1;
 
@@ -358,7 +401,7 @@ class BoardGame extends Everything
                     FlxTween.tween(arrow, {angle: -45}, 0.5);
                 }
 
-                if (controls.RIGHT || controls.DOWN)
+                if (up.triggered || right.triggered)
                 {
                     playerPaths[activePlayer] = curFork;
 
@@ -366,7 +409,7 @@ class BoardGame extends Everything
                     FlxTween.tween(arrow, {angle: 45}, 0.5);
                 }
 
-                if (controls.ENTER)
+                if (interact.triggered)
                 {
                     deciding = false;
 
@@ -378,13 +421,13 @@ class BoardGame extends Everything
 
             if (shopping)
             {
-                if (controls.LEFT)
+                if (left.triggered)
                     changeSelection(-1);
 
-                if (controls.RIGHT)
+                if (right.triggered)
                     changeSelection(1);
 
-                if (controls.ENTER)
+                if (interact.triggered)
                 {
                     curChar.inventory.push(Std.string(stock[selected][0]));
                     chen[activePlayer] -= Std.int(stock[selected][1]);
@@ -928,7 +971,7 @@ class BoardGame extends Everything
     {
         if (newGame)
         {
-            openSubState(new BoardBegin(0x000000));
+            openSubState(new BoardBegin());
 
             turnOrder = [];
 

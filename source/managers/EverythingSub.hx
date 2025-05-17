@@ -1,7 +1,7 @@
 package managers;
 
 import flixel.FlxG;
-import flixel.FlxState;
+import flixel.FlxSubState;
 import flixel.FlxSprite;
 import flixel.FlxCamera;
 import flixel.text.FlxText;
@@ -10,9 +10,7 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 
 import assets.*;
 
-import menus.Pause;
-
-class Everything extends FlxState
+class EverythingSub extends FlxSubState
 {
     var selected:Int = -1;
 
@@ -25,11 +23,11 @@ class Everything extends FlxState
     var gayCam:FlxCamera;
     var textCam:FlxCamera;
 
-    var newGame:Bool;
+    public var newGame:Bool;
     var boardGame:Bool = false;
 
-    var cycleCount:Int;
-    var playerCount:Int;
+    public var cycleCount:Int;
+    public var playerCount:Int;
 
     var cycle:Int = 1;
     var round:Int = 0;
@@ -87,14 +85,6 @@ class Everything extends FlxState
     var turnStart:Bool = false;
 
     var timerComplete:Void -> Void;
-
-    override function update(elapsed:Float)
-    {
-        if (FlxG.save.data != null)
-            FlxG.save.data.fullscreen = FlxG.fullscreen;
-
-        super.update(elapsed);
-    }
 
     function timer(time:Int, x:Float, y:Float)
     {

@@ -152,7 +152,7 @@ class HueWont extends Minigames
 
         colorChoice.resetText('');
 
-        roundText.text = '$round';
+        roundText.text = 'Round $round';
 
         choiceText.resetText('Make your choice');
         choiceText.start(0.02);
