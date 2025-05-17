@@ -210,7 +210,7 @@ class CharacterSelect extends Everything
     {
         buttons.killMembers();
 
-        buttonNames = ['Demo'/* , 'Kingdom' */];
+        buttonNames = ['Party', 'Kingdom'];
 
         text.text = 'Choose a board';
 

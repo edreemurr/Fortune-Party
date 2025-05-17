@@ -141,7 +141,7 @@ class BoardGame extends Everything
 
         switch (board)
         {
-            case 'demo':
+            case 'party':
                 spaceCount = 42;
                 spaceCountAlt = [4, 8];
 
@@ -495,7 +495,7 @@ class BoardGame extends Everything
             changeTurn();
 
             if (event != 'brown')
-                if (activePlayer == playerCount && board == 'demo')
+                if (activePlayer == playerCount && board == 'party')
                     minigame();
                 else
                     startTurn();
@@ -864,7 +864,7 @@ class BoardGame extends Everything
 
             dice.destroy();
 
-            if (board == 'demo')
+            if (board == 'party')
                 initEvent(curSpace);
             else if (board == 'kingdom')
                 if (spaceType[locations[activePlayer]] == null)
@@ -1018,7 +1018,7 @@ class BoardGame extends Everything
     {
         activePlayer += 1;
 
-        if (board != 'demo')
+        if (board != 'party')
         {
             activePlayer = FlxMath.wrap(activePlayer, 0, playerCount - 1);
             
