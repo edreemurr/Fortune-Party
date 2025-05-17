@@ -36,7 +36,7 @@ class BoardBegin extends EverythingSub
             num = FlxMath.maxAdd(num, 5, 100, 5);
         if (FlxG.keys.justPressed.DOWN)
             num = FlxMath.maxAdd(num, -5, 100, 5);
-        if (FlxG.keys.justPressed.ENTER)
+        if (FlxG.keys.justPressed.ENTER || FlxG.keys.justPressed.SPACE)
         {
             FlxG.save.data.cycleCount = num;
             FlxG.save.flush();
