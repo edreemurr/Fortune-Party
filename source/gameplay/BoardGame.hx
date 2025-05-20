@@ -33,7 +33,7 @@ class BoardGame extends Everything
     var spaceCount:Int;
     var spaceCountAlt:Array<Int>;
 
-    var playerPaths:Array<Int>;
+    var playerPaths:Array<Int> = [-1, -1, -1, -1];
 
     var curFork:Int = 0;
     var merge:Array<Int>;
@@ -217,9 +217,6 @@ class BoardGame extends Everything
         player1.animation.play('idle');
         add(player1);
 
-        if (newGame)
-            characters.push(player1);
-
         if (playerCount >= 2)
         {
             curItems = FlxG.save.data.inventory2;
@@ -227,9 +224,6 @@ class BoardGame extends Everything
             player2 = new Character(1, startPos.x, startPos.y, curItems);
             player2.animation.play('idle');
             add(player2);
-
-            if (newGame)
-                characters.push(player2);
         }
 
         if (playerCount >= 3)
@@ -239,9 +233,6 @@ class BoardGame extends Everything
             player3 = new Character(2, startPos.x, startPos.y, curItems);
             player3.animation.play('idle');
             add(player3);
-
-            if (newGame)
-                characters.push(player3);
         }
 
         if (playerCount >= 4)
@@ -251,12 +242,16 @@ class BoardGame extends Everything
             player4 = new Character(3, startPos.x, startPos.y, curItems);
             player4.animation.play('idle');
             add(player4);
-
-            if (newGame)
-                characters.push(player4);
         }
 
-        if (!newGame)
+        if (newGame)
+        {
+            characters.push(player1);
+            characters.push(player2);
+            characters.push(player3);
+            characters.push(player4);
+        }
+        else
             for (num in turnOrder)
                 if (num == player1.player)
                     characters.push(player1);
@@ -315,11 +310,7 @@ class BoardGame extends Everything
                 var pathCheck = playerPaths[num];
     
                 if (pathCheck > -1)
-                {
                     char.setPosition(spacePosAlt[pathCheck][locationsAlt[num]].x, spacePosAlt[pathCheck][locationsAlt[num]].y);
-
-                    char.altPath = pathCheck;
-                }
                 else
                     char.setPosition(spacePos[locations[num]].x, spacePos[locations[num]].y);
             }
@@ -671,10 +662,8 @@ class BoardGame extends Everything
                 {
                     case 'blue':
                         chen[activePlayer] = FlxMath.maxAdd(chen[activePlayer], rng, 999, 0);
-                        
+
                         chen = FlxArrayUtil.fastSplice(chen, activePlayer);
-                        // FlxG.save.data.chen = chen;
-                        // FlxG.save.flush();
 
                         updateNum(activePlayer, 'chen', chen[activePlayer]);
 
@@ -682,9 +671,7 @@ class BoardGame extends Everything
                         chen[activePlayer] = FlxMath.maxAdd(chen[activePlayer], -rng, 999, 0);
 
                         chen = FlxArrayUtil.fastSplice(chen, activePlayer);
-                        // FlxG.save.data.chen = chen;
-                        // FlxG.save.flush();
-                        
+
                         updateNum(activePlayer, 'chen', chen[activePlayer]);
 
                     case 'green':
@@ -723,14 +710,9 @@ class BoardGame extends Everything
                     case 'land buy':
                         chen[activePlayer] -= spacePrice[locations[activePlayer]];
 
-                        // curChar.land.push(curSpace);
                         lands[activePlayer].push(curSpace);
 
                         chen = FlxArrayUtil.fastSplice(chen, activePlayer);
-
-                        // FlxG.save.data.chen = chen;
-                        // FlxG.save.data.lands = lands;
-                        // FlxG.save.flush();
 
                         updateNum(activePlayer, 'chen', chen[activePlayer]);
 
@@ -744,7 +726,7 @@ class BoardGame extends Everything
                         else
                         {
                             chen[activePlayer] -= 2;
-                            checkOwnership().chen += 2;
+                            chen[characters.indexOf(checkOwnership())] += 2;
 
                             chen = FlxArrayUtil.fastSplice(chen, activePlayer);
                             chen = FlxArrayUtil.fastSplice(chen, characters.indexOf(checkOwnership()));
