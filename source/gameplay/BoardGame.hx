@@ -1,5 +1,6 @@
 package gameplay;
 
+import flixel.tweens.FlxEase;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxCamera;
@@ -488,8 +489,8 @@ class BoardGame extends Everything
             if (event != 'brown')
                 if (activePlayer == playerCount && board == 'party')
                     minigame();
-                else
-                    startTurn();
+                // else
+                //     startTurn();
 
             space.destroy();
             space.kill();
@@ -592,8 +593,6 @@ class BoardGame extends Everything
 
                         lands = FlxG.save.data.lands;
                     }
-
-                    // char.loadStats();
 
                     var ui:FlxSprite = new FlxSprite(20, 20 + (num * 150), 'assets/images/GUI/stats.png');
                     ui.color = char.color;
@@ -730,9 +729,6 @@ class BoardGame extends Everything
 
                             chen = FlxArrayUtil.fastSplice(chen, activePlayer);
                             chen = FlxArrayUtil.fastSplice(chen, characters.indexOf(checkOwnership()));
-
-                            // FlxG.save.data.chen = chen;
-                            // FlxG.save.flush();
                         }
 
                     case 'minigame':
@@ -989,6 +985,7 @@ class BoardGame extends Everything
     function startTurn()
     {
         gayCam.follow(curChar);
+        gayCam.fade(0.25, true);
 
         dice = new Dice(curChar.x, curChar.y - 100);
         add(dice);
@@ -1011,9 +1008,9 @@ class BoardGame extends Everything
                 
                 saveData();
             }
-
-            startTurn();
         }
+
+        gayCam.fade(0.25, startTurn);
 
         curChar = characters[activePlayer];
 
