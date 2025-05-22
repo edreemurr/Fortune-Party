@@ -984,11 +984,10 @@ class BoardGame extends Everything
 
     function startTurn()
     {
-        gayCam.follow(curChar);
-        gayCam.fade(0.25, true);
-
         dice = new Dice(curChar.x, curChar.y - 100);
-        add(dice);
+        
+        gayCam.follow(curChar);
+        gayCam.fade(0.25, true, () -> add(dice));
 
         turnStart = true;
     }
@@ -1000,12 +999,12 @@ class BoardGame extends Everything
         if (board != 'party')
         {
             activePlayer = FlxMath.wrap(activePlayer, 0, playerCount - 1);
-            
+
             if (activePlayer == 0)
             {
                 cycle ++;
                 cycleText.text = '$cycle/$cycleCount';
-                
+
                 saveData();
             }
         }
