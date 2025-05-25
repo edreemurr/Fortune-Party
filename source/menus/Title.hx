@@ -6,8 +6,9 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 
 import openfl.system.System;
 
-import menus.CharacterSelect;
 import managers.Everything;
+import menus.CharacterSelect;
+import controllerTest.GamepadTest;
 
 class Title extends Everything
 {
@@ -21,7 +22,7 @@ class Title extends Everything
         buttons = new FlxTypedGroup<FlxButton>();
         add(buttons);
 
-        buttonNames = ['Board', 'Minigames', 'Exit'];
+        buttonNames = ['Board', 'Minigames', 'Controller Test', 'Exit'];
 
         for (i in 0...buttonNames.length)
         {
@@ -44,6 +45,7 @@ class Title extends Everything
         {
             case 'Board': FlxG.switchState(CharacterSelect.new);
             case 'Minigames': FlxG.switchState(Minigames.new);
+            case 'Controller Test': FlxG.switchState(GamepadTest.new);
             case 'Exit': System.exit(0);
         }
 }

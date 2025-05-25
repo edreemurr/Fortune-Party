@@ -1,5 +1,8 @@
 package;
 
+import openfl.events.GameInputEvent;
+import openfl.ui.GameInputDevice;
+import openfl.ui.GameInput;
 import flixel.FlxG;
 import flixel.FlxGame;
 import flixel.FlxState;
@@ -38,6 +41,18 @@ class Main extends Sprite
 			init();
 		else
 			addEventListener(Event.ADDED_TO_STAGE, init);
+
+        var input = new GameInput();
+        var device:GameInputDevice;
+
+        input.addEventListener(GameInputEvent.DEVICE_ADDED, function (event:GameInputEvent)
+        {
+            device = event.device;
+            device.enabled = true;
+        });
+
+        stage.addEventListener(Event.ENTER_FRAME, function (event:Event)
+            trace ([for (i in 0...device.numControls) device.getControlAt(i).value]));
 	}
 
 	private function init(?E:Event):Void

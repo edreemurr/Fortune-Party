@@ -23,9 +23,9 @@ class Character extends FlxSprite
     
     var game:BoardGame;
 
-    public function new(player:Int, x:Float, y:Float, ?items:Array<String>)
+    public function new(player:Int, ?items:Array<String>)
     {
-        super(x, y);
+        super();
 
         this.player = player;
         this.inventory = items;
