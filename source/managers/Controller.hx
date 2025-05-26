@@ -12,13 +12,24 @@ class Controller
     public var buttons:FlxActionSet;
     public var directions:FlxActionSet;
 
-    public var interact:FlxActionDigital;
-    public var withdraw:FlxActionDigital;
-
     public var up:FlxActionDigital;
     public var down:FlxActionDigital;
     public var left:FlxActionDigital;
     public var right:FlxActionDigital;
+    
+    public var buttonA:FlxActionDigital;
+    public var buttonB:FlxActionDigital;
+    public var buttonX:FlxActionDigital;
+    public var buttonY:FlxActionDigital;
+
+    public var start:FlxActionDigital;
+    public var select:FlxActionDigital;
+    
+    public var triggerL:FlxActionDigital;
+    public var triggerR:FlxActionDigital;
+
+    public var shoulderL:FlxActionDigital;
+    public var shoulderR:FlxActionDigital;
 
     public function new(player:Int)
     {
@@ -29,13 +40,24 @@ class Controller
         left = new FlxActionDigital();
         right = new FlxActionDigital();
 
-        interact = new FlxActionDigital();
-        withdraw = new FlxActionDigital();
+        buttonA = new FlxActionDigital();
+        buttonB = new FlxActionDigital();
+        buttonX = new FlxActionDigital();
+        buttonY = new FlxActionDigital();
 
-        buttons = new FlxActionSet('buttons', [interact, withdraw]);
+        start = new FlxActionDigital();
+        select = new FlxActionDigital();
+
+        triggerL = new FlxActionDigital();
+        triggerR = new FlxActionDigital();
+
+        shoulderL = new FlxActionDigital();
+        shoulderR = new FlxActionDigital();
+
+        buttons = new FlxActionSet('buttons', [buttonA, buttonB, buttonX, buttonY, start, select, triggerL, triggerR, shoulderL, shoulderR]);
         directions = new FlxActionSet('directions', [up, down, left, right]);
 
-        inputs.addActions([up, down, left, right, interact, withdraw]);
+        inputs.addActions([up, down, left, right, buttonA, buttonB, buttonX, buttonY, start, select, triggerL, triggerR, shoulderL, shoulderR]);
 
         up.addKey(UP, PRESSED);
         down.addKey(DOWN, PRESSED);
@@ -57,11 +79,11 @@ class Controller
         left.addGamepad(LEFT_STICK_DIGITAL_LEFT, PRESSED);
         right.addGamepad(LEFT_STICK_DIGITAL_RIGHT, PRESSED);
 
-        interact.addKey(SPACE, JUST_PRESSED);
-        interact.addGamepad(B, JUST_PRESSED);
-        
-        withdraw.addKey(ESCAPE, JUST_PRESSED);
-        withdraw.addGamepad(A, JUST_PRESSED);
+        buttonA.addKey(SPACE, JUST_PRESSED);
+        buttonA.addGamepad(B, JUST_PRESSED);
+
+        buttonB.addKey(ESCAPE, JUST_PRESSED);
+        buttonB.addGamepad(A, JUST_PRESSED);
 
         inputs.activateSet(inputs.getSetIndex('buttons'), GAMEPAD, player);
         inputs.activateSet(inputs.getSetIndex('joystick'), GAMEPAD, player);

@@ -301,7 +301,7 @@ class BoardGame extends Everything
         if (controlsFree)
         {
             if (turnStart)
-                if (controllers[activePlayer].interact.triggered)
+                if (controllers[activePlayer].buttonA.triggered)
                 {
                     var min:Int = 1;
                     var max:Int = 6;
@@ -357,7 +357,7 @@ class BoardGame extends Everything
                     FlxTween.tween(arrow, {angle: 45}, 0.5);
                 }
 
-                if (controllers[activePlayer].interact.triggered)
+                if (controllers[activePlayer].buttonA.triggered)
                 {
                     deciding = false;
 
@@ -375,7 +375,7 @@ class BoardGame extends Everything
                 if (controllers[activePlayer].right.triggered)
                     changeSelection(1);
 
-                if (controllers[activePlayer].interact.triggered)
+                if (controllers[activePlayer].buttonA.triggered)
                 {
                     curChar.inventory.push(Std.string(stock[selected][0]));
                     chen[activePlayer] -= Std.int(stock[selected][1]);

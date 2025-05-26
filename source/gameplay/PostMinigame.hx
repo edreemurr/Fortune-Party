@@ -34,7 +34,7 @@ class PostMinigame extends EverythingSub
 
     override function update(elapsed:Float)
     {
-        // if (controls.interact.triggered)
+        // if (controls.buttonA.triggered)
             close();
 
         super.update(elapsed);

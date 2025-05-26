@@ -82,7 +82,7 @@ class Ur extends Minigames
 
     override function update(elapsed:Float)
     {
-        // if (controls.interact.triggered && !moving && !rolled)
+        // if (controls.buttonA.triggered && !moving && !rolled)
         {
             roll = FlxG.random.int(0, 4);
 
