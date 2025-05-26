@@ -1,6 +1,5 @@
 package managers;
 
-import flixel.input.gamepad.FlxGamepad;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.FlxSprite;
@@ -10,8 +9,6 @@ import flixel.util.FlxTimer;
 import flixel.group.FlxGroup.FlxTypedGroup;
 
 import assets.*;
-
-import menus.Pause;
 
 class Everything extends FlxState
 {
@@ -84,7 +81,7 @@ class Everything extends FlxState
     var cards4:FlxTypedGroup<Card>;
     // var playerHands:Array<FlxTypedGroup<Card>>;
 
-    var controllers:Array<FlxGamepad> = [];
+    var controllers:Array<Controller> = [];
 
     var deciding:Bool = false;
     var turnStart:Bool = false;

@@ -1,8 +1,5 @@
 package gameplay;
 
-import flixel.input.gamepad.FlxGamepad;
-import flixel.input.actions.FlxActionInput.FlxInputDevice;
-import flixel.tweens.FlxEase;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxCamera;
@@ -11,20 +8,15 @@ import flixel.text.FlxText;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
+import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxArrayUtil;
 import flixel.addons.text.FlxTypeText;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.graphics.frames.FlxAtlasFrames;
 
-import flixel.input.actions.FlxActionSet;
-import flixel.input.actions.FlxActionManager;
-import flixel.input.actions.FlxAction.FlxActionAnalog;
-import flixel.input.actions.FlxAction.FlxActionDigital;
-
 import assets.*;
-
-import managers.Everything;
+import managers.*;
 
 class BoardGame extends Everything
 {
@@ -73,21 +65,6 @@ class BoardGame extends Everything
 
     var music:String = 'assets/music';
     var image:String = 'assets/images';
-
-    var inputs:FlxActionManager;
-
-    var buttons:FlxActionSet;
-    var directions:FlxActionSet;
-
-    var joystick:FlxActionAnalog;
-    
-    var interact:FlxActionDigital;
-    var withdraw:FlxActionDigital;
-
-    var up:FlxActionDigital;
-    var down:FlxActionDigital;
-    var left:FlxActionDigital;
-    var right:FlxActionDigital;
 
     var dice:Dice;
     var minigameResults:PostMinigame;
@@ -239,8 +216,8 @@ class BoardGame extends Everything
                 else
                     characters.push(player4);
 
-        for (num in 0...FlxG.gamepads.numActiveGamepads)
-            controllers.push(FlxG.gamepads.getByID(num));
+        for (num in 0...playerCount)
+            controllers.push(new Controller(num));
 
         items = [
             ['high', 5, 'Can roll only between 4 and 6'],
@@ -314,7 +291,6 @@ class BoardGame extends Everything
         FlxG.cameras.add(textCam, false);
         FlxG.cameras.add(subCam, false);
 
-        playerControls();
         initBoard();
 
         super.create();
@@ -325,7 +301,7 @@ class BoardGame extends Everything
         if (controlsFree)
         {
             if (turnStart)
-                if (interact.triggered)
+                if (controllers[activePlayer].interact.triggered)
                 {
                     var min:Int = 1;
                     var max:Int = 6;
@@ -365,7 +341,7 @@ class BoardGame extends Everything
             
             if (deciding)
             {
-                if (down.triggered || left.triggered)
+                if (controllers[activePlayer].left.triggered)
                 {
                     playerPaths[activePlayer] = -1;
 
@@ -373,7 +349,7 @@ class BoardGame extends Everything
                     FlxTween.tween(arrow, {angle: -45}, 0.5);
                 }
 
-                if (up.triggered || right.triggered)
+                if (controllers[activePlayer].right.triggered)
                 {
                     playerPaths[activePlayer] = curFork;
 
@@ -381,7 +357,7 @@ class BoardGame extends Everything
                     FlxTween.tween(arrow, {angle: 45}, 0.5);
                 }
 
-                if (interact.triggered)
+                if (controllers[activePlayer].interact.triggered)
                 {
                     deciding = false;
 
@@ -393,13 +369,13 @@ class BoardGame extends Everything
 
             if (shopping)
             {
-                if (left.triggered)
+                if (controllers[activePlayer].left.triggered)
                     changeSelection(-1);
 
-                if (right.triggered)
+                if (controllers[activePlayer].right.triggered)
                     changeSelection(1);
 
-                if (interact.triggered)
+                if (controllers[activePlayer].interact.triggered)
                 {
                     curChar.inventory.push(Std.string(stock[selected][0]));
                     chen[activePlayer] -= Std.int(stock[selected][1]);
@@ -995,51 +971,6 @@ class BoardGame extends Everything
 
         if (activePlayer < playerCount && !newGame)
             curChar.animation.play('think');
-    }
-
-    function playerControls()
-    {
-        inputs = FlxG.inputs.addInput(new FlxActionManager());
-
-        joystick = new FlxActionAnalog();
-
-        up = new FlxActionDigital();
-        down = new FlxActionDigital();
-        left = new FlxActionDigital();
-        right = new FlxActionDigital();
-
-        interact = new FlxActionDigital();
-        withdraw = new FlxActionDigital();
-
-        buttons = new FlxActionSet('buttons', [interact, withdraw]);
-        directions = new FlxActionSet('directions', [up, down, left, right]);
-
-        inputs.addAction(joystick);
-        inputs.addActions([up, down, left, right, interact, withdraw]);
-
-        joystick.addGamepad(LEFT_ANALOG_STICK, MOVED);
-
-        up.addKey(UP, PRESSED);
-        down.addKey(DOWN, PRESSED);
-        left.addKey(LEFT, PRESSED);
-        right.addKey(RIGHT, PRESSED);
-
-        up.addGamepad(DPAD_UP, PRESSED);
-        down.addGamepad(DPAD_DOWN, PRESSED);
-        left.addGamepad(DPAD_LEFT, PRESSED);
-        right.addGamepad(DPAD_RIGHT, PRESSED);
-
-        interact.addKey(SPACE, JUST_PRESSED);
-        interact.addGamepad(B, JUST_PRESSED);
-        
-        withdraw.addKey(ESCAPE, JUST_PRESSED);
-        withdraw.addGamepad(A, JUST_PRESSED);
-
-        for (controller in controllers)
-        {
-            inputs.activateSet(inputs.getSetIndex('buttons'), GAMEPAD, controller.id);
-            inputs.activateSet(inputs.getSetIndex('joystick'), GAMEPAD, controller.id);
-        }
     }
 
     function changeSelection(num:Int)
