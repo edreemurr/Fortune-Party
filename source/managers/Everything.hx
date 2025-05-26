@@ -84,7 +84,7 @@ class Everything extends FlxState
     var cards4:FlxTypedGroup<Card>;
     // var playerHands:Array<FlxTypedGroup<Card>>;
 
-    var controller:FlxGamepad;
+    var controllers:Array<FlxGamepad> = [];
 
     var deciding:Bool = false;
     var turnStart:Bool = false;

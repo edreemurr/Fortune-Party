@@ -239,6 +239,9 @@ class BoardGame extends Everything
                 else
                     characters.push(player4);
 
+        for (num in 0...FlxG.gamepads.numActiveGamepads)
+            controllers.push(FlxG.gamepads.getByID(num));
+
         items = [
             ['high', 5, 'Can roll only between 4 and 6'],
             ['low', 5, 'Can only only between 1 and 3'],
@@ -319,8 +322,6 @@ class BoardGame extends Everything
 
     override function update(elapsed:Float)
     {
-        controller = FlxG.gamepads.lastActive;
-
         if (controlsFree)
         {
             if (turnStart)
@@ -1034,10 +1035,11 @@ class BoardGame extends Everything
         withdraw.addKey(ESCAPE, JUST_PRESSED);
         withdraw.addGamepad(A, JUST_PRESSED);
 
-        inputs.activateSet(inputs.getSetIndex(buttons.name), GAMEPAD, FlxG.gamepads.getFirstActiveGamepadID());
-        inputs.activateSet(inputs.getSetIndex(joystick.name), GAMEPAD, FlxG.gamepads.getFirstActiveGamepadID());
-
-        trace (FlxG.gamepads.getActiveGamepadIDs());
+        for (controller in controllers)
+        {
+            inputs.activateSet(inputs.getSetIndex('buttons'), GAMEPAD, controller.id);
+            inputs.activateSet(inputs.getSetIndex('joystick'), GAMEPAD, controller.id);
+        }
     }
 
     function changeSelection(num:Int)
