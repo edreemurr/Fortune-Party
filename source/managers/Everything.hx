@@ -1,5 +1,6 @@
 package managers;
 
+import flixel.input.gamepad.FlxGamepad;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.FlxSprite;
@@ -82,6 +83,8 @@ class Everything extends FlxState
     var cards3:FlxTypedGroup<Card>;
     var cards4:FlxTypedGroup<Card>;
     // var playerHands:Array<FlxTypedGroup<Card>>;
+
+    var controller:FlxGamepad;
 
     var deciding:Bool = false;
     var turnStart:Bool = false;

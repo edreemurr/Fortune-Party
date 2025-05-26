@@ -151,7 +151,7 @@ class GamepadTest extends FlxState
 	function showAttachment(b:Bool)
 		attachmentLabel.visible = attachmentDropDown.visible = attachmentDropDown.active = b;
 
-	function onGamepadChange(gamepad:FlxGamepad):Void
+	function onGamepadChange(gamepad:FlxGamepad)
 	{
 		if (gamepadSprite.gamepad == null && gamepad != null)
 			setEnabled(true);

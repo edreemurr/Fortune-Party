@@ -1,5 +1,7 @@
 package gameplay;
 
+import flixel.input.gamepad.FlxGamepad;
+import flixel.input.actions.FlxActionInput.FlxInputDevice;
 import flixel.tweens.FlxEase;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -114,32 +116,6 @@ class BoardGame extends Everything
 
         events = [/* 'Chance Time',  */'Random Space', 'Gain/Lose Chen', 'Star Sprout'];
 
-        joystick = new FlxActionAnalog();
-
-        up = new FlxActionDigital();
-        down = new FlxActionDigital();
-        left = new FlxActionDigital();
-        right = new FlxActionDigital();
-
-        interact = new FlxActionDigital();
-        withdraw = new FlxActionDigital();
-
-        buttons = new FlxActionSet('buttons', [interact, withdraw]);
-        directions = new FlxActionSet('directions', [up, down, left, right]);
-
-        inputs = FlxG.inputs.addInput(new FlxActionManager());
-
-        inputs.addAction(joystick);
-        inputs.addActions([up, down, left, right, interact, withdraw]);
-
-        up.addKey(UP, PRESSED);
-        down.addKey(DOWN, PRESSED);
-        left.addKey(LEFT, PRESSED);
-        right.addKey(RIGHT, PRESSED);
-        
-        interact.addKey(SPACE, PRESSED);
-        withdraw.addKey(ESCAPE, PRESSED);
-
         switch (board)
         {
             case 'party':
@@ -214,7 +190,7 @@ class BoardGame extends Everything
 
         var curItems:Array<String> = FlxG.save.data.inventory1;
 
-        player1 = new Character(0, startPos.x, startPos.y, curItems);
+        player1 = new Character(0, curItems);
         player1.animation.play('idle');
         add(player1);
 
@@ -222,7 +198,7 @@ class BoardGame extends Everything
         {
             curItems = FlxG.save.data.inventory2;
 
-            player2 = new Character(1, startPos.x, startPos.y, curItems);
+            player2 = new Character(1, curItems);
             player2.animation.play('idle');
             add(player2);
         }
@@ -231,7 +207,7 @@ class BoardGame extends Everything
         {
             curItems = FlxG.save.data.inventory3;
 
-            player3 = new Character(2, startPos.x, startPos.y, curItems);
+            player3 = new Character(2, curItems);
             player3.animation.play('idle');
             add(player3);
         }
@@ -240,7 +216,7 @@ class BoardGame extends Everything
         {
             curItems = FlxG.save.data.inventory4;
 
-            player4 = new Character(3, startPos.x, startPos.y, curItems);
+            player4 = new Character(3, curItems);
             player4.animation.play('idle');
             add(player4);
         }
@@ -335,6 +311,7 @@ class BoardGame extends Everything
         FlxG.cameras.add(textCam, false);
         FlxG.cameras.add(subCam, false);
 
+        playerControls();
         initBoard();
 
         super.create();
@@ -342,6 +319,8 @@ class BoardGame extends Everything
 
     override function update(elapsed:Float)
     {
+        controller = FlxG.gamepads.lastActive;
+
         if (controlsFree)
         {
             if (turnStart)
@@ -1015,6 +994,50 @@ class BoardGame extends Everything
 
         if (activePlayer < playerCount && !newGame)
             curChar.animation.play('think');
+    }
+
+    function playerControls()
+    {
+        inputs = FlxG.inputs.addInput(new FlxActionManager());
+
+        joystick = new FlxActionAnalog();
+
+        up = new FlxActionDigital();
+        down = new FlxActionDigital();
+        left = new FlxActionDigital();
+        right = new FlxActionDigital();
+
+        interact = new FlxActionDigital();
+        withdraw = new FlxActionDigital();
+
+        buttons = new FlxActionSet('buttons', [interact, withdraw]);
+        directions = new FlxActionSet('directions', [up, down, left, right]);
+
+        inputs.addAction(joystick);
+        inputs.addActions([up, down, left, right, interact, withdraw]);
+
+        joystick.addGamepad(LEFT_ANALOG_STICK, MOVED);
+
+        up.addKey(UP, PRESSED);
+        down.addKey(DOWN, PRESSED);
+        left.addKey(LEFT, PRESSED);
+        right.addKey(RIGHT, PRESSED);
+
+        up.addGamepad(DPAD_UP, PRESSED);
+        down.addGamepad(DPAD_DOWN, PRESSED);
+        left.addGamepad(DPAD_LEFT, PRESSED);
+        right.addGamepad(DPAD_RIGHT, PRESSED);
+
+        interact.addKey(SPACE, JUST_PRESSED);
+        interact.addGamepad(B, JUST_PRESSED);
+        
+        withdraw.addKey(ESCAPE, JUST_PRESSED);
+        withdraw.addGamepad(A, JUST_PRESSED);
+
+        inputs.activateSet(inputs.getSetIndex(buttons.name), GAMEPAD, FlxG.gamepads.getFirstActiveGamepadID());
+        inputs.activateSet(inputs.getSetIndex(joystick.name), GAMEPAD, FlxG.gamepads.getFirstActiveGamepadID());
+
+        trace (FlxG.gamepads.getActiveGamepadIDs());
     }
 
     function changeSelection(num:Int)

@@ -1,19 +1,14 @@
 package;
 
-import openfl.events.GameInputEvent;
-import openfl.ui.GameInputDevice;
-import openfl.ui.GameInput;
 import flixel.FlxG;
 import flixel.FlxGame;
-import flixel.FlxState;
 import lime.app.Application;
 
 import openfl.Lib;
-import openfl.display.Sprite;
 import openfl.events.Event;
+import openfl.display.Sprite;
 
 import managers.FileNans;
-import managers.Settings.GameSettings;
 import managers.Settings.SaveData;
 
 using StringTools;
@@ -26,8 +21,9 @@ import js.html.*;
 #end
 
 #if CRASH_HANDLER
-import haxe.CallStack;
 import haxe.io.Path;
+import haxe.CallStack;
+
 import openfl.events.UncaughtErrorEvent;
 #end
 
@@ -41,29 +37,17 @@ class Main extends Sprite
 			init();
 		else
 			addEventListener(Event.ADDED_TO_STAGE, init);
-
-        var input = new GameInput();
-        var device:GameInputDevice;
-
-        input.addEventListener(GameInputEvent.DEVICE_ADDED, function (event:GameInputEvent)
-        {
-            device = event.device;
-            device.enabled = true;
-        });
-
-        stage.addEventListener(Event.ENTER_FRAME, function (event:Event)
-            trace ([for (i in 0...device.numControls) device.getControlAt(i).value]));
 	}
 
-	private function init(?E:Event):Void
+	function init(?event:Event)
 	{
-		// if (hasEventListener(Event.ADDED_TO_STAGE))
-		// 	removeEventListener(Event.ADDED_TO_STAGE, init);
+		if (hasEventListener(Event.ADDED_TO_STAGE))
+			removeEventListener(Event.ADDED_TO_STAGE, init);
 
 		bootUp();
 	}
 
-	private function bootUp():Void
+	function bootUp()
 	{
 		if (FlxG.save.data == null)
 			FlxG.save.bind('saveFile', FileNans.locateSave());
@@ -76,7 +60,7 @@ class Main extends Sprite
 		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);
 		#end
 
-		FlxG.signals.gameResized.add(function(w, h)
+		FlxG.signals.gameResized.add(function(width, height)
 		{
 			if (FlxG.cameras != null)
 				for (cam in FlxG.cameras.list)
@@ -88,7 +72,7 @@ class Main extends Sprite
 		});
 	}
 
-	static function resetSpriteCache(sprite:Sprite):Void
+	static function resetSpriteCache(sprite:Sprite)
 	{
 		@:privateAccess
 		{
@@ -97,10 +81,10 @@ class Main extends Sprite
 		}
 	}
 	#if CRASH_HANDLER
-	function onCrash(e:UncaughtErrorEvent):Void
+	function onCrash(error:UncaughtErrorEvent)
 	{
-		var message:String = '';
 		var path:String;
+		var message:String = '';
 		var callStack:Array<StackItem> = CallStack.exceptionStack(true);
 		var today:String = Date.now().toString();
 
@@ -112,13 +96,11 @@ class Main extends Sprite
 		for (stack in callStack)
 			switch (stack)
 			{
-				case FilePos(s, file, line, column):
-					message += '$file (line $line)\n';
-
-				default:
-					Sys.println(stack);
+				case FilePos(s, file, line, column): message += '$file (line $line)\n';
+				default: Sys.println(stack);
 			}
-		message += '\nUncaught Error: ${e.error}';
+
+		message += '\nUncaught Error: ${error.error}';
 
 		if (!FileSystem.exists('./crash/'))
 			FileSystem.createDirectory('./crash/');
