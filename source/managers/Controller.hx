@@ -80,10 +80,14 @@ class Controller
         right.addGamepad(LEFT_STICK_DIGITAL_RIGHT, PRESSED);
 
         buttonA.addKey(SPACE, JUST_PRESSED);
-        buttonA.addGamepad(B, JUST_PRESSED);
-
         buttonB.addKey(ESCAPE, JUST_PRESSED);
+        buttonX.addKey(X, JUST_PRESSED);
+        buttonY.addKey(Z, JUST_PRESSED);
+        
+        buttonA.addGamepad(B, JUST_PRESSED);
         buttonB.addGamepad(A, JUST_PRESSED);
+        buttonX.addGamepad(Y, JUST_PRESSED);
+        buttonY.addGamepad(X, JUST_PRESSED);
 
         inputs.activateSet(inputs.getSetIndex('buttons'), GAMEPAD, player);
         inputs.activateSet(inputs.getSetIndex('joystick'), GAMEPAD, player);
